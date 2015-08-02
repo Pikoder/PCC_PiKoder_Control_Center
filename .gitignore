@@ -1,0 +1,34 @@
+# git ignore file
+# Visual Studio Dateien ignorieren
+*.obj
+*.exe
+*.pdb
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+*.pfx
+[Bb]in
+[Dd]ebug*/
+*.lib
+*.sbr
+obj/
+[Rr]elease*/
+_ReSharper*/
+
+# Specific files for PCC 
+PCC PiKoder Control Center\bin*\
+PCC PiKoder Control Center\obj*\
+
+*.suo
+*.suo
