@@ -227,14 +227,12 @@ Public Class SerialLink
             mySerialPort.Write(strWriteBuffer, 0, Len(strWriteBuffer))
         Catch ex As SystemException
             Connected = False
-            MsgBox("Lost Connection. Program will stop.", MsgBoxStyle.OkOnly, "Error Message")
         End Try
     End Sub
-    Public Sub SendBinaryDataToSerial(ByVal myByteArray() As Byte)
+    Public Sub SendBinaryDataToSerial(ByVal myByteArray() As Byte, ByVal numBytes As Integer)
         Try
-            mySerialPort.Write(myByteArray, 0, 2)
+            mySerialPort.Write(myByteArray, 0, numBytes)
         Catch ex As SystemException
-            MsgBox("Lost Connection. Please try to reconnect.", MsgBoxStyle.OkOnly, "Error Message")
             Connected = False
         End Try
     End Sub

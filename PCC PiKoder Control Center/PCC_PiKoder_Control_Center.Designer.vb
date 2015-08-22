@@ -30,6 +30,8 @@ Partial Class PCC_PiKoder_Control_Center
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
+        Me.GroupBox12 = New System.Windows.Forms.GroupBox()
+        Me.NumericUpDown1 = New System.Windows.Forms.NumericUpDown()
         Me.ZeroOffset = New System.Windows.Forms.NumericUpDown()
         Me.GroupBox8 = New System.Windows.Forms.GroupBox()
         Me.miniSSCOffset = New System.Windows.Forms.NumericUpDown()
@@ -94,12 +96,24 @@ Partial Class PCC_PiKoder_Control_Center
         Me.Label3 = New System.Windows.Forms.Label()
         Me.TypeId = New System.Windows.Forms.TextBox()
         Me.GroupBox6 = New System.Windows.Forms.GroupBox()
+        Me.GroupBox17 = New System.Windows.Forms.GroupBox()
+        Me.PPM_Mode = New System.Windows.Forms.ListBox()
+        Me.GroupBox13 = New System.Windows.Forms.GroupBox()
+        Me.GroupBox15 = New System.Windows.Forms.GroupBox()
+        Me.GroupBox16 = New System.Windows.Forms.GroupBox()
+        Me.NumericUpDown4 = New System.Windows.Forms.NumericUpDown()
+        Me.NumericUpDown5 = New System.Windows.Forms.NumericUpDown()
+        Me.GroupBox14 = New System.Windows.Forms.GroupBox()
+        Me.NumericUpDown2 = New System.Windows.Forms.NumericUpDown()
+        Me.PPM_Channels = New System.Windows.Forms.NumericUpDown()
         Me.tHeartBeat = New System.Windows.Forms.Timer(Me.components)
         Me.Led2 = New LED()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
         Me.GroupBox4.SuspendLayout()
+        Me.GroupBox12.SuspendLayout()
+        CType(Me.NumericUpDown1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ZeroOffset, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox8.SuspendLayout()
         CType(Me.miniSSCOffset, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -135,6 +149,15 @@ Partial Class PCC_PiKoder_Control_Center
         Me._Frame2_0.SuspendLayout()
         Me.GroupBox5.SuspendLayout()
         Me.GroupBox6.SuspendLayout()
+        Me.GroupBox17.SuspendLayout()
+        Me.GroupBox13.SuspendLayout()
+        Me.GroupBox15.SuspendLayout()
+        Me.GroupBox16.SuspendLayout()
+        CType(Me.NumericUpDown4, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.NumericUpDown5, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupBox14.SuspendLayout()
+        CType(Me.NumericUpDown2, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PPM_Channels, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'GroupBox1
@@ -215,10 +238,11 @@ Partial Class PCC_PiKoder_Control_Center
         'GroupBox4
         '
         Me.GroupBox4.BackColor = System.Drawing.SystemColors.Control
+        Me.GroupBox4.Controls.Add(Me.GroupBox12)
         Me.GroupBox4.Controls.Add(Me.ZeroOffset)
         Me.GroupBox4.Font = New System.Drawing.Font("Arial", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GroupBox4.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.GroupBox4.Location = New System.Drawing.Point(11, 105)
+        Me.GroupBox4.Location = New System.Drawing.Point(11, 91)
         Me.GroupBox4.Name = "GroupBox4"
         Me.GroupBox4.Padding = New System.Windows.Forms.Padding(0)
         Me.GroupBox4.RightToLeft = System.Windows.Forms.RightToLeft.No
@@ -227,10 +251,35 @@ Partial Class PCC_PiKoder_Control_Center
         Me.GroupBox4.TabStop = False
         Me.GroupBox4.Text = "Zero Offset"
         '
+        'GroupBox12
+        '
+        Me.GroupBox12.BackColor = System.Drawing.SystemColors.Control
+        Me.GroupBox12.Controls.Add(Me.NumericUpDown1)
+        Me.GroupBox12.Font = New System.Drawing.Font("Arial", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.GroupBox12.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.GroupBox12.Location = New System.Drawing.Point(1, 71)
+        Me.GroupBox12.Name = "GroupBox12"
+        Me.GroupBox12.Padding = New System.Windows.Forms.Padding(0)
+        Me.GroupBox12.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.GroupBox12.Size = New System.Drawing.Size(145, 63)
+        Me.GroupBox12.TabIndex = 27
+        Me.GroupBox12.TabStop = False
+        Me.GroupBox12.Text = "Zero Offset"
+        '
+        'NumericUpDown1
+        '
+        Me.NumericUpDown1.ForeColor = System.Drawing.Color.White
+        Me.NumericUpDown1.Location = New System.Drawing.Point(28, 25)
+        Me.NumericUpDown1.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
+        Me.NumericUpDown1.Name = "NumericUpDown1"
+        Me.NumericUpDown1.Size = New System.Drawing.Size(73, 26)
+        Me.NumericUpDown1.TabIndex = 26
+        Me.NumericUpDown1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
         'ZeroOffset
         '
         Me.ZeroOffset.ForeColor = System.Drawing.Color.White
-        Me.ZeroOffset.Location = New System.Drawing.Point(28, 26)
+        Me.ZeroOffset.Location = New System.Drawing.Point(13, 25)
         Me.ZeroOffset.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
         Me.ZeroOffset.Name = "ZeroOffset"
         Me.ZeroOffset.Size = New System.Drawing.Size(73, 26)
@@ -243,7 +292,7 @@ Partial Class PCC_PiKoder_Control_Center
         Me.GroupBox8.Controls.Add(Me.miniSSCOffset)
         Me.GroupBox8.Font = New System.Drawing.Font("Arial", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GroupBox8.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.GroupBox8.Location = New System.Drawing.Point(11, 32)
+        Me.GroupBox8.Location = New System.Drawing.Point(11, 27)
         Me.GroupBox8.Name = "GroupBox8"
         Me.GroupBox8.Padding = New System.Windows.Forms.Padding(0)
         Me.GroupBox8.RightToLeft = System.Windows.Forms.RightToLeft.No
@@ -255,7 +304,7 @@ Partial Class PCC_PiKoder_Control_Center
         'miniSSCOffset
         '
         Me.miniSSCOffset.ForeColor = System.Drawing.Color.White
-        Me.miniSSCOffset.Location = New System.Drawing.Point(28, 23)
+        Me.miniSSCOffset.Location = New System.Drawing.Point(12, 23)
         Me.miniSSCOffset.Maximum = New Decimal(New Integer() {248, 0, 0, 0})
         Me.miniSSCOffset.Name = "miniSSCOffset"
         Me.miniSSCOffset.Size = New System.Drawing.Size(72, 26)
@@ -268,11 +317,11 @@ Partial Class PCC_PiKoder_Control_Center
         Me.GroupBox7.Controls.Add(Me.saveButton)
         Me.GroupBox7.Font = New System.Drawing.Font("Arial", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GroupBox7.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.GroupBox7.Location = New System.Drawing.Point(675, 444)
+        Me.GroupBox7.Location = New System.Drawing.Point(675, 440)
         Me.GroupBox7.Name = "GroupBox7"
         Me.GroupBox7.Padding = New System.Windows.Forms.Padding(0)
         Me.GroupBox7.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.GroupBox7.Size = New System.Drawing.Size(206, 75)
+        Me.GroupBox7.Size = New System.Drawing.Size(206, 81)
         Me.GroupBox7.TabIndex = 24
         Me.GroupBox7.TabStop = False
         Me.GroupBox7.Text = "Parameter"
@@ -1045,7 +1094,7 @@ Partial Class PCC_PiKoder_Control_Center
         Me.GroupBox5.Controls.Add(Me.TypeId)
         Me.GroupBox5.Font = New System.Drawing.Font("Arial", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GroupBox5.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.GroupBox5.Location = New System.Drawing.Point(677, 12)
+        Me.GroupBox5.Location = New System.Drawing.Point(677, 10)
         Me.GroupBox5.Name = "GroupBox5"
         Me.GroupBox5.Padding = New System.Windows.Forms.Padding(0)
         Me.GroupBox5.RightToLeft = System.Windows.Forms.RightToLeft.No
@@ -1091,6 +1140,8 @@ Partial Class PCC_PiKoder_Control_Center
         'GroupBox6
         '
         Me.GroupBox6.BackColor = System.Drawing.SystemColors.Control
+        Me.GroupBox6.Controls.Add(Me.GroupBox17)
+        Me.GroupBox6.Controls.Add(Me.GroupBox13)
         Me.GroupBox6.Controls.Add(Me.GroupBox8)
         Me.GroupBox6.Controls.Add(Me.GroupBox4)
         Me.GroupBox6.Font = New System.Drawing.Font("Arial", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -1099,10 +1150,140 @@ Partial Class PCC_PiKoder_Control_Center
         Me.GroupBox6.Name = "GroupBox6"
         Me.GroupBox6.Padding = New System.Windows.Forms.Padding(0)
         Me.GroupBox6.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.GroupBox6.Size = New System.Drawing.Size(204, 300)
+        Me.GroupBox6.Size = New System.Drawing.Size(204, 305)
         Me.GroupBox6.TabIndex = 24
         Me.GroupBox6.TabStop = False
         Me.GroupBox6.Text = "PiKoder Parameters"
+        '
+        'GroupBox17
+        '
+        Me.GroupBox17.BackColor = System.Drawing.SystemColors.Control
+        Me.GroupBox17.Controls.Add(Me.PPM_Mode)
+        Me.GroupBox17.Font = New System.Drawing.Font("Arial", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.GroupBox17.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.GroupBox17.Location = New System.Drawing.Point(9, 234)
+        Me.GroupBox17.Name = "GroupBox17"
+        Me.GroupBox17.Padding = New System.Windows.Forms.Padding(0)
+        Me.GroupBox17.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.GroupBox17.Size = New System.Drawing.Size(178, 59)
+        Me.GroupBox17.TabIndex = 30
+        Me.GroupBox17.TabStop = False
+        Me.GroupBox17.Text = "PPM-Mode"
+        '
+        'PPM_Mode
+        '
+        Me.PPM_Mode.Font = New System.Drawing.Font("Arial", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.PPM_Mode.FormattingEnabled = True
+        Me.PPM_Mode.ItemHeight = 16
+        Me.PPM_Mode.Location = New System.Drawing.Point(10, 25)
+        Me.PPM_Mode.Name = "PPM_Mode"
+        Me.PPM_Mode.Size = New System.Drawing.Size(154, 20)
+        Me.PPM_Mode.TabIndex = 1
+        '
+        'GroupBox13
+        '
+        Me.GroupBox13.BackColor = System.Drawing.SystemColors.Control
+        Me.GroupBox13.Controls.Add(Me.GroupBox15)
+        Me.GroupBox13.Controls.Add(Me.GroupBox14)
+        Me.GroupBox13.Controls.Add(Me.PPM_Channels)
+        Me.GroupBox13.Font = New System.Drawing.Font("Arial", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.GroupBox13.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.GroupBox13.Location = New System.Drawing.Point(9, 162)
+        Me.GroupBox13.Name = "GroupBox13"
+        Me.GroupBox13.Padding = New System.Windows.Forms.Padding(0)
+        Me.GroupBox13.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.GroupBox13.Size = New System.Drawing.Size(145, 63)
+        Me.GroupBox13.TabIndex = 28
+        Me.GroupBox13.TabStop = False
+        Me.GroupBox13.Text = "PPM-Channels"
+        '
+        'GroupBox15
+        '
+        Me.GroupBox15.BackColor = System.Drawing.SystemColors.Control
+        Me.GroupBox15.Controls.Add(Me.GroupBox16)
+        Me.GroupBox15.Controls.Add(Me.NumericUpDown5)
+        Me.GroupBox15.Font = New System.Drawing.Font("Arial", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.GroupBox15.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.GroupBox15.Location = New System.Drawing.Point(2, 71)
+        Me.GroupBox15.Name = "GroupBox15"
+        Me.GroupBox15.Padding = New System.Windows.Forms.Padding(0)
+        Me.GroupBox15.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.GroupBox15.Size = New System.Drawing.Size(145, 63)
+        Me.GroupBox15.TabIndex = 29
+        Me.GroupBox15.TabStop = False
+        Me.GroupBox15.Text = "PPM-Channels"
+        '
+        'GroupBox16
+        '
+        Me.GroupBox16.BackColor = System.Drawing.SystemColors.Control
+        Me.GroupBox16.Controls.Add(Me.NumericUpDown4)
+        Me.GroupBox16.Font = New System.Drawing.Font("Arial", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.GroupBox16.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.GroupBox16.Location = New System.Drawing.Point(1, 71)
+        Me.GroupBox16.Name = "GroupBox16"
+        Me.GroupBox16.Padding = New System.Windows.Forms.Padding(0)
+        Me.GroupBox16.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.GroupBox16.Size = New System.Drawing.Size(145, 63)
+        Me.GroupBox16.TabIndex = 27
+        Me.GroupBox16.TabStop = False
+        Me.GroupBox16.Text = "Zero Offset"
+        '
+        'NumericUpDown4
+        '
+        Me.NumericUpDown4.ForeColor = System.Drawing.Color.White
+        Me.NumericUpDown4.Location = New System.Drawing.Point(28, 25)
+        Me.NumericUpDown4.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
+        Me.NumericUpDown4.Name = "NumericUpDown4"
+        Me.NumericUpDown4.Size = New System.Drawing.Size(73, 26)
+        Me.NumericUpDown4.TabIndex = 26
+        Me.NumericUpDown4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'NumericUpDown5
+        '
+        Me.NumericUpDown5.ForeColor = System.Drawing.Color.White
+        Me.NumericUpDown5.Location = New System.Drawing.Point(28, 25)
+        Me.NumericUpDown5.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
+        Me.NumericUpDown5.Name = "NumericUpDown5"
+        Me.NumericUpDown5.Size = New System.Drawing.Size(73, 26)
+        Me.NumericUpDown5.TabIndex = 26
+        Me.NumericUpDown5.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'GroupBox14
+        '
+        Me.GroupBox14.BackColor = System.Drawing.SystemColors.Control
+        Me.GroupBox14.Controls.Add(Me.NumericUpDown2)
+        Me.GroupBox14.Font = New System.Drawing.Font("Arial", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.GroupBox14.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.GroupBox14.Location = New System.Drawing.Point(1, 71)
+        Me.GroupBox14.Name = "GroupBox14"
+        Me.GroupBox14.Padding = New System.Windows.Forms.Padding(0)
+        Me.GroupBox14.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.GroupBox14.Size = New System.Drawing.Size(145, 63)
+        Me.GroupBox14.TabIndex = 27
+        Me.GroupBox14.TabStop = False
+        Me.GroupBox14.Text = "Zero Offset"
+        '
+        'NumericUpDown2
+        '
+        Me.NumericUpDown2.ForeColor = System.Drawing.Color.White
+        Me.NumericUpDown2.Location = New System.Drawing.Point(28, 25)
+        Me.NumericUpDown2.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
+        Me.NumericUpDown2.Name = "NumericUpDown2"
+        Me.NumericUpDown2.Size = New System.Drawing.Size(73, 26)
+        Me.NumericUpDown2.TabIndex = 26
+        Me.NumericUpDown2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'PPM_Channels
+        '
+        Me.PPM_Channels.ForeColor = System.Drawing.Color.White
+        Me.PPM_Channels.Location = New System.Drawing.Point(13, 25)
+        Me.PPM_Channels.Maximum = New Decimal(New Integer() {8, 0, 0, 0})
+        Me.PPM_Channels.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
+        Me.PPM_Channels.Name = "PPM_Channels"
+        Me.PPM_Channels.Size = New System.Drawing.Size(73, 26)
+        Me.PPM_Channels.TabIndex = 26
+        Me.PPM_Channels.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.PPM_Channels.Value = New Decimal(New Integer() {8, 0, 0, 0})
         '
         'tHeartBeat
         '
@@ -1126,11 +1307,11 @@ Partial Class PCC_PiKoder_Control_Center
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(890, 529)
-        Me.Controls.Add(Me.GroupBox6)
         Me.Controls.Add(Me.GroupBox5)
         Me.Controls.Add(Me.GroupBox7)
         Me.Controls.Add(Me.frmOuter)
         Me.Controls.Add(Me.GroupBox3)
+        Me.Controls.Add(Me.GroupBox6)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "PCC_PiKoder_Control_Center"
         Me.Text = "PCC_PiKoder_Control_Center"
@@ -1140,6 +1321,8 @@ Partial Class PCC_PiKoder_Control_Center
         Me.GroupBox3.ResumeLayout(False)
         Me.GroupBox3.PerformLayout()
         Me.GroupBox4.ResumeLayout(False)
+        Me.GroupBox12.ResumeLayout(False)
+        CType(Me.NumericUpDown1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ZeroOffset, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox8.ResumeLayout(False)
         CType(Me.miniSSCOffset, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1181,6 +1364,15 @@ Partial Class PCC_PiKoder_Control_Center
         Me.GroupBox5.ResumeLayout(False)
         Me.GroupBox5.PerformLayout()
         Me.GroupBox6.ResumeLayout(False)
+        Me.GroupBox17.ResumeLayout(False)
+        Me.GroupBox13.ResumeLayout(False)
+        Me.GroupBox15.ResumeLayout(False)
+        Me.GroupBox16.ResumeLayout(False)
+        CType(Me.NumericUpDown4, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.NumericUpDown5, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GroupBox14.ResumeLayout(False)
+        CType(Me.NumericUpDown2, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PPM_Channels, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1257,4 +1449,16 @@ Partial Class PCC_PiKoder_Control_Center
     Friend WithEvents Label4 As System.Windows.Forms.Label
     Public WithEvents GroupBox6 As System.Windows.Forms.GroupBox
     Public WithEvents tHeartBeat As System.Windows.Forms.Timer
+    Public WithEvents GroupBox12 As System.Windows.Forms.GroupBox
+    Friend WithEvents NumericUpDown1 As System.Windows.Forms.NumericUpDown
+    Public WithEvents GroupBox17 As System.Windows.Forms.GroupBox
+    Friend WithEvents PPM_Mode As System.Windows.Forms.ListBox
+    Public WithEvents GroupBox13 As System.Windows.Forms.GroupBox
+    Public WithEvents GroupBox15 As System.Windows.Forms.GroupBox
+    Public WithEvents GroupBox16 As System.Windows.Forms.GroupBox
+    Friend WithEvents NumericUpDown4 As System.Windows.Forms.NumericUpDown
+    Friend WithEvents NumericUpDown5 As System.Windows.Forms.NumericUpDown
+    Public WithEvents GroupBox14 As System.Windows.Forms.GroupBox
+    Friend WithEvents NumericUpDown2 As System.Windows.Forms.NumericUpDown
+    Friend WithEvents PPM_Channels As System.Windows.Forms.NumericUpDown
 End Class
