@@ -28,11 +28,12 @@ Partial Class PCC_PiKoder_Control_Center
         Me.AvailableCOMPorts = New System.Windows.Forms.ListBox()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.Led2 = New LED()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
         Me.GroupBox12 = New System.Windows.Forms.GroupBox()
         Me.NumericUpDown1 = New System.Windows.Forms.NumericUpDown()
-        Me.ZeroOffset = New System.Windows.Forms.NumericUpDown()
+        Me.TimeOut = New System.Windows.Forms.NumericUpDown()
         Me.GroupBox8 = New System.Windows.Forms.GroupBox()
         Me.miniSSCOffset = New System.Windows.Forms.NumericUpDown()
         Me.GroupBox7 = New System.Windows.Forms.GroupBox()
@@ -107,14 +108,13 @@ Partial Class PCC_PiKoder_Control_Center
         Me.NumericUpDown2 = New System.Windows.Forms.NumericUpDown()
         Me.PPM_Channels = New System.Windows.Forms.NumericUpDown()
         Me.tHeartBeat = New System.Windows.Forms.Timer(Me.components)
-        Me.Led2 = New LED()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
         Me.GroupBox4.SuspendLayout()
         Me.GroupBox12.SuspendLayout()
         CType(Me.NumericUpDown1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.ZeroOffset, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.TimeOut, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox8.SuspendLayout()
         CType(Me.miniSSCOffset, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox7.SuspendLayout()
@@ -219,6 +219,19 @@ Partial Class PCC_PiKoder_Control_Center
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Status"
         '
+        'Led2
+        '
+        Me.Led2.BackColor = System.Drawing.SystemColors.ButtonFace
+        Me.Led2.Blink = False
+        Me.Led2.Color = LED.LEDColorSelection.LED_Red
+        Me.Led2.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Led2.Interval = CType(0, Short)
+        Me.Led2.Location = New System.Drawing.Point(311, 18)
+        Me.Led2.Name = "Led2"
+        Me.Led2.Size = New System.Drawing.Size(33, 35)
+        Me.Led2.State = False
+        Me.Led2.TabIndex = 23
+        '
         'GroupBox3
         '
         Me.GroupBox3.BackColor = System.Drawing.SystemColors.Control
@@ -239,7 +252,7 @@ Partial Class PCC_PiKoder_Control_Center
         '
         Me.GroupBox4.BackColor = System.Drawing.SystemColors.Control
         Me.GroupBox4.Controls.Add(Me.GroupBox12)
-        Me.GroupBox4.Controls.Add(Me.ZeroOffset)
+        Me.GroupBox4.Controls.Add(Me.TimeOut)
         Me.GroupBox4.Font = New System.Drawing.Font("Arial", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GroupBox4.ForeColor = System.Drawing.SystemColors.ControlText
         Me.GroupBox4.Location = New System.Drawing.Point(11, 91)
@@ -249,7 +262,7 @@ Partial Class PCC_PiKoder_Control_Center
         Me.GroupBox4.Size = New System.Drawing.Size(145, 63)
         Me.GroupBox4.TabIndex = 26
         Me.GroupBox4.TabStop = False
-        Me.GroupBox4.Text = "Zero Offset"
+        Me.GroupBox4.Text = "TimeOut [0.1s]"
         '
         'GroupBox12
         '
@@ -276,15 +289,15 @@ Partial Class PCC_PiKoder_Control_Center
         Me.NumericUpDown1.TabIndex = 26
         Me.NumericUpDown1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
-        'ZeroOffset
+        'TimeOut
         '
-        Me.ZeroOffset.ForeColor = System.Drawing.Color.White
-        Me.ZeroOffset.Location = New System.Drawing.Point(13, 25)
-        Me.ZeroOffset.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
-        Me.ZeroOffset.Name = "ZeroOffset"
-        Me.ZeroOffset.Size = New System.Drawing.Size(73, 26)
-        Me.ZeroOffset.TabIndex = 26
-        Me.ZeroOffset.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.TimeOut.ForeColor = System.Drawing.Color.White
+        Me.TimeOut.Location = New System.Drawing.Point(13, 25)
+        Me.TimeOut.Maximum = New Decimal(New Integer() {999, 0, 0, 0})
+        Me.TimeOut.Name = "TimeOut"
+        Me.TimeOut.Size = New System.Drawing.Size(73, 26)
+        Me.TimeOut.TabIndex = 26
+        Me.TimeOut.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'GroupBox8
         '
@@ -1289,19 +1302,6 @@ Partial Class PCC_PiKoder_Control_Center
         '
         Me.tHeartBeat.Interval = 5000
         '
-        'Led2
-        '
-        Me.Led2.BackColor = System.Drawing.SystemColors.ButtonFace
-        Me.Led2.Blink = False
-        Me.Led2.Color = LED.LEDColorSelection.LED_Red
-        Me.Led2.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Led2.Interval = CType(0, Short)
-        Me.Led2.Location = New System.Drawing.Point(311, 18)
-        Me.Led2.Name = "Led2"
-        Me.Led2.Size = New System.Drawing.Size(33, 35)
-        Me.Led2.State = False
-        Me.Led2.TabIndex = 23
-        '
         'PCC_PiKoder_Control_Center
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1323,7 +1323,7 @@ Partial Class PCC_PiKoder_Control_Center
         Me.GroupBox4.ResumeLayout(False)
         Me.GroupBox12.ResumeLayout(False)
         CType(Me.NumericUpDown1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.ZeroOffset, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.TimeOut, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox8.ResumeLayout(False)
         CType(Me.miniSSCOffset, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox7.ResumeLayout(False)
@@ -1384,7 +1384,7 @@ Partial Class PCC_PiKoder_Control_Center
     Friend WithEvents Led2 As LED
     Public WithEvents GroupBox3 As System.Windows.Forms.GroupBox
     Public WithEvents GroupBox4 As System.Windows.Forms.GroupBox
-    Friend WithEvents ZeroOffset As System.Windows.Forms.NumericUpDown
+    Friend WithEvents TimeOut As System.Windows.Forms.NumericUpDown
     Public WithEvents GroupBox8 As System.Windows.Forms.GroupBox
     Friend WithEvents miniSSCOffset As System.Windows.Forms.NumericUpDown
     Public WithEvents GroupBox7 As System.Windows.Forms.GroupBox

@@ -74,18 +74,20 @@ Public Class SerialLink
             System.Threading.Thread.Sleep(20) 'wait for next frame and allow for task switch
         Loop
     End Sub
-    Public Sub GetZeroOffset(ByRef SerialInputString As String, ByVal intCharsToRead As Integer)
+    Public Sub GetTimeOut(ByRef SerialInputString As String, ByVal intCharsToRead As Integer)
         Dim i As Integer
         Dim j As Integer = 0
         Dim myByte As Char
         SerialInputString = ""
+        '
+        Call SendDataToSerial("T?")
         Do
             If Connected And (mySerialPort.BytesToRead >= intCharsToRead) Then ' make sure to receive complete message
                 For i = 1 To mySerialPort.BytesToRead
                     myByte = Chr(mySerialPort.ReadByte)
                     If IsNumeric(myByte) Then SerialInputString = SerialInputString + myByte
                 Next
-                If ValidateZeroOffset(SerialInputString) Then Return
+                Return
             End If
             'check for TimeOut
             j = j + 1
@@ -201,11 +203,12 @@ Public Class SerialLink
             End Try
         Loop While (iError <> 0) And Connected
     End Sub
-    Public Sub SendZeroOffsetToPiKoder(ByVal strPulseLength As String)
+    Public Sub SendTimeOutToPiKoder(ByVal strPulseLength As String)
         Dim strSendString As String
-        strSendString = "Z=" + strPulseLength
+        strSendString = "T=" + strPulseLength
         Try
             mySerialPort.Write(strSendString, 0, Len(strSendString))
+            GetErrorCode()
         Catch ex As Exception
             MessageBox.Show(ex.Message)
             Connected = False
@@ -302,16 +305,15 @@ Public Class SerialLink
         End Try
     End Sub
     ''' <summary>
-    ''' Try to retrieve channel 1 pulse length to determine connection status
+    ''' Sent a single char and retreive error message
     ''' </summary>
     ''' <returns></returns>
     ''' <remarks></remarks>
     Public Function PiKoderConnected() As Boolean
         Dim strChannelBuffer As String = ""
         If Connected Then
-            Call SendDataToSerial("1?")
-            Call GetPulseLength(strChannelBuffer)
-            If strChannelBuffer <> "TimeOut" Then Return True
+            Call SendDataToSerial("*")
+            If (GetErrorCode() = 1) Then Return True
         End If
         Return False
     End Function
