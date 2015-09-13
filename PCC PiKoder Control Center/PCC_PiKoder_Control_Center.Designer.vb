@@ -108,6 +108,7 @@ Partial Class PCC_PiKoder_Control_Center
         Me.NumericUpDown2 = New System.Windows.Forms.NumericUpDown()
         Me.PPM_Channels = New System.Windows.Forms.NumericUpDown()
         Me.tHeartBeat = New System.Windows.Forms.Timer(Me.components)
+        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
@@ -1302,6 +1303,11 @@ Partial Class PCC_PiKoder_Control_Center
         '
         Me.tHeartBeat.Interval = 5000
         '
+        'Timer1
+        '
+        Me.Timer1.Enabled = True
+        Me.Timer1.Interval = 1
+        '
         'PCC_PiKoder_Control_Center
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1461,4 +1467,5 @@ Partial Class PCC_PiKoder_Control_Center
     Public WithEvents GroupBox14 As System.Windows.Forms.GroupBox
     Friend WithEvents NumericUpDown2 As System.Windows.Forms.NumericUpDown
     Friend WithEvents PPM_Channels As System.Windows.Forms.NumericUpDown
+    Friend WithEvents Timer1 As System.Windows.Forms.Timer
 End Class

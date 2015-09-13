@@ -55,8 +55,7 @@ Friend Class LED
     ' LED Display Indicator Control
     ' Written by: Michael Karas, Carousel Design Solutions (www.CarouselDesign.com)
     '
-    ' Migration to VB 2008 by:
-    ' Gregor Schlechtriem
+    ' Migration to VB 2008-2013 by Gregor Schlechtriem
     '
     ' You may incorporate all or parts of this program into your own project.
     ' Keep in mind that you got this code free and as such Carousel Design Solutions

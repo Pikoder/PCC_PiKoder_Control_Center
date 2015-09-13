@@ -1,19 +1,24 @@
 ﻿Option Strict Off
 Option Explicit On
+Imports System
+Imports System.IO.Ports
 Public Class PCC_PiKoder_Control_Center
 
-    ' This is a program for evaluating the PiKoder platform
+    ' This is a program for evaluating the PiKoder platform - please refer to http://pikoder.com for more details.
     ' 
-    ' Gregor Schlechtriem
-    ' Copyright (C) 2013-2015
-    ' www.pikoder.com
+    ' Copyright 2015 Gregor Schlechtriem
     '
-    ' You may incorporate all or parts of this program into your own project.
-    ' Keep in mind that you got this code free and as such the author has no 
-    ' responsibility to you, your customers, or anyone else regarding the use
-    ' of this program code. No support or warrenty of any kind can be provided. All
-    ' liability falls upon the user of this code and thus you must judge the suitability
-    ' of this code to your application and usage.
+    ' Licensed under the Apache License, Version 2.0 (the "License");
+    ' you may not use this file except in compliance with the License.
+    ' You may obtain a copy of the License at
+    '
+    ' http://www.apache.org/licenses/LICENSE-2.0
+    '
+    ' Unless required by applicable law or agreed to in writing, software
+    ' distributed under the License is distributed on an "AS IS" BASIS,
+    ' WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    ' See the License for the specific language governing permissions and
+    ' limitations under the License.
 
     Inherits System.Windows.Forms.Form
     Private mySerialLink As New SerialLink
@@ -79,7 +84,119 @@ Public Class PCC_PiKoder_Control_Center
 
 
     End Sub
+    '****************************************************************************
+    '   Function:
+    '       private void UpdateCOMPortList()
+    '
+    '   Summary:
+    '       This function updates the COM ports listbox.
+    '
+    '   Description:
+    '       This function updates the COM ports listbox.  This function is launched 
+    '       periodically based on its Interval attribute (set in the form editor under
+    '       the properties window).
+    '
+    '   Precondition:
+    '       None
+    '
+    '   Parameters:
+    '       None
+    '
+    '   Return Values
+    '       None
+    '
+    '   Remarks:
+    '       None
+    '***************************************************************************
+    Private Sub UpdateCOMPortList()
+        Dim s As String
+        Dim i As Integer
+        Dim foundDifference As Boolean
+        Dim iBufferSelectedIndex As Integer
 
+        i = 0
+        foundDifference = False
+        iBufferSelectedIndex = AvailableCOMPorts.SelectedIndex 'buffer selection
+
+        'If the number of COM ports is different than the last time we
+        '  checked, then we know that the COM ports have changed and we
+        '  don't need to verify each entry.
+
+        If AvailableCOMPorts.Items.Count = SerialPort.GetPortNames().Length Then
+            'Search the entire SerialPort object.  Look at COM port name
+            '  returned and see if it already exists in the list.
+            For Each s In SerialPort.GetPortNames()
+                'If any of the names have changed then we need to update 
+                '  the list
+                If AvailableCOMPorts.Items(i).Equals(s) = False Then
+                    foundDifference = True
+                End If
+                i = i + 1
+            Next s
+        Else
+            foundDifference = True
+        End If
+
+        'If nothing has changed, exit the function.
+        If foundDifference = False Then
+            Exit Sub
+        End If
+
+        'If something has changed, then clear the list
+        AvailableCOMPorts.Items.Clear()
+
+        'Add all of the current COM ports to the list
+        For Each s In SerialPort.GetPortNames()
+            AvailableCOMPorts.Items.Add(s)
+        Next s
+        'Set the listbox to point to the first entry in the list
+        AvailableCOMPorts.SelectedIndex = iBufferSelectedIndex
+    End Sub
+
+
+    '****************************************************************************
+    '   Function:
+    '       private void timer1_Tick(object sender, EventArgs e)
+    '
+    '   Summary:
+    '       This function updates the COM ports listbox.
+    '
+    '   Description:
+    '       This function updates the COM ports listbox.  This function is launched 
+    '       periodically based on its Interval attribute (set in the form editor under
+    '       the properties window).
+    '
+    '   Precondition:
+    '       None
+    '
+    '   Parameters:
+    '       object sender     - Sender of the event (this form)
+    '       EventArgs e       - The event arguments
+    '
+    '   Return Values
+    '       None
+    '
+    '   Remarks:
+    '       None
+    '***************************************************************************/
+
+    Private Sub Timer1_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Timer1.Tick
+        If mySerialLink.SerialLinkConnected() Then
+            'check if we still have a connection on USB system level
+            If Not (mySerialLink.PiKoderConnected()) Then
+                LostConnection()
+            End If
+        Else
+            'Update the COM ports list so that we can detect
+            '  new COM ports that have been added.
+            UpdateCOMPortList()
+        End If
+    End Sub
+    Private Sub IndicateConnectionOk()
+        TextBox1.Text = "Parameters loaded ok."
+        Led2.Color = LED.LEDColorSelection.LED_Green
+        Led2.Blink = False ' indicate that the connection established
+    End Sub
     Private Sub AvailableCOMPorts_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles AvailableCOMPorts.SelectedIndexChanged
 
         Dim strChannelBuffer As String = ""
@@ -87,35 +204,34 @@ Public Class PCC_PiKoder_Control_Center
 
         If (AvailableCOMPorts.SelectedItem = Nothing) Then Exit Sub
 
-        Led2.Blink = True
+        Led2.Blink = True 'indicate connection testing
 
         boolErrorFlag = Not (mySerialLink.EstablishSerialLink(AvailableCOMPorts.SelectedItem))
 
         RetrievePiKoderType(strPiKoderType)
 
         If Not boolErrorFlag Then
-            Led2.Blink = False ' indicate that the connection established
-            Led2.Color = LED.LEDColorSelection.LED_Green
             If (InStr(strPiKoderType, "UART2PPM") > 0) Then
                 TextBox1.Text = "Found UART2PPM @ " + AvailableCOMPorts.SelectedItem.ToString
                 TypeId.Text = "UART2PPM"
                 RetrieveUART2PPMParameters()
                 ' toggleHeartBeat(3000)
-                TextBox1.Text = "Parameters loaded ok."
+                IndicateConnectionOk()
             ElseIf (InStr(strPiKoderType, "USB2PPM") > 0) Then
                 TextBox1.Text = "Found USB2PPM @ " + AvailableCOMPorts.SelectedItem.ToString
                 TypeId.Text = "USB2PPM"
                 RetrieveUSB2PPMParameters()
                 ' toggleHeartBeat()
-                TextBox1.Text = "Parameters loaded ok."
+                IndicateConnectionOk()
             Else ' error message
                 Led2.Blink = False
-                TextBox1.Text = "Connect Error " + AvailableCOMPorts.SelectedItem.ToString
+                TextBox1.Text = "Device on " + AvailableCOMPorts.SelectedItem.ToString + " not supported"
             End If
         End If
 
 ErrorExit:
         AvailableCOMPorts.SelectedItem = Nothing
+        Timer1.Enabled = True
     End Sub
 
     Private Sub RetrievePiKoderType(ByRef SerialInputString As String)
@@ -204,11 +320,18 @@ ErrorExit:
     ''' <remarks></remarks>
     Private Sub tHeartBeat_Tick(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles tHeartBeat.Tick
         If mySerialLink.PiKoderConnected() Then Exit Sub
+        LostConnection()
+    End Sub
+    ''' <summary>
+    ''' Set UI to indicate that we have lost connection - either on USB system level or due to a time out condition on application level
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private Sub LostConnection()
         ' indicate that connection is lost
         Led2.Color = LED.LEDColorSelection.LED_Red
         TextBox1.Text = "Lost connection to PiKoder."
         stopHeartBeat()
-
+        Timer1.Enabled = True
         TypeId.Text = ""
 
         ' delete text fields

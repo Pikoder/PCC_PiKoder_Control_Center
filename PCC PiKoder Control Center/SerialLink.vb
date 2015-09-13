@@ -14,17 +14,19 @@ Public Class SerialLink
     ' such as GetPulseLength() and SentPulseLength(). Please refer to the definitons for more
     ' details.
     '
-    ' The following property settings are supported (read/write at both design time and run time)
-    ' The properties are:
-    ' 
-    ' Written by: Gregor Schlechtriem, www.pikoder.com
+    ' Copyright 2015 Gregor Schlechtriem
     '
-    ' You may incorporate all or parts of this program into your own project.
-    ' Keep in mind that you got this code free and as such Carousel Design Solutions
-    ' has no responsibility to you, your customers, or anyone else regarding the use
-    ' of this program code. No support or warrenty of any kind can be provided. All
-    ' liability falls upon the user of this code and thus you must judge the suitability
-    ' of this code to your application and usage.
+    ' Licensed under the Apache License, Version 2.0 (the "License");
+    ' you may not use this file except in compliance with the License.
+    ' You may obtain a copy of the License at
+    '
+    ' http://www.apache.org/licenses/LICENSE-2.0
+    '
+    ' Unless required by applicable law or agreed to in writing, software
+    ' distributed under the License is distributed on an "AS IS" BASIS,
+    ' WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    ' See the License for the specific language governing permissions and
+    ' limitations under the License.
     '
     Private mySerialPort As New SerialPort
     Private Connected As Boolean = False ' connection status
