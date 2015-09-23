@@ -227,6 +227,14 @@ Public Class SerialLink
         End Try
     End Sub
 
+    Public Sub SendDataToSerialwithAck(ByVal strWriteBuffer As String)
+        Try
+            mySerialPort.Write(strWriteBuffer, 0, Len(strWriteBuffer))
+            GetErrorCode()
+        Catch ex As SystemException
+            Connected = False
+        End Try
+    End Sub
     Public Sub SendDataToSerial(ByVal strWriteBuffer As String)
         Try
             mySerialPort.Write(strWriteBuffer, 0, Len(strWriteBuffer))
@@ -234,6 +242,7 @@ Public Class SerialLink
             Connected = False
         End Try
     End Sub
+
     Public Sub SendBinaryDataToSerial(ByVal myByteArray() As Byte, ByVal numBytes As Integer)
         Try
             mySerialPort.Write(myByteArray, 0, numBytes)
@@ -248,14 +257,17 @@ Public Class SerialLink
         Dim myChar As Char
         StartTime = Now
         Do
-            If mySerialPort.BytesToRead >= 5 Then ' make sure to receive complete message
-                For i = 1 To mySerialPort.BytesToRead
-                    myChar = Chr(mySerialPort.ReadByte)
-                    If myChar = "!" Then iRetCode = 0 
-                    If myChar = "?" Then iRetCode = 1
-                Next
-                Return iRetCode
-            End If
+            Try
+                If mySerialPort.BytesToRead >= 5 Then ' make sure to receive complete message
+                    For i = 1 To mySerialPort.BytesToRead
+                        myChar = Chr(mySerialPort.ReadByte)
+                        If myChar = "!" Then iRetCode = 0
+                        If myChar = "?" Then iRetCode = 1
+                    Next
+                    Return iRetCode
+                End If
+            Catch ex As Exception
+            End Try
             'check for TimeOut
             j = j + 1
             If j > 10 Then

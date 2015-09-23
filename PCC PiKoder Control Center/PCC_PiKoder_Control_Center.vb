@@ -41,33 +41,7 @@ Public Class PCC_PiKoder_Control_Center
 
         InitializeComponent()
 
-        Dim myStringBuffer As String ' used for temporary storage of COM port designator
-        ' define and initialize array for sorting COM ports 
-        Dim myCOMPorts(99) As String ' assume we have a max of 100 COM Ports
-        Dim i As Integer = 0 'local buffer for serial array
-
         boolErrorFlag = False
-
-        For Each s As String In myCOMPorts
-            s = ""
-        Next
-
-        ' Connection setup - check for ports and display result
-        For Each sp As String In My.Computer.Ports.SerialPortNames
-            myStringBuffer = ""
-            i = 0
-            For intI = 0 To Len(sp) - 1
-                If ((sp(intI) >= "A" And (sp(intI) <= "Z")) Or IsNumeric(sp(intI))) Then
-                    myStringBuffer = myStringBuffer + sp(intI)
-                    If IsNumeric(sp(intI)) Then i = (i * 10) + Val(sp(intI))
-                End If
-            Next
-            myCOMPorts(i) = myStringBuffer
-        Next
-
-        For Each s As String In myCOMPorts
-            If s <> "" Then AvailableCOMPorts.Items.Add(s)
-        Next
 
         ' Set active control 
         Me.ActiveControl = Me.AvailableCOMPorts
@@ -76,12 +50,6 @@ Public Class PCC_PiKoder_Control_Center
         Led2.Color = LED.LEDColorSelection.LED_Red
         Led2.Interval = 500
         Led2.State = True
-
-        If AvailableCOMPorts.Items.Count = 0 Then
-            MsgBox("No COM Port found. Program will stop.", MsgBoxStyle.OkOnly, "Error Message")
-            End
-        End If
-
 
     End Sub
     '****************************************************************************
@@ -111,8 +79,13 @@ Public Class PCC_PiKoder_Control_Center
     Private Sub UpdateCOMPortList()
         Dim s As String
         Dim i As Integer
+        Dim k As Integer
         Dim foundDifference As Boolean
+        Dim foundDifferenceHere As Boolean
         Dim iBufferSelectedIndex As Integer
+        Dim myStringBuffer As String ' used for temporary storage of COM port designator
+        ' define and initialize array for sorting COM ports 
+        Dim myCOMPorts(99) As String ' assume we have a max of 100 COM Ports
 
         i = 0
         foundDifference = False
@@ -128,13 +101,18 @@ Public Class PCC_PiKoder_Control_Center
             For Each s In SerialPort.GetPortNames()
                 'If any of the names have changed then we need to update 
                 '  the list
-                If AvailableCOMPorts.Items(i).Equals(s) = False Then
-                    foundDifference = True
-                End If
+                k = 0
+                foundDifferenceHere = True
+                For k = 0 To SerialPort.GetPortNames().Length - 1
+                    If AvailableCOMPorts.Items(k).Equals(s) = True Then
+                        foundDifferenceHere = False
+                    End If
+                Next
                 i = i + 1
+                foundDifference = foundDifference Or foundDifferenceHere
             Next s
         Else
-            foundDifference = True
+                foundDifference = True
         End If
 
         'If nothing has changed, exit the function.
@@ -145,10 +123,27 @@ Public Class PCC_PiKoder_Control_Center
         'If something has changed, then clear the list
         AvailableCOMPorts.Items.Clear()
 
-        'Add all of the current COM ports to the list
-        For Each s In SerialPort.GetPortNames()
-            AvailableCOMPorts.Items.Add(s)
-        Next s
+        For Each sp As String In myCOMPorts
+            sp = ""
+        Next
+
+        ' Connection setup - check for ports and display result
+        For Each sp As String In My.Computer.Ports.SerialPortNames
+            myStringBuffer = ""
+            i = 0
+            For intI = 0 To Len(sp) - 1
+                If ((sp(intI) >= "A" And (sp(intI) <= "Z")) Or IsNumeric(sp(intI))) Then
+                    myStringBuffer = myStringBuffer + sp(intI)
+                    If IsNumeric(sp(intI)) Then i = (i * 10) + Val(sp(intI))
+                End If
+            Next
+            myCOMPorts(i) = myStringBuffer
+        Next
+
+        For i = 1 To 99
+            If myCOMPorts(i) <> "" Then AvailableCOMPorts.Items.Add(myCOMPorts(i))
+        Next
+
         'Set the listbox to point to the first entry in the list
         AvailableCOMPorts.SelectedIndex = iBufferSelectedIndex
     End Sub
@@ -184,7 +179,7 @@ Public Class PCC_PiKoder_Control_Center
         If mySerialLink.SerialLinkConnected() Then
             'check if we still have a connection on USB system level
             If Not (mySerialLink.PiKoderConnected()) Then
-                LostConnection()
+                    LostConnection()
             End If
         Else
             'Update the COM ports list so that we can detect
@@ -810,7 +805,7 @@ ErrorExit:
                 Call mySerialLink.GetFirmwareVersion(strChannelBuffer)
                 If strChannelBuffer <> "TimeOut" Then
                     strSSC_Firmware.Text = strChannelBuffer
-                    If Val(strChannelBuffer) > 1.03 Then
+                    If Val(strChannelBuffer) > 2.0 Then
                         MsgBox("The PiKoder firmware version found is not supported! Please goto www.pikoder.com and upgrade PCC PiKoder Control Center to the latest version.", MsgBoxStyle.OkOnly, "Error Message")
                         End
                     ElseIf Val(strChannelBuffer) < 1.02 Then
@@ -985,7 +980,7 @@ ErrorExit:
                     strChannelBuffer = strChannelBuffer + "0"
                 End If
                 strChannelBuffer = strChannelBuffer + Convert.ToString(strCH_1_Neutral.Value)
-                Call mySerialLink.SendDataToSerial(strChannelBuffer)
+                Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
             End If
             boolSentChangeValueNotRequired(16) = False
         End If
@@ -1000,7 +995,7 @@ ErrorExit:
                     strChannelBuffer = strChannelBuffer + "0"
                 End If
                 strChannelBuffer = strChannelBuffer + Convert.ToString(strCH_2_Neutral.Value)
-                Call mySerialLink.SendDataToSerial(strChannelBuffer)
+                Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
             End If
             boolSentChangeValueNotRequired(17) = False
         End If
@@ -1013,7 +1008,7 @@ ErrorExit:
                     strChannelBuffer = strChannelBuffer + "0"
                 End If
                 strChannelBuffer = strChannelBuffer + Convert.ToString(strCH_3_Neutral.Value)
-                Call mySerialLink.SendDataToSerial(strChannelBuffer)
+                Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
             End If
             boolSentChangeValueNotRequired(18) = False
         End If
@@ -1026,7 +1021,7 @@ ErrorExit:
                     strChannelBuffer = strChannelBuffer + "0"
                 End If
                 strChannelBuffer = strChannelBuffer + Convert.ToString(strCH_4_Neutral.Value)
-                Call mySerialLink.SendDataToSerial(strChannelBuffer)
+                Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
             End If
             boolSentChangeValueNotRequired(19) = False
         End If
@@ -1039,7 +1034,7 @@ ErrorExit:
                     strChannelBuffer = strChannelBuffer + "0"
                 End If
                 strChannelBuffer = strChannelBuffer + Convert.ToString(strCH_5_Neutral.Value)
-                Call mySerialLink.SendDataToSerial(strChannelBuffer)
+                Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
             End If
             boolSentChangeValueNotRequired(20) = False
         End If
@@ -1052,7 +1047,7 @@ ErrorExit:
                     strChannelBuffer = strChannelBuffer + "0"
                 End If
                 strChannelBuffer = strChannelBuffer + Convert.ToString(strCH_6_Neutral.Value)
-                Call mySerialLink.SendDataToSerial(strChannelBuffer)
+                Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
             End If
             boolSentChangeValueNotRequired(21) = False
         End If
@@ -1065,7 +1060,7 @@ ErrorExit:
                     strChannelBuffer = strChannelBuffer + "0"
                 End If
                 strChannelBuffer = strChannelBuffer + Convert.ToString(strCH_7_Neutral.Value)
-                Call mySerialLink.SendDataToSerial(strChannelBuffer)
+                Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
             End If
             boolSentChangeValueNotRequired(22) = False
         End If
@@ -1078,7 +1073,7 @@ ErrorExit:
                     strChannelBuffer = strChannelBuffer + "0"
                 End If
                 strChannelBuffer = strChannelBuffer + Convert.ToString(strCH_8_Neutral.Value)
-                Call mySerialLink.SendDataToSerial(strChannelBuffer)
+                Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
             End If
             boolSentChangeValueNotRequired(23) = False
         End If
@@ -1091,7 +1086,7 @@ ErrorExit:
                     strChannelBuffer = strChannelBuffer + "0"
                 End If
                 strChannelBuffer = strChannelBuffer + Convert.ToString(strCH_1_Min.Value)
-                Call mySerialLink.SendDataToSerial(strChannelBuffer)
+                Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
                 If ch1_HScrollBar.Value < strCH_1_Min.Value Then
                     ch1_HScrollBar.Value = strCH_1_Min.Value
                     strCH_1_Current.Text = Convert.ToString(ch1_HScrollBar.Value)
@@ -1109,7 +1104,7 @@ ErrorExit:
                     strChannelBuffer = strChannelBuffer + "0"
                 End If
                 strChannelBuffer = strChannelBuffer + Convert.ToString(strCH_2_Min.Value)
-                Call mySerialLink.SendDataToSerial(strChannelBuffer)
+                Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
                 If ch2_HScrollBar.Value < strCH_2_Min.Value Then
                     ch1_HScrollBar.Value = strCH_2_Min.Value
                     strCH_2_Current.Text = Convert.ToString(ch2_HScrollBar.Value)
@@ -1127,7 +1122,7 @@ ErrorExit:
                     strChannelBuffer = strChannelBuffer + "0"
                 End If
                 strChannelBuffer = strChannelBuffer + Convert.ToString(strCH_3_Min.Value)
-                Call mySerialLink.SendDataToSerial(strChannelBuffer)
+                Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
                 If ch3_HScrollBar.Value < strCH_3_Min.Value Then
                     ch3_HScrollBar.Value = strCH_3_Min.Value
                     strCH_3_Current.Text = Convert.ToString(ch3_HScrollBar.Value)
@@ -1145,7 +1140,7 @@ ErrorExit:
                     strChannelBuffer = strChannelBuffer + "0"
                 End If
                 strChannelBuffer = strChannelBuffer + Convert.ToString(strCH_4_Min.Value)
-                Call mySerialLink.SendDataToSerial(strChannelBuffer)
+                Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
                 If ch4_HScrollBar.Value < strCH_4_Min.Value Then
                     ch4_HScrollBar.Value = strCH_4_Min.Value
                     strCH_4_Current.Text = Convert.ToString(ch4_HScrollBar.Value)
@@ -1163,7 +1158,7 @@ ErrorExit:
                     strChannelBuffer = strChannelBuffer + "0"
                 End If
                 strChannelBuffer = strChannelBuffer + Convert.ToString(strCH_5_Min.Value)
-                Call mySerialLink.SendDataToSerial(strChannelBuffer)
+                Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
                 If ch5_HScrollBar.Value < strCH_5_Min.Value Then
                     ch5_HScrollBar.Value = strCH_5_Min.Value
                     strCH_5_Current.Text = Convert.ToString(ch5_HScrollBar.Value)
@@ -1181,7 +1176,7 @@ ErrorExit:
                     strChannelBuffer = strChannelBuffer + "0"
                 End If
                 strChannelBuffer = strChannelBuffer + Convert.ToString(strCH_6_Min.Value)
-                Call mySerialLink.SendDataToSerial(strChannelBuffer)
+                Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
                 If ch6_HScrollBar.Value < strCH_6_Min.Value Then
                     ch6_HScrollBar.Value = strCH_6_Min.Value
                     strCH_6_Current.Text = Convert.ToString(ch6_HScrollBar.Value)
@@ -1199,7 +1194,7 @@ ErrorExit:
                     strChannelBuffer = strChannelBuffer + "0"
                 End If
                 strChannelBuffer = strChannelBuffer + Convert.ToString(strCH_7_Min.Value)
-                Call mySerialLink.SendDataToSerial(strChannelBuffer)
+                Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
                 If ch7_HScrollBar.Value < strCH_7_Min.Value Then
                     ch7_HScrollBar.Value = strCH_7_Min.Value
                     strCH_7_Current.Text = Convert.ToString(ch7_HScrollBar.Value)
@@ -1217,7 +1212,7 @@ ErrorExit:
                     strChannelBuffer = strChannelBuffer + "0"
                 End If
                 strChannelBuffer = strChannelBuffer + Convert.ToString(strCH_8_Min.Value)
-                Call mySerialLink.SendDataToSerial(strChannelBuffer)
+                Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
                 If ch8_HScrollBar.Value < strCH_8_Min.Value Then
                     ch8_HScrollBar.Value = strCH_8_Min.Value
                     strCH_8_Current.Text = Convert.ToString(ch8_HScrollBar.Value)
@@ -1235,7 +1230,7 @@ ErrorExit:
                     strChannelBuffer = strChannelBuffer + "0"
                 End If
                 strChannelBuffer = strChannelBuffer + Convert.ToString(strCH_1_Max.Value)
-                Call mySerialLink.SendDataToSerial(strChannelBuffer)
+                Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
                 If ch1_HScrollBar.Value > strCH_1_Max.Value Then
                     ch1_HScrollBar.Value = strCH_1_Max.Value
                     strCH_1_Current.Text = Convert.ToString(ch1_HScrollBar.Value)
@@ -1253,7 +1248,7 @@ ErrorExit:
                     strChannelBuffer = strChannelBuffer + "0"
                 End If
                 strChannelBuffer = strChannelBuffer + Convert.ToString(strCH_2_Max.Value)
-                Call mySerialLink.SendDataToSerial(strChannelBuffer)
+                Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
                 If ch2_HScrollBar.Value > strCH_2_Max.Value Then
                     ch2_HScrollBar.Value = strCH_2_Max.Value
                     strCH_2_Current.Text = Convert.ToString(ch2_HScrollBar.Value)
@@ -1271,7 +1266,7 @@ ErrorExit:
                     strChannelBuffer = strChannelBuffer + "0"
                 End If
                 strChannelBuffer = strChannelBuffer + Convert.ToString(strCH_3_Max.Value)
-                Call mySerialLink.SendDataToSerial(strChannelBuffer)
+                Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
                 If ch3_HScrollBar.Value > strCH_3_Max.Value Then
                     ch3_HScrollBar.Value = strCH_3_Max.Value
                     strCH_3_Current.Text = Convert.ToString(ch3_HScrollBar.Value)
@@ -1289,7 +1284,7 @@ ErrorExit:
                     strChannelBuffer = strChannelBuffer + "0"
                 End If
                 strChannelBuffer = strChannelBuffer + Convert.ToString(strCH_4_Max.Value)
-                Call mySerialLink.SendDataToSerial(strChannelBuffer)
+                Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
                 If ch4_HScrollBar.Value > strCH_4_Max.Value Then
                     ch4_HScrollBar.Value = strCH_4_Max.Value
                     strCH_4_Current.Text = Convert.ToString(ch4_HScrollBar.Value)
@@ -1307,7 +1302,7 @@ ErrorExit:
                     strChannelBuffer = strChannelBuffer + "0"
                 End If
                 strChannelBuffer = strChannelBuffer + Convert.ToString(strCH_5_Max.Value)
-                Call mySerialLink.SendDataToSerial(strChannelBuffer)
+                Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
                 If ch5_HScrollBar.Value > strCH_5_Max.Value Then
                     ch5_HScrollBar.Value = strCH_5_Max.Value
                     strCH_5_Current.Text = Convert.ToString(ch5_HScrollBar.Value)
@@ -1325,7 +1320,7 @@ ErrorExit:
                     strChannelBuffer = strChannelBuffer + "0"
                 End If
                 strChannelBuffer = strChannelBuffer + Convert.ToString(strCH_6_Max.Value)
-                Call mySerialLink.SendDataToSerial(strChannelBuffer)
+                Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
                 If ch6_HScrollBar.Value > strCH_6_Max.Value Then
                     ch6_HScrollBar.Value = strCH_6_Max.Value
                     strCH_6_Current.Text = Convert.ToString(ch6_HScrollBar.Value)
@@ -1343,7 +1338,7 @@ ErrorExit:
                     strChannelBuffer = strChannelBuffer + "0"
                 End If
                 strChannelBuffer = strChannelBuffer + Convert.ToString(strCH_7_Max.Value)
-                Call mySerialLink.SendDataToSerial(strChannelBuffer)
+                Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
                 If ch7_HScrollBar.Value > strCH_7_Max.Value Then
                     ch7_HScrollBar.Value = strCH_7_Max.Value
                     strCH_7_Current.Text = Convert.ToString(ch7_HScrollBar.Value)
@@ -1361,7 +1356,7 @@ ErrorExit:
                     strChannelBuffer = strChannelBuffer + "0"
                 End If
                 strChannelBuffer = strChannelBuffer + Convert.ToString(strCH_8_Max.Value)
-                Call mySerialLink.SendDataToSerial(strChannelBuffer)
+                Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
                 If ch8_HScrollBar.Value > strCH_8_Max.Value Then
                     ch8_HScrollBar.Value = strCH_8_Max.Value
                     strCH_8_Current.Text = Convert.ToString(ch8_HScrollBar.Value)
