@@ -6,7 +6,7 @@ Public Class PCC_PiKoder_Control_Center
 
     ' This is a program for evaluating the PiKoder platform - please refer to http://pikoder.com for more details.
     ' 
-    ' Copyright 2015 Gregor Schlechtriem
+    ' Copyright 2015-2016 Gregor Schlechtriem
     '
     ' Licensed under the Apache License, Version 2.0 (the "License");
     ' you may not use this file except in compliance with the License.
@@ -210,13 +210,16 @@ Public Class PCC_PiKoder_Control_Center
                 TextBox1.Text = "Found UART2PPM @ " + AvailableCOMPorts.SelectedItem.ToString
                 TypeId.Text = "UART2PPM"
                 RetrieveUART2PPMParameters()
-                ' toggleHeartBeat(3000)
                 IndicateConnectionOk()
             ElseIf (InStr(strPiKoderType, "USB2PPM") > 0) Then
                 TextBox1.Text = "Found USB2PPM @ " + AvailableCOMPorts.SelectedItem.ToString
                 TypeId.Text = "USB2PPM"
                 RetrieveUSB2PPMParameters()
-                ' toggleHeartBeat()
+                IndicateConnectionOk()
+            ElseIf (InStr(strPiKoderType, "SSC") > 0) Then
+                TextBox1.Text = "Found SSC @ " + AvailableCOMPorts.SelectedItem.ToString
+                TypeId.Text = "SSC"
+                RetrieveSSCParameters()
                 IndicateConnectionOk()
             Else ' error message
                 Led2.Blink = False
@@ -412,92 +415,37 @@ ErrorExit:
                 If strChannelBuffer <> "TimeOut" Then
                     strSSC_Firmware.Text = strChannelBuffer
                     If Val(strChannelBuffer) > 2.01 Then
-                        MsgBox("The PiKoder firmware version found is not supported! Please goto www.pikoder.com and upgrade SSC Control Center to the latest version.", MsgBoxStyle.OkOnly, "Error Message")
+                        MsgBox("The PiKoder firmware version found is not supported! Please goto www.pikoder.com and upgrade PCC Control Center to the latest version.", MsgBoxStyle.OkOnly, "Error Message")
                         End
                     End If
                 Else ' error message
                     boolErrorFlag = True
                 End If
             End If
+
             'retrieve information for channel 1
-            If Not boolErrorFlag Then
-                Call mySerialLink.SendDataToSerial("1?")
-                Call mySerialLink.GetPulseLength(strChannelBuffer)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_1_Current.Text = strChannelBuffer
-                    ch1_HScrollBar.Value = Val(strChannelBuffer)
-                End If
-            End If
+            Call RetrieveChannel1Information()
 
             'retrieve information for channel 2
-            If Not boolErrorFlag Then
-                Call mySerialLink.SendDataToSerial("2?")
-                Call mySerialLink.GetPulseLength(strChannelBuffer)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_2_Current.Text = strChannelBuffer
-                    ch2_HScrollBar.Value = Val(strChannelBuffer)
-                End If
-            End If
+            Call RetrieveChannel2Information()
 
             'retrieve information for channel 3
-            If Not boolErrorFlag Then
-                Call mySerialLink.SendDataToSerial("3?")
-                Call mySerialLink.GetPulseLength(strChannelBuffer)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_3_Current.Text = strChannelBuffer
-                    ch3_HScrollBar.Value = Val(strChannelBuffer)
-                End If
-            End If
+            Call RetrieveChannel3Information()
 
             'retrieve information for channel 4
-            If Not boolErrorFlag Then
-                Call mySerialLink.SendDataToSerial("4?")
-                Call mySerialLink.GetPulseLength(strChannelBuffer)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_4_Current.Text = strChannelBuffer
-                    ch4_HScrollBar.Value = Val(strChannelBuffer)
-                End If
-            End If
+            Call RetrieveChannel4Information()
 
             'retrieve information for channel 5
-            If Not boolErrorFlag Then
-                Call mySerialLink.SendDataToSerial("5?")
-                Call mySerialLink.GetPulseLength(strChannelBuffer)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_5_Current.Text = strChannelBuffer
-                    ch5_HScrollBar.Value = Val(strChannelBuffer)
-                End If
-            End If
+            Call RetrieveChannel5Information()
 
             'retrieve information for channel 6
-            If Not boolErrorFlag Then
-                Call mySerialLink.SendDataToSerial("6?")
-                Call mySerialLink.GetPulseLength(strChannelBuffer)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_6_Current.Text = strChannelBuffer
-                    ch6_HScrollBar.Value = Val(strChannelBuffer)
-                End If
-            End If
+            Call RetrieveChannel6Information()
 
             'retrieve information for channel 7
-            If Not boolErrorFlag Then
-                Call mySerialLink.SendDataToSerial("7?")
-                Call mySerialLink.GetPulseLength(strChannelBuffer)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_7_Current.Text = strChannelBuffer
-                    ch7_HScrollBar.Value = Val(strChannelBuffer)
-                End If
-            End If
+            Call RetrieveChannel7Information()
 
             'retrieve information for channel 8
-            If Not boolErrorFlag Then
-                Call mySerialLink.SendDataToSerial("8?")
-                Call mySerialLink.GetPulseLength(strChannelBuffer)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_8_Current.Text = strChannelBuffer
-                    ch8_HScrollBar.Value = Val(strChannelBuffer)
-                End If
-            End If
+            Call RetrieveChannel8Information()
 
             If Not boolErrorFlag Then
                 Call mySerialLink.SendDataToSerial("N1?")
@@ -783,6 +731,352 @@ ErrorExit:
         GroupBox17.Visible = False
 
     End Sub
+    Private Sub RetrieveSSCParameters()
+
+        Dim strChannelBuffer As String = ""
+        Dim b As Integer
+
+        For b = 0 To 24
+            boolSentChangeValueNotRequired(b) = False
+        Next
+
+        'Make sure that all required fields are enabled
+        GroupBox8.Enabled = True
+        GroupBox8.Visible = True
+        GroupBox4.Enabled = True
+        GroupBox4.Visible = True
+        GroupBox7.Enabled = True 'Save Parameters
+        GroupBox7.Visible = True
+
+        If mySerialLink.SerialLinkConnected() Then
+            If Not boolErrorFlag Then
+                'request status information from SSC    
+                Call mySerialLink.SendDataToSerial("0")
+                Call mySerialLink.GetFirmwareVersion(strChannelBuffer)
+                If strChannelBuffer <> "TimeOut" Then
+                    strSSC_Firmware.Text = strChannelBuffer
+                    If Val(strChannelBuffer) > 2.0 Then
+                        MsgBox("The PiKoder firmware version found is not supported! Please goto www.pikoder.com and upgrade PCC Control Center to the latest version.", MsgBoxStyle.OkOnly, "Error Message")
+                        End
+                    ElseIf Val(strChannelBuffer) < 2.0 Then
+                        MsgBox("The PiKoder firmware version found is not supported! Please goto www.pikoder.com and upgrade the PiKoder firmware to the latest version.", MsgBoxStyle.OkOnly, "Error Message")
+                        End
+
+                    End If
+                Else ' error message
+                    boolErrorFlag = True
+                End If
+            End If
+
+            'retrieve information for channel 1
+            Call RetrieveChannel1Information()
+
+            'retrieve information for channel 2
+            Call RetrieveChannel2Information()
+
+            'retrieve information for channel 3
+            Call RetrieveChannel3Information()
+
+            'retrieve information for channel 4
+            Call RetrieveChannel4Information()
+
+            'retrieve information for channel 5
+            Call RetrieveChannel5Information()
+
+            'retrieve information for channel 6
+            Call RetrieveChannel6Information()
+
+            'retrieve information for channel 7
+            Call RetrieveChannel7Information()
+
+            'retrieve information for channel 8
+            Call RetrieveChannel8Information()
+
+            If Not boolErrorFlag Then
+                Call mySerialLink.SendDataToSerial("N1?")
+                Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+                If strChannelBuffer <> "TimeOut" Then
+                    boolSentChangeValueNotRequired(16) = True
+                    strCH_1_Neutral.Maximum = 2500
+                    strCH_1_Neutral.Value = Val(strChannelBuffer)
+                    strCH_1_Neutral.ForeColor = Color.Black
+                End If
+            End If
+            If Not boolErrorFlag Then
+                Call mySerialLink.SendDataToSerial("N2?")
+                Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+                If strChannelBuffer <> "TimeOut" Then
+                    boolSentChangeValueNotRequired(17) = True
+                    strCH_2_Neutral.Maximum = 2500
+                    strCH_2_Neutral.Value = Val(strChannelBuffer)
+                    strCH_2_Neutral.ForeColor = Color.Black
+                End If
+            End If
+            If Not boolErrorFlag Then
+                Call mySerialLink.SendDataToSerial("N3?")
+                Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+                If strChannelBuffer <> "TimeOut" Then
+                    boolSentChangeValueNotRequired(18) = True
+                    strCH_3_Neutral.Maximum = 2500
+                    strCH_3_Neutral.Value = Val(strChannelBuffer)
+                    strCH_3_Neutral.ForeColor = Color.Black
+                End If
+            End If
+            If Not boolErrorFlag Then
+                Call mySerialLink.SendDataToSerial("N4?")
+                Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+                If strChannelBuffer <> "TimeOut" Then
+                    boolSentChangeValueNotRequired(19) = True
+                    strCH_4_Neutral.Maximum = 2500
+                    strCH_4_Neutral.Value = Val(strChannelBuffer)
+                    strCH_4_Neutral.ForeColor = Color.Black
+                End If
+            End If
+            If Not boolErrorFlag Then
+                Call mySerialLink.SendDataToSerial("N5?")
+                Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+                If strChannelBuffer <> "TimeOut" Then
+                    boolSentChangeValueNotRequired(20) = True
+                    strCH_5_Neutral.Maximum = 2500
+                    strCH_5_Neutral.Value = Val(strChannelBuffer)
+                    strCH_5_Neutral.ForeColor = Color.Black
+                End If
+            End If
+            If Not boolErrorFlag Then
+                Call mySerialLink.SendDataToSerial("N6?")
+                Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+                If strChannelBuffer <> "TimeOut" Then
+                    boolSentChangeValueNotRequired(21) = True
+                    strCH_6_Neutral.Maximum = 2500
+                    strCH_6_Neutral.Value = Val(strChannelBuffer)
+                    strCH_6_Neutral.ForeColor = Color.Black
+                End If
+            End If
+            If Not boolErrorFlag Then
+                Call mySerialLink.SendDataToSerial("N7?")
+                Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+                If strChannelBuffer <> "TimeOut" Then
+                    boolSentChangeValueNotRequired(22) = True
+                    strCH_7_Neutral.Maximum = 2500
+                    strCH_7_Neutral.Value = Val(strChannelBuffer)
+                    strCH_7_Neutral.ForeColor = Color.Black
+                End If
+            End If
+            If Not boolErrorFlag Then
+                Call mySerialLink.SendDataToSerial("N8?")
+                Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+                If strChannelBuffer <> "TimeOut" Then
+                    boolSentChangeValueNotRequired(23) = True
+                    strCH_8_Neutral.Maximum = 2500
+                    strCH_8_Neutral.Value = Val(strChannelBuffer)
+                    strCH_8_Neutral.ForeColor = Color.Black
+                End If
+            End If
+            'retrieve min & max information for all channels
+            'channel 1
+            If Not boolErrorFlag Then
+                Call mySerialLink.SendDataToSerial("L1?")
+                Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+                If strChannelBuffer <> "TimeOut" Then
+                    boolSentChangeValueNotRequired(0) = True
+                    strCH_1_Min.Value = Val(strChannelBuffer)
+                    ch1_HScrollBar.Minimum = strCH_1_Min.Value
+                    strCH_1_Min.ForeColor = Color.Black
+                End If
+            End If
+            If Not boolErrorFlag Then
+                Call mySerialLink.SendDataToSerial("U1?")
+                Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+                If strChannelBuffer <> "TimeOut" Then
+                    boolSentChangeValueNotRequired(1) = True
+                    strCH_1_Max.Value = Val(strChannelBuffer)
+                    ch1_HScrollBar.Maximum = strCH_1_Max.Value
+                    strCH_1_Max.ForeColor = Color.Black
+                End If
+            End If
+        End If
+
+        'channel 2
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("L2?")
+            Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+            If strChannelBuffer <> "TimeOut" Then
+                boolSentChangeValueNotRequired(2) = True
+                strCH_2_Min.Value = Val(strChannelBuffer)
+                ch2_HScrollBar.Minimum = strCH_2_Min.Value
+                strCH_2_Min.ForeColor = Color.Black
+            End If
+        End If
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("U2?")
+            Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+            If strChannelBuffer <> "TimeOut" Then
+                boolSentChangeValueNotRequired(3) = True
+                strCH_2_Max.Value = Val(strChannelBuffer)
+                ch2_HScrollBar.Maximum = strCH_2_Max.Value
+                strCH_2_Max.ForeColor = Color.Black
+            End If
+        End If
+
+        'channel 3
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("L3?")
+            Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+            If strChannelBuffer <> "TimeOut" Then
+                boolSentChangeValueNotRequired(4) = True
+                strCH_3_Min.Value = Val(strChannelBuffer)
+                ch3_HScrollBar.Minimum = strCH_3_Min.Value
+                strCH_3_Min.ForeColor = Color.Black
+            End If
+        End If
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("U3?")
+            Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+            If strChannelBuffer <> "TimeOut" Then
+                boolSentChangeValueNotRequired(5) = True
+                strCH_3_Max.Value = Val(strChannelBuffer)
+                ch3_HScrollBar.Maximum = strCH_3_Max.Value
+                strCH_3_Max.ForeColor = Color.Black
+            End If
+        End If
+
+        'channel 4
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("L4?")
+            Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+            If strChannelBuffer <> "TimeOut" Then
+                boolSentChangeValueNotRequired(6) = True
+                strCH_4_Min.Value = Val(strChannelBuffer)
+                ch4_HScrollBar.Minimum = strCH_4_Min.Value
+                strCH_4_Min.ForeColor = Color.Black
+            End If
+        End If
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("U4?")
+            Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+            If strChannelBuffer <> "TimeOut" Then
+                boolSentChangeValueNotRequired(7) = True
+                strCH_4_Max.Value = Val(strChannelBuffer)
+                ch4_HScrollBar.Maximum = strCH_4_Max.Value
+                strCH_4_Max.ForeColor = Color.Black
+            End If
+        End If
+
+        'channel 5
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("L5?")
+            Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+            If strChannelBuffer <> "TimeOut" Then
+                boolSentChangeValueNotRequired(8) = True
+                strCH_5_Min.Value = Val(strChannelBuffer)
+                ch5_HScrollBar.Minimum = strCH_5_Min.Value
+                strCH_5_Min.ForeColor = Color.Black
+            End If
+        End If
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("U5?")
+            Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+            If strChannelBuffer <> "TimeOut" Then
+                boolSentChangeValueNotRequired(9) = True
+                strCH_5_Max.Value = Val(strChannelBuffer)
+                ch5_HScrollBar.Maximum = strCH_5_Max.Value
+                strCH_5_Max.ForeColor = Color.Black
+            End If
+        End If
+
+        'channel 6
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("L6?")
+            Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+            If strChannelBuffer <> "TimeOut" Then
+                boolSentChangeValueNotRequired(10) = True
+                strCH_6_Min.Value = Val(strChannelBuffer)
+                ch6_HScrollBar.Minimum = strCH_6_Min.Value
+                strCH_6_Min.ForeColor = Color.Black
+            End If
+        End If
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("U6?")
+            Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+            If strChannelBuffer <> "TimeOut" Then
+                boolSentChangeValueNotRequired(11) = True
+                strCH_6_Max.Value = Val(strChannelBuffer)
+                ch6_HScrollBar.Maximum = strCH_6_Max.Value
+                strCH_6_Max.ForeColor = Color.Black
+            End If
+        End If
+
+        'channel 7
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("L7?")
+            Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+            If strChannelBuffer <> "TimeOut" Then
+                boolSentChangeValueNotRequired(12) = True
+                strCH_7_Min.Value = Val(strChannelBuffer)
+                ch7_HScrollBar.Minimum = strCH_7_Min.Value
+                strCH_7_Min.ForeColor = Color.Black
+            End If
+        End If
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("U7?")
+            Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+            If strChannelBuffer <> "TimeOut" Then
+                boolSentChangeValueNotRequired(13) = True
+                strCH_7_Max.Value = Val(strChannelBuffer)
+                ch7_HScrollBar.Maximum = strCH_7_Max.Value
+                strCH_7_Max.ForeColor = Color.Black
+            End If
+        End If
+
+        'channel 8
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("L8?")
+            Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+            If strChannelBuffer <> "TimeOut" Then
+                boolSentChangeValueNotRequired(14) = True
+                strCH_8_Min.Value = Val(strChannelBuffer)
+                ch8_HScrollBar.Minimum = strCH_8_Min.Value
+                strCH_8_Min.ForeColor = Color.Black
+            End If
+        End If
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("U8?")
+            Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+            If strChannelBuffer <> "TimeOut" Then
+                boolSentChangeValueNotRequired(15) = True
+                strCH_8_Max.Value = Val(strChannelBuffer)
+                ch8_HScrollBar.Maximum = strCH_8_Max.Value
+                strCH_8_Max.ForeColor = Color.Black
+            End If
+
+        End If
+
+        'retrieve TimeOut
+        If Not boolErrorFlag Then
+            Call mySerialLink.GetTimeOut(strChannelBuffer, 7)
+            If strChannelBuffer <> "TimeOut" Then
+                TimeOut.Value = Val(strChannelBuffer)
+                TimeOut.ForeColor = Color.Black
+            End If
+        End If
+
+        'retrieve miniSSC offset
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("M?")
+            Call mySerialLink.GetMiniSSCOffset(strChannelBuffer, 6)
+            If strChannelBuffer <> "TimeOut" Then
+                miniSSCOffset.Value = Val(strChannelBuffer)
+                miniSSCOffset.ForeColor = Color.Black
+            End If
+        End If
+
+        GroupBox13.Enabled = False '# PPM Channels
+        GroupBox13.Visible = False
+        GroupBox17.Enabled = False 'PPM mode
+        GroupBox17.Visible = False
+
+    End Sub
+
     Private Sub RetrieveUSB2PPMParameters()
 
         Dim strChannelBuffer As String = ""
@@ -818,157 +1112,101 @@ ErrorExit:
             End If
 
             'retrieve information for channel 1
-            If Not boolErrorFlag Then
-                Call mySerialLink.SendDataToSerial("1?")
-                Call mySerialLink.GetPulseLength(strChannelBuffer)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_1_Current.Text = strChannelBuffer
-                    ch1_HScrollBar.Value = Val(strChannelBuffer)
-                End If
-            End If
+            Call RetrieveChannel1Information()
 
             'retrieve information for channel 2
-            If Not boolErrorFlag Then
-                Call mySerialLink.SendDataToSerial("2?")
-                Call mySerialLink.GetPulseLength(strChannelBuffer)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_2_Current.Text = strChannelBuffer
-                    ch2_HScrollBar.Value = Val(strChannelBuffer)
-                End If
-            End If
+            Call RetrieveChannel2Information()
 
             'retrieve information for channel 3
-            If Not boolErrorFlag Then
-                Call mySerialLink.SendDataToSerial("3?")
-                Call mySerialLink.GetPulseLength(strChannelBuffer)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_3_Current.Text = strChannelBuffer
-                    ch3_HScrollBar.Value = Val(strChannelBuffer)
-                End If
-            End If
+            Call RetrieveChannel3Information()
 
             'retrieve information for channel 4
-            If Not boolErrorFlag Then
-                Call mySerialLink.SendDataToSerial("4?")
-                Call mySerialLink.GetPulseLength(strChannelBuffer)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_4_Current.Text = strChannelBuffer
-                    ch4_HScrollBar.Value = Val(strChannelBuffer)
-                End If
-            End If
+            Call RetrieveChannel4Information()
 
             'retrieve information for channel 5
-            If Not boolErrorFlag Then
-                Call mySerialLink.SendDataToSerial("5?")
-                Call mySerialLink.GetPulseLength(strChannelBuffer)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_5_Current.Text = strChannelBuffer
-                    ch5_HScrollBar.Value = Val(strChannelBuffer)
-                End If
-            End If
+            Call RetrieveChannel5Information()
 
             'retrieve information for channel 6
-            If Not boolErrorFlag Then
-                Call mySerialLink.SendDataToSerial("6?")
-                Call mySerialLink.GetPulseLength(strChannelBuffer)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_6_Current.Text = strChannelBuffer
-                    ch6_HScrollBar.Value = Val(strChannelBuffer)
-                End If
-            End If
+            Call RetrieveChannel6Information()
 
             'retrieve information for channel 7
-            If Not boolErrorFlag Then
-                Call mySerialLink.SendDataToSerial("7?")
-                Call mySerialLink.GetPulseLength(strChannelBuffer)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_7_Current.Text = strChannelBuffer
-                    ch7_HScrollBar.Value = Val(strChannelBuffer)
-                End If
-            End If
+            Call RetrieveChannel7Information()
 
             'retrieve information for channel 8
-            If Not boolErrorFlag Then
-                Call mySerialLink.SendDataToSerial("8?")
-                Call mySerialLink.GetPulseLength(strChannelBuffer)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_8_Current.Text = strChannelBuffer
-                    ch8_HScrollBar.Value = Val(strChannelBuffer)
-                End If
-            End If
+            Call RetrieveChannel8Information()
+
+            'set min & max information for all channels
+            strCH_1_Min.Value = sDefaultMinValue
+            ch1_HScrollBar.Minimum = strCH_1_Min.Value
+            strCH_1_Min.ForeColor = Color.Black
+            strCH_1_Max.Value = sDefaultMaxValue
+            ch1_HScrollBar.Maximum = strCH_1_Max.Value
+            strCH_1_Max.ForeColor = Color.Black
+
+            strCH_2_Min.Value = sDefaultMinValue
+            ch2_HScrollBar.Minimum = strCH_2_Min.Value
+            strCH_2_Min.ForeColor = Color.Black
+            strCH_2_Max.Value = sDefaultMaxValue
+            ch2_HScrollBar.Maximum = strCH_2_Max.Value
+            strCH_2_Max.ForeColor = Color.Black
+
+            strCH_3_Min.Value = sDefaultMinValue
+            ch3_HScrollBar.Minimum = strCH_3_Min.Value
+            strCH_3_Min.ForeColor = Color.Black
+            strCH_3_Max.Value = sDefaultMaxValue
+            ch3_HScrollBar.Maximum = strCH_3_Max.Value
+            strCH_3_Max.ForeColor = Color.Black
+
+            strCH_4_Min.Value = sDefaultMinValue
+            ch4_HScrollBar.Minimum = strCH_4_Min.Value
+            strCH_4_Min.ForeColor = Color.Black
+            strCH_4_Max.Value = sDefaultMaxValue
+            ch4_HScrollBar.Maximum = strCH_4_Max.Value
+            strCH_4_Max.ForeColor = Color.Black
+
+            strCH_5_Min.Value = sDefaultMinValue
+            ch5_HScrollBar.Minimum = strCH_5_Min.Value
+            strCH_5_Min.ForeColor = Color.Black
+            strCH_5_Max.Value = sDefaultMaxValue
+            ch5_HScrollBar.Maximum = strCH_5_Max.Value
+            strCH_5_Max.ForeColor = Color.Black
+
+            strCH_6_Min.Value = sDefaultMinValue
+            ch6_HScrollBar.Minimum = strCH_6_Min.Value
+            strCH_6_Min.ForeColor = Color.Black
+            strCH_6_Max.Value = sDefaultMaxValue
+            ch6_HScrollBar.Maximum = strCH_6_Max.Value
+            strCH_6_Max.ForeColor = Color.Black
+
+            strCH_7_Min.Value = sDefaultMinValue
+            ch7_HScrollBar.Minimum = strCH_7_Min.Value
+            strCH_7_Min.ForeColor = Color.Black
+            strCH_7_Max.Value = sDefaultMaxValue
+            ch7_HScrollBar.Maximum = strCH_7_Max.Value
+            strCH_7_Max.ForeColor = Color.Black
+
+            strCH_8_Min.Value = sDefaultMinValue
+            ch8_HScrollBar.Minimum = strCH_8_Min.Value
+            strCH_8_Min.ForeColor = Color.Black
+            strCH_8_Max.Value = sDefaultMaxValue
+            ch8_HScrollBar.Maximum = strCH_8_Max.Value
+            strCH_8_Max.ForeColor = Color.Black
+
+            GroupBox11.Enabled = False 'neutral positions
+            GroupBox11.Visible = False
+            GroupBox8.Enabled = False 'miniSSC Offset
+            GroupBox8.Visible = False
+            GroupBox4.Enabled = False 'zero offset
+            GroupBox4.Visible = False
+            GroupBox7.Enabled = False 'Save Parameters
+            GroupBox7.Visible = False
+
+            PPM_Channels.Value = 8
+            PPM_Channels.ForeColor = Color.Black
+            PPM_Mode.Items.Add("positive")
+            PPM_Mode.Items.Add("negative (Futaba)")
+            PPM_Mode.ForeColor = Color.Black
         End If
-
-        'set min & max information for all channels
-        strCH_1_Min.Value = sDefaultMinValue
-        ch1_HScrollBar.Minimum = strCH_1_Min.Value
-        strCH_1_Min.ForeColor = Color.Black
-        strCH_1_Max.Value = sDefaultMaxValue
-        ch1_HScrollBar.Maximum = strCH_1_Max.Value
-        strCH_1_Max.ForeColor = Color.Black
-
-        strCH_2_Min.Value = sDefaultMinValue
-        ch2_HScrollBar.Minimum = strCH_2_Min.Value
-        strCH_2_Min.ForeColor = Color.Black
-        strCH_2_Max.Value = sDefaultMaxValue
-        ch2_HScrollBar.Maximum = strCH_2_Max.Value
-        strCH_2_Max.ForeColor = Color.Black
-
-        strCH_3_Min.Value = sDefaultMinValue
-        ch3_HScrollBar.Minimum = strCH_3_Min.Value
-        strCH_3_Min.ForeColor = Color.Black
-        strCH_3_Max.Value = sDefaultMaxValue
-        ch3_HScrollBar.Maximum = strCH_3_Max.Value
-        strCH_3_Max.ForeColor = Color.Black
-
-        strCH_4_Min.Value = sDefaultMinValue
-        ch4_HScrollBar.Minimum = strCH_4_Min.Value
-        strCH_4_Min.ForeColor = Color.Black
-        strCH_4_Max.Value = sDefaultMaxValue
-        ch4_HScrollBar.Maximum = strCH_4_Max.Value
-        strCH_4_Max.ForeColor = Color.Black
-
-        strCH_5_Min.Value = sDefaultMinValue
-        ch5_HScrollBar.Minimum = strCH_5_Min.Value
-        strCH_5_Min.ForeColor = Color.Black
-        strCH_5_Max.Value = sDefaultMaxValue
-        ch5_HScrollBar.Maximum = strCH_5_Max.Value
-        strCH_5_Max.ForeColor = Color.Black
-
-        strCH_6_Min.Value = sDefaultMinValue
-        ch6_HScrollBar.Minimum = strCH_6_Min.Value
-        strCH_6_Min.ForeColor = Color.Black
-        strCH_6_Max.Value = sDefaultMaxValue
-        ch6_HScrollBar.Maximum = strCH_6_Max.Value
-        strCH_6_Max.ForeColor = Color.Black
-
-        strCH_7_Min.Value = sDefaultMinValue
-        ch7_HScrollBar.Minimum = strCH_7_Min.Value
-        strCH_7_Min.ForeColor = Color.Black
-        strCH_7_Max.Value = sDefaultMaxValue
-        ch7_HScrollBar.Maximum = strCH_7_Max.Value
-        strCH_7_Max.ForeColor = Color.Black
-
-        strCH_8_Min.Value = sDefaultMinValue
-        ch8_HScrollBar.Minimum = strCH_8_Min.Value
-        strCH_8_Min.ForeColor = Color.Black
-        strCH_8_Max.Value = sDefaultMaxValue
-        ch8_HScrollBar.Maximum = strCH_8_Max.Value
-        strCH_8_Max.ForeColor = Color.Black
-
-        GroupBox11.Enabled = False 'neutral positions
-        GroupBox11.Visible = False
-        GroupBox8.Enabled = False 'miniSSC Offset
-        GroupBox8.Visible = False
-        GroupBox4.Enabled = False 'zero offset
-        GroupBox4.Visible = False
-        GroupBox7.Enabled = False 'Save Parameters
-        GroupBox7.Visible = False
-
-        PPM_Channels.Value = 8
-        PPM_Channels.ForeColor = Color.Black
-        PPM_Mode.Items.Add("positive")
-        PPM_Mode.Items.Add("negative (Futaba)")
-        PPM_Mode.ForeColor = Color.Black
     End Sub
 
 
@@ -1441,6 +1679,94 @@ ErrorExit:
             myByteArray(3) = PPM_Mode.SelectedIndex
             Call mySerialLink.SendBinaryDataToSerial(myByteArray, 4)
             PPM_Mode.ClearSelected()
+        End If
+    End Sub
+    Private Sub RetrieveChannel1Information()
+        Dim strChannelBuffer As String = ""
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("1?")
+            Call mySerialLink.GetPulseLength(strChannelBuffer)
+            If strChannelBuffer <> "TimeOut" Then
+                strCH_1_Current.Text = strChannelBuffer
+                ch1_HScrollBar.Value = Val(strChannelBuffer)
+            End If
+        End If
+    End Sub
+    Private Sub RetrieveChannel2Information()
+        Dim strChannelBuffer As String = ""
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("2?")
+            Call mySerialLink.GetPulseLength(strChannelBuffer)
+            If strChannelBuffer <> "TimeOut" Then
+                strCH_2_Current.Text = strChannelBuffer
+                ch2_HScrollBar.Value = Val(strChannelBuffer)
+            End If
+        End If
+    End Sub
+    Private Sub RetrieveChannel3Information()
+        Dim strChannelBuffer As String = ""
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("3?")
+            Call mySerialLink.GetPulseLength(strChannelBuffer)
+            If strChannelBuffer <> "TimeOut" Then
+                strCH_3_Current.Text = strChannelBuffer
+                ch3_HScrollBar.Value = Val(strChannelBuffer)
+            End If
+        End If
+    End Sub
+    Private Sub RetrieveChannel4Information()
+        Dim strChannelBuffer As String = ""
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("4?")
+            Call mySerialLink.GetPulseLength(strChannelBuffer)
+            If strChannelBuffer <> "TimeOut" Then
+                strCH_4_Current.Text = strChannelBuffer
+                ch4_HScrollBar.Value = Val(strChannelBuffer)
+            End If
+        End If
+    End Sub
+    Private Sub RetrieveChannel5Information()
+        Dim strChannelBuffer As String = ""
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("5?")
+            Call mySerialLink.GetPulseLength(strChannelBuffer)
+            If strChannelBuffer <> "TimeOut" Then
+                strCH_5_Current.Text = strChannelBuffer
+                ch5_HScrollBar.Value = Val(strChannelBuffer)
+            End If
+        End If
+    End Sub
+    Private Sub RetrieveChannel6Information()
+        Dim strChannelBuffer As String = ""
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("6?")
+            Call mySerialLink.GetPulseLength(strChannelBuffer)
+            If strChannelBuffer <> "TimeOut" Then
+                strCH_6_Current.Text = strChannelBuffer
+                ch6_HScrollBar.Value = Val(strChannelBuffer)
+            End If
+        End If
+    End Sub
+    Private Sub RetrieveChannel7Information()
+        Dim strChannelBuffer As String = ""
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("7?")
+            Call mySerialLink.GetPulseLength(strChannelBuffer)
+            If strChannelBuffer <> "TimeOut" Then
+                strCH_7_Current.Text = strChannelBuffer
+                ch7_HScrollBar.Value = Val(strChannelBuffer)
+            End If
+        End If
+    End Sub
+    Private Sub RetrieveChannel8Information()
+        Dim strChannelBuffer As String = ""
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("8?")
+            Call mySerialLink.GetPulseLength(strChannelBuffer)
+            If strChannelBuffer <> "TimeOut" Then
+                strCH_8_Current.Text = strChannelBuffer
+                ch8_HScrollBar.Value = Val(strChannelBuffer)
+            End If
         End If
     End Sub
 End Class
