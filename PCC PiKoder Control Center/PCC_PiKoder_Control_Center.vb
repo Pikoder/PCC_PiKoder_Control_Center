@@ -414,7 +414,7 @@ ErrorExit:
                 Call mySerialLink.GetFirmwareVersion(strChannelBuffer)
                 If strChannelBuffer <> "TimeOut" Then
                     strSSC_Firmware.Text = strChannelBuffer
-                    If Val(strChannelBuffer) > 2.01 Then
+                    If Val(strChannelBuffer) > 2.02 Then
                         MsgBox("The PiKoder firmware version found is not supported! Please goto www.pikoder.com and upgrade PCC Control Center to the latest version.", MsgBoxStyle.OkOnly, "Error Message")
                         End
                     End If
@@ -755,7 +755,7 @@ ErrorExit:
                 Call mySerialLink.GetFirmwareVersion(strChannelBuffer)
                 If strChannelBuffer <> "TimeOut" Then
                     strSSC_Firmware.Text = strChannelBuffer
-                    If Val(strChannelBuffer) > 2.0 Then
+                    If Val(strChannelBuffer) > 2.01 Then
                         MsgBox("The PiKoder firmware version found is not supported! Please goto www.pikoder.com and upgrade PCC Control Center to the latest version.", MsgBoxStyle.OkOnly, "Error Message")
                         End
                     ElseIf Val(strChannelBuffer) < 2.0 Then
