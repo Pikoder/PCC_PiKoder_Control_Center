@@ -315,7 +315,9 @@ Public Class SerialLink
     Public Sub MyForm_Dispose()
         Try
             mySerialPort.Close()
+            Connected = False 'make sure to force new connect
         Catch ex As Exception
+            MessageBox.Show(ex.Message)
         End Try
     End Sub
     ''' <summary>

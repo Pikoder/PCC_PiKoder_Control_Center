@@ -28,7 +28,6 @@ Partial Class PCC_PiKoder_Control_Center
         Me.AvailableCOMPorts = New System.Windows.Forms.ListBox()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
-        Me.Led2 = New LED()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
         Me.GroupBox12 = New System.Windows.Forms.GroupBox()
@@ -109,6 +108,7 @@ Partial Class PCC_PiKoder_Control_Center
         Me.PPM_Channels = New System.Windows.Forms.NumericUpDown()
         Me.tHeartBeat = New System.Windows.Forms.Timer(Me.components)
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.Led2 = New LED()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
@@ -185,7 +185,7 @@ Partial Class PCC_PiKoder_Control_Center
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(136, 32)
         Me.Label1.TabIndex = 2
-        Me.Label1.Text = "Select COM port and double click to connect"
+        Me.Label1.Text = "Select COM port and click to connect"
         '
         'AvailableCOMPorts
         '
@@ -219,19 +219,6 @@ Partial Class PCC_PiKoder_Control_Center
         Me.GroupBox2.TabIndex = 22
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Status"
-        '
-        'Led2
-        '
-        Me.Led2.BackColor = System.Drawing.SystemColors.ButtonFace
-        Me.Led2.Blink = False
-        Me.Led2.Color = LED.LEDColorSelection.LED_Red
-        Me.Led2.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Led2.Interval = CType(0, Short)
-        Me.Led2.Location = New System.Drawing.Point(311, 18)
-        Me.Led2.Name = "Led2"
-        Me.Led2.Size = New System.Drawing.Size(33, 35)
-        Me.Led2.State = False
-        Me.Led2.TabIndex = 23
         '
         'GroupBox3
         '
@@ -1307,6 +1294,19 @@ Partial Class PCC_PiKoder_Control_Center
         '
         Me.Timer1.Enabled = True
         Me.Timer1.Interval = 1
+        '
+        'Led2
+        '
+        Me.Led2.BackColor = System.Drawing.SystemColors.ButtonFace
+        Me.Led2.Blink = False
+        Me.Led2.Color = LED.LEDColorSelection.LED_Red
+        Me.Led2.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Led2.Interval = CType(0, Short)
+        Me.Led2.Location = New System.Drawing.Point(311, 18)
+        Me.Led2.Name = "Led2"
+        Me.Led2.Size = New System.Drawing.Size(33, 35)
+        Me.Led2.State = False
+        Me.Led2.TabIndex = 23
         '
         'PCC_PiKoder_Control_Center
         '
