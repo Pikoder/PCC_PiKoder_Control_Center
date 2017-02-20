@@ -994,7 +994,7 @@ Partial Class PCC_PiKoder_Control_Center
         Me.strCH_1_Current.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.strCH_1_Current.ForeColor = System.Drawing.SystemColors.WindowText
         Me.strCH_1_Current.Location = New System.Drawing.Point(38, 24)
-        Me.strCH_1_Current.MaxLength = 4
+        Me.strCH_1_Current.MaxLength = 6
         Me.strCH_1_Current.Name = "strCH_1_Current"
         Me.strCH_1_Current.ReadOnly = True
         Me.strCH_1_Current.RightToLeft = System.Windows.Forms.RightToLeft.No

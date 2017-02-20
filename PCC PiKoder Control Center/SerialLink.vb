@@ -55,6 +55,27 @@ Public Class SerialLink
             Return False
         End Try
     End Function
+    Public Sub GetHPPulseLength(ByRef SerialInputString As String)
+        Dim i As Integer
+        Dim j As Integer = 0
+        Dim myByte As Char
+        SerialInputString = ""
+        Do
+            If Connected And (mySerialPort.BytesToRead >= 9) Then ' make sure to receive complete message
+                For i = 1 To mySerialPort.BytesToRead
+                    myByte = Chr(mySerialPort.ReadByte)
+                    If IsNumeric(myByte) Then SerialInputString = SerialInputString + myByte
+                Next
+                If ValidateHPPulseValue(SerialInputString) Then Return
+            End If
+            'check for TimeOut
+            j = j + 1
+            If j > 10 Then
+                SerialInputString = "TimeOut" : Exit Do ' timeout exit
+            End If
+            System.Threading.Thread.Sleep(20) 'wait for next frame and allow for task switch
+        Loop
+    End Sub
     Public Sub GetPulseLength(ByRef SerialInputString As String)
         Dim i As Integer
         Dim j As Integer = 0
@@ -76,6 +97,7 @@ Public Class SerialLink
             System.Threading.Thread.Sleep(20) 'wait for next frame and allow for task switch
         Loop
     End Sub
+
     Public Sub GetTimeOut(ByRef SerialInputString As String, ByVal intCharsToRead As Integer)
         Dim i As Integer
         Dim j As Integer = 0
@@ -141,6 +163,7 @@ Public Class SerialLink
             System.Threading.Thread.Sleep(20) 'wait for next frame and allow for task switch
         Loop
     End Sub
+
     Public Sub GetFirmwareVersion(ByRef SerialInputString As String)
         Dim j As Integer = 0
         Dim i As Integer
@@ -178,6 +201,23 @@ Public Class SerialLink
         If (intChannelPulseLength < 1000) And (Len(strVal) = 4) Then strVal = Mid(strVal, 2, 3)
         Return True
     End Function
+    ''' <summary>
+    ''' This one still has to move to a separate class PPMChannel t.b.d.
+    ''' </summary>
+    ''' <param name="strVal"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Private Function ValidateHPPulseValue(ByRef strVal As String) As Boolean
+        Dim intChannelPulseLength As Double
+        intChannelPulseLength = Val(strVal) 'no check on chars this time
+        If (intChannelPulseLength < 3750) Or (intChannelPulseLength > 11250) Then
+            Return False
+        End If
+        'format string
+        If (intChannelPulseLength < 10000) And (Len(strVal) = 5) Then strVal = Mid(strVal, 2, 4)
+        Return True
+    End Function
+
     Private Function ValidateZeroOffset(ByRef strVal As String) As Boolean
         Dim intZeroOffset As Integer
         intZeroOffset = Val(strVal) 'no check on chars this time
@@ -193,6 +233,24 @@ Public Class SerialLink
         Do
             strSendString = Chr(iChannel + Asc("0")) + "="
             If Len(strPulseLength) = 3 Then strSendString = strSendString + "0"
+            strSendString = strSendString + strPulseLength
+            Try
+                mySerialPort.Write(strSendString, 0, Len(strSendString))
+                iError = GetErrorCode()
+                If iError = 0 Then Exit Do ' job completed
+                If iError = 2 Then iError = GetErrorCode() ' retry after timeout
+            Catch ex As Exception
+                MessageBox.Show(ex.Message)
+                Connected = False
+            End Try
+        Loop While (iError <> 0) And Connected
+    End Sub
+    Public Sub SendHPPulseLengthToPiKoder(ByVal iChannel As Integer, ByVal strPulseLength As String)
+        Dim strSendString As String
+        Dim iError As Integer
+        Do
+            strSendString = Chr(iChannel + Asc("0")) + "="
+            If Len(strPulseLength) = 4 Then strSendString = strSendString + "0"
             strSendString = strSendString + strPulseLength
             Try
                 mySerialPort.Write(strSendString, 0, Len(strSendString))
@@ -289,7 +347,7 @@ Public Class SerialLink
                     CpMode = CpMode + 1
                 ElseIf ((myByte = Chr(13)) And (SerialInputString.Length = 0)) Then
                     CpMode = CpMode + 1
-                ElseIf ((myByte >= Chr(48)) And (CpMode = 2)) Then
+                ElseIf ((myByte >= Chr(31)) And (CpMode = 2)) Then
                     SerialInputString = SerialInputString + myByte
                 ElseIf ((myByte = Chr(10)) And (SerialInputString.Length > 0)) Then
                     If (CpMode = 1) Then
