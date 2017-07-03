@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "PCC PiKoder Control Center", "PCC PiKoder Control Center\PCC PiKoder Control Center.vbproj", "{70A0811D-13A9-4E7C-BA44-CB8E12D6F164}"
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "PCC PRO PiKoder Control Center", "..\..\PCC PRO\PCC PRO PiKoder Control Center\PCC PiKoder Control Center\PCC PRO PiKoder Control Center.vbproj", "{213D11B7-594A-4DC1-976B-2E458C22FB9D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{70A0811D-13A9-4E7C-BA44-CB8E12D6F164}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70A0811D-13A9-4E7C-BA44-CB8E12D6F164}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70A0811D-13A9-4E7C-BA44-CB8E12D6F164}.Release|Any CPU.Build.0 = Release|Any CPU
+		{213D11B7-594A-4DC1-976B-2E458C22FB9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{213D11B7-594A-4DC1-976B-2E458C22FB9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{213D11B7-594A-4DC1-976B-2E458C22FB9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{213D11B7-594A-4DC1-976B-2E458C22FB9D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
