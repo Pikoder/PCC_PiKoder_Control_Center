@@ -1569,8 +1569,10 @@ ErrorExit:
             If Not boolSentChangeValueNotRequired(16) Then
                 Dim strChannelBuffer As String = "N1="
                 Dim iNeutralValue = strCH_1_Neutral.Value
-                If (HPMath) Then iNeutralValue = strCH_1_Neutral.Value * 5
-                If (iNeutralValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                If (HPMath) Then
+                    iNeutralValue = strCH_1_Neutral.Value * 5
+                    If (iNeutralValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                End If
                 If (iNeutralValue < 1000) Then strChannelBuffer = strChannelBuffer + "0"
                 strChannelBuffer = strChannelBuffer + Convert.ToString(iNeutralValue)
                 Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
@@ -1585,8 +1587,10 @@ ErrorExit:
             If Not boolSentChangeValueNotRequired(17) Then
                 Dim strChannelBuffer As String = "N2="
                 Dim iNeutralValue = strCH_2_Neutral.Value
-                If (HPMath) Then iNeutralValue = strCH_2_Neutral.Value * 5
-                If (iNeutralValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                If (HPMath) Then
+                    iNeutralValue = strCH_2_Neutral.Value * 5
+                    If (iNeutralValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                End If
                 If (iNeutralValue < 1000) Then strChannelBuffer = strChannelBuffer + "0"
                 strChannelBuffer = strChannelBuffer + Convert.ToString(iNeutralValue)
                 Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
@@ -1599,8 +1603,10 @@ ErrorExit:
             If Not boolSentChangeValueNotRequired(18) Then
                 Dim strChannelBuffer As String = "N3="
                 Dim iNeutralValue = strCH_3_Neutral.Value
-                If (HPMath) Then iNeutralValue = strCH_3_Neutral.Value * 5
-                If (iNeutralValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                If (HPMath) Then
+                    iNeutralValue = strCH_3_Neutral.Value * 5
+                    If (iNeutralValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                End If
                 If (iNeutralValue < 1000) Then strChannelBuffer = strChannelBuffer + "0"
                 strChannelBuffer = strChannelBuffer + Convert.ToString(iNeutralValue)
                 Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
@@ -1613,8 +1619,10 @@ ErrorExit:
             If Not boolSentChangeValueNotRequired(19) Then
                 Dim strChannelBuffer As String = "N4="
                 Dim iNeutralValue = strCH_4_Neutral.Value
-                If (HPMath) Then iNeutralValue = strCH_4_Neutral.Value * 5
-                If (iNeutralValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                If (HPMath) Then
+                    iNeutralValue = strCH_4_Neutral.Value * 5
+                    If (iNeutralValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                End If
                 If (iNeutralValue < 1000) Then strChannelBuffer = strChannelBuffer + "0"
                 strChannelBuffer = strChannelBuffer + Convert.ToString(iNeutralValue)
                 Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
@@ -1627,8 +1635,10 @@ ErrorExit:
             If Not boolSentChangeValueNotRequired(20) Then
                 Dim strChannelBuffer As String = "N5="
                 Dim iNeutralValue = strCH_5_Neutral.Value
-                If (HPMath) Then iNeutralValue = strCH_5_Neutral.Value * 5
-                If (iNeutralValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                If (HPMath) Then
+                    iNeutralValue = strCH_5_Neutral.Value * 5
+                    If (iNeutralValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                End If
                 If (iNeutralValue < 1000) Then strChannelBuffer = strChannelBuffer + "0"
                 strChannelBuffer = strChannelBuffer + Convert.ToString(iNeutralValue)
                 Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
@@ -1641,8 +1651,10 @@ ErrorExit:
             If Not boolSentChangeValueNotRequired(21) Then
                 Dim strChannelBuffer As String = "N6="
                 Dim iNeutralValue = strCH_6_Neutral.Value
-                If (HPMath) Then iNeutralValue = strCH_6_Neutral.Value * 5
-                If (iNeutralValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                If (HPMath) Then
+                    iNeutralValue = strCH_6_Neutral.Value * 5
+                    If (iNeutralValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                End If
                 If (iNeutralValue < 1000) Then strChannelBuffer = strChannelBuffer + "0"
                 strChannelBuffer = strChannelBuffer + Convert.ToString(iNeutralValue)
                 Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
@@ -1655,8 +1667,10 @@ ErrorExit:
             If Not boolSentChangeValueNotRequired(22) Then
                 Dim strChannelBuffer As String = "N7="
                 Dim iNeutralValue = strCH_7_Neutral.Value
-                If (HPMath) Then iNeutralValue = strCH_7_Neutral.Value * 5
-                If (iNeutralValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                If (HPMath) Then
+                    iNeutralValue = strCH_7_Neutral.Value * 5
+                    If (iNeutralValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                End If
                 If (iNeutralValue < 1000) Then strChannelBuffer = strChannelBuffer + "0"
                 strChannelBuffer = strChannelBuffer + Convert.ToString(iNeutralValue)
                 Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
@@ -1669,8 +1683,10 @@ ErrorExit:
             If Not boolSentChangeValueNotRequired(23) Then
                 Dim strChannelBuffer As String = "N8="
                 Dim iNeutralValue = strCH_8_Neutral.Value
-                If (HPMath) Then iNeutralValue = strCH_8_Neutral.Value * 5
-                If (iNeutralValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                If (HPMath) Then
+                    iNeutralValue = strCH_8_Neutral.Value * 5
+                    If (iNeutralValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                End If
                 If (iNeutralValue < 1000) Then strChannelBuffer = strChannelBuffer + "0"
                 strChannelBuffer = strChannelBuffer + Convert.ToString(iNeutralValue)
                 Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
@@ -1688,8 +1704,10 @@ ErrorExit:
                     strCH_1_Current.Text = Convert.ToString(ch1_HScrollBar.Value)
                 End If
                 ch1_HScrollBar.Minimum = strCH_1_Min.Value
-                If (HPMath) Then iMinValue = strCH_1_Min.Value * 5
-                If (iMinValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                If (HPMath) Then
+                    iMinValue = strCH_1_Min.Value * 5
+                    If (iMinValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                End If
                 If (iMinValue < 1000) Then strChannelBuffer = strChannelBuffer + "0"
                 strChannelBuffer = strChannelBuffer + Convert.ToString(iMinValue)
                 Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
@@ -1707,8 +1725,10 @@ ErrorExit:
                     strCH_2_Current.Text = Convert.ToString(ch2_HScrollBar.Value)
                 End If
                 ch2_HScrollBar.Minimum = strCH_2_Min.Value
-                If (HPMath) Then iMinValue = strCH_2_Min.Value * 5
-                If (iMinValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                If (HPMath) Then
+                    iMinValue = strCH_2_Min.Value * 5
+                    If (iMinValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                End If
                 If (iMinValue < 1000) Then strChannelBuffer = strChannelBuffer + "0"
                 strChannelBuffer = strChannelBuffer + Convert.ToString(iMinValue)
                 Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
@@ -1726,8 +1746,10 @@ ErrorExit:
                     strCH_3_Current.Text = Convert.ToString(ch3_HScrollBar.Value)
                 End If
                 ch3_HScrollBar.Minimum = strCH_3_Min.Value
-                If (HPMath) Then iMinValue = strCH_3_Min.Value * 5
-                If (iMinValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                If (HPMath) Then
+                    iMinValue = strCH_3_Min.Value * 5
+                    If (iMinValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                End If
                 If (iMinValue < 1000) Then strChannelBuffer = strChannelBuffer + "0"
                 strChannelBuffer = strChannelBuffer + Convert.ToString(iMinValue)
                 Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
@@ -1745,8 +1767,10 @@ ErrorExit:
                     strCH_4_Current.Text = Convert.ToString(ch4_HScrollBar.Value)
                 End If
                 ch4_HScrollBar.Minimum = strCH_4_Min.Value
-                If (HPMath) Then iMinValue = strCH_4_Min.Value * 5
-                If (iMinValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                If (HPMath) Then
+                    iMinValue = strCH_4_Min.Value * 5
+                    If (iMinValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                End If
                 If (iMinValue < 1000) Then strChannelBuffer = strChannelBuffer + "0"
                 strChannelBuffer = strChannelBuffer + Convert.ToString(iMinValue)
                 Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
@@ -1764,8 +1788,10 @@ ErrorExit:
                     strCH_5_Current.Text = Convert.ToString(ch5_HScrollBar.Value)
                 End If
                 ch5_HScrollBar.Minimum = strCH_5_Min.Value
-                If (HPMath) Then iMinValue = strCH_5_Min.Value * 5
-                If (iMinValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                If (HPMath) Then
+                    iMinValue = strCH_5_Min.Value * 5
+                    If (iMinValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                End If
                 If (iMinValue < 1000) Then strChannelBuffer = strChannelBuffer + "0"
                 strChannelBuffer = strChannelBuffer + Convert.ToString(iMinValue)
                 Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
@@ -1783,8 +1809,10 @@ ErrorExit:
                     strCH_6_Current.Text = Convert.ToString(ch6_HScrollBar.Value)
                 End If
                 ch6_HScrollBar.Minimum = strCH_6_Min.Value
-                If (HPMath) Then iMinValue = strCH_6_Min.Value * 5
-                If (iMinValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                If (HPMath) Then
+                    iMinValue = strCH_6_Min.Value * 5
+                    If (iMinValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                End If
                 If (iMinValue < 1000) Then strChannelBuffer = strChannelBuffer + "0"
                 strChannelBuffer = strChannelBuffer + Convert.ToString(iMinValue)
                 Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
@@ -1802,8 +1830,10 @@ ErrorExit:
                     strCH_7_Current.Text = Convert.ToString(ch7_HScrollBar.Value)
                 End If
                 ch7_HScrollBar.Minimum = strCH_7_Min.Value
-                If (HPMath) Then iMinValue = strCH_7_Min.Value * 5
-                If (iMinValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                If (HPMath) Then
+                    iMinValue = strCH_7_Min.Value * 5
+                    If (iMinValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                End If
                 If (iMinValue < 1000) Then strChannelBuffer = strChannelBuffer + "0"
                 strChannelBuffer = strChannelBuffer + Convert.ToString(iMinValue)
                 Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
@@ -1821,8 +1851,10 @@ ErrorExit:
                     strCH_8_Current.Text = Convert.ToString(ch8_HScrollBar.Value)
                 End If
                 ch8_HScrollBar.Minimum = strCH_8_Min.Value
-                If (HPMath) Then iMinValue = strCH_8_Min.Value * 5
-                If (iMinValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                If (HPMath) Then
+                    iMinValue = strCH_8_Min.Value * 5
+                    If (iMinValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                End If
                 If (iMinValue < 1000) Then strChannelBuffer = strChannelBuffer + "0"
                 strChannelBuffer = strChannelBuffer + Convert.ToString(iMinValue)
                 Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
@@ -1835,13 +1867,16 @@ ErrorExit:
             If Not boolSentChangeValueNotRequired(1) Then
                 Dim strChannelBuffer As String = "U1="
                 Dim iMaxValue = strCH_1_Max.Value
-                If ch1_HScrollBar.Value < strCH_1_Max.Value Then
+                If ch1_HScrollBar.Value > strCH_1_Max.Value Then
                     ch1_HScrollBar.Value = strCH_1_Max.Value
+                    ch1_HScrollBar.Maximum = strCH_1_Max.Value
                     strCH_1_Current.Text = Convert.ToString(ch1_HScrollBar.Value)
                 End If
                 ch1_HScrollBar.Maximum = strCH_1_Max.Value
-                If (HPMath) Then iMaxValue = strCH_1_Max.Value * 5
-                If (iMaxValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                If (HPMath) Then
+                    iMaxValue = strCH_1_Max.Value * 5
+                    If (iMaxValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                End If
                 If (iMaxValue < 1000) Then strChannelBuffer = strChannelBuffer + "0"
                 strChannelBuffer = strChannelBuffer + Convert.ToString(iMaxValue)
                 Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
@@ -1854,13 +1889,16 @@ ErrorExit:
             If Not boolSentChangeValueNotRequired(3) Then
                 Dim strChannelBuffer As String = "U2="
                 Dim iMaxValue = strCH_2_Max.Value
-                If ch2_HScrollBar.Value < strCH_2_Max.Value Then
+                If ch2_HScrollBar.Value > strCH_2_Max.Value Then
                     ch2_HScrollBar.Value = strCH_2_Max.Value
+                    ch2_HScrollBar.Maximum = strCH_2_Max.Value
                     strCH_2_Current.Text = Convert.ToString(ch2_HScrollBar.Value)
                 End If
                 ch2_HScrollBar.Maximum = strCH_2_Max.Value
-                If (HPMath) Then iMaxValue = strCH_2_Max.Value * 5
-                If (iMaxValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                If (HPMath) Then
+                    iMaxValue = strCH_2_Max.Value * 5
+                    If (iMaxValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                End If
                 If (iMaxValue < 1000) Then strChannelBuffer = strChannelBuffer + "0"
                 strChannelBuffer = strChannelBuffer + Convert.ToString(iMaxValue)
                 Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
@@ -1873,13 +1911,16 @@ ErrorExit:
             If Not boolSentChangeValueNotRequired(5) Then
                 Dim strChannelBuffer As String = "U3="
                 Dim iMaxValue = strCH_3_Max.Value
-                If ch3_HScrollBar.Value < strCH_3_Max.Value Then
+                If ch3_HScrollBar.Value > strCH_3_Max.Value Then
                     ch3_HScrollBar.Value = strCH_3_Max.Value
+                    ch3_HScrollBar.Maximum = strCH_3_Max.Value
                     strCH_3_Current.Text = Convert.ToString(ch3_HScrollBar.Value)
                 End If
                 ch3_HScrollBar.Maximum = strCH_3_Max.Value
-                If (HPMath) Then iMaxValue = strCH_3_Max.Value * 5
-                If (iMaxValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                If (HPMath) Then
+                    iMaxValue = strCH_3_Max.Value * 5
+                    If (iMaxValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                End If
                 If (iMaxValue < 1000) Then strChannelBuffer = strChannelBuffer + "0"
                 strChannelBuffer = strChannelBuffer + Convert.ToString(iMaxValue)
                 Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
@@ -1892,13 +1933,16 @@ ErrorExit:
             If Not boolSentChangeValueNotRequired(7) Then
                 Dim strChannelBuffer As String = "U4="
                 Dim iMaxValue = strCH_4_Max.Value
-                If ch4_HScrollBar.Value < strCH_4_Max.Value Then
+                If ch4_HScrollBar.Value > strCH_4_Max.Value Then
                     ch4_HScrollBar.Value = strCH_4_Max.Value
+                    ch4_HScrollBar.Maximum = strCH_4_Max.Value
                     strCH_4_Current.Text = Convert.ToString(ch4_HScrollBar.Value)
                 End If
                 ch4_HScrollBar.Maximum = strCH_4_Max.Value
-                If (HPMath) Then iMaxValue = strCH_4_Max.Value * 5
-                If (iMaxValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                If (HPMath) Then
+                    iMaxValue = strCH_4_Max.Value * 5
+                    If (iMaxValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                End If
                 If (iMaxValue < 1000) Then strChannelBuffer = strChannelBuffer + "0"
                 strChannelBuffer = strChannelBuffer + Convert.ToString(iMaxValue)
                 Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
@@ -1911,13 +1955,16 @@ ErrorExit:
             If Not boolSentChangeValueNotRequired(9) Then
                 Dim strChannelBuffer As String = "U5="
                 Dim iMaxValue = strCH_5_Max.Value
-                If ch5_HScrollBar.Value < strCH_5_Max.Value Then
+                If ch5_HScrollBar.Value > strCH_5_Max.Value Then
                     ch5_HScrollBar.Value = strCH_5_Max.Value
+                    ch5_HScrollBar.Maximum = strCH_5_Max.Value
                     strCH_5_Current.Text = Convert.ToString(ch5_HScrollBar.Value)
                 End If
                 ch5_HScrollBar.Maximum = strCH_5_Max.Value
-                If (HPMath) Then iMaxValue = strCH_5_Max.Value * 5
-                If (iMaxValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                If (HPMath) Then
+                    iMaxValue = strCH_5_Max.Value * 5
+                    If (iMaxValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                End If
                 If (iMaxValue < 1000) Then strChannelBuffer = strChannelBuffer + "0"
                 strChannelBuffer = strChannelBuffer + Convert.ToString(iMaxValue)
                 Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
@@ -1930,13 +1977,16 @@ ErrorExit:
             If Not boolSentChangeValueNotRequired(11) Then
                 Dim strChannelBuffer As String = "U6="
                 Dim iMaxValue = strCH_6_Max.Value
-                If ch6_HScrollBar.Value < strCH_6_Max.Value Then
+                If ch6_HScrollBar.Value > strCH_6_Max.Value Then
                     ch6_HScrollBar.Value = strCH_6_Max.Value
+                    ch6_HScrollBar.Maximum = strCH_6_Max.Value
                     strCH_6_Current.Text = Convert.ToString(ch6_HScrollBar.Value)
                 End If
                 ch6_HScrollBar.Maximum = strCH_6_Max.Value
-                If (HPMath) Then iMaxValue = strCH_6_Max.Value * 5
-                If (iMaxValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                If (HPMath) Then
+                    iMaxValue = strCH_6_Max.Value * 5
+                    If (iMaxValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                End If
                 If (iMaxValue < 1000) Then strChannelBuffer = strChannelBuffer + "0"
                 strChannelBuffer = strChannelBuffer + Convert.ToString(iMaxValue)
                 Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
@@ -1949,13 +1999,16 @@ ErrorExit:
             If Not boolSentChangeValueNotRequired(13) Then
                 Dim strChannelBuffer As String = "U7="
                 Dim iMaxValue = strCH_7_Max.Value
-                If ch7_HScrollBar.Value < strCH_7_Max.Value Then
+                If ch7_HScrollBar.Value > strCH_7_Max.Value Then
                     ch7_HScrollBar.Value = strCH_7_Max.Value
+                    ch7_HScrollBar.Maximum = strCH_7_Max.Value
                     strCH_7_Current.Text = Convert.ToString(ch7_HScrollBar.Value)
                 End If
                 ch7_HScrollBar.Maximum = strCH_7_Max.Value
-                If (HPMath) Then iMaxValue = strCH_7_Max.Value * 5
-                If (iMaxValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                If (HPMath) Then
+                    iMaxValue = strCH_7_Max.Value * 5
+                    If (iMaxValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                End If
                 If (iMaxValue < 1000) Then strChannelBuffer = strChannelBuffer + "0"
                 strChannelBuffer = strChannelBuffer + Convert.ToString(iMaxValue)
                 Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
@@ -1968,13 +2021,16 @@ ErrorExit:
             If Not boolSentChangeValueNotRequired(15) Then
                 Dim strChannelBuffer As String = "U8="
                 Dim iMaxValue = strCH_8_Max.Value
-                If ch8_HScrollBar.Value < strCH_8_Max.Value Then
+                If ch8_HScrollBar.Value > strCH_8_Max.Value Then
                     ch8_HScrollBar.Value = strCH_8_Max.Value
+                    ch8_HScrollBar.Maximum = strCH_8_Max.Value
                     strCH_8_Current.Text = Convert.ToString(ch8_HScrollBar.Value)
                 End If
                 ch8_HScrollBar.Maximum = strCH_8_Max.Value
-                If (HPMath) Then iMaxValue = strCH_8_Max.Value * 5
-                If (iMaxValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                If (HPMath) Then
+                    iMaxValue = strCH_8_Max.Value * 5
+                    If (iMaxValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+                End If
                 If (iMaxValue < 1000) Then strChannelBuffer = strChannelBuffer + "0"
                 strChannelBuffer = strChannelBuffer + Convert.ToString(iMaxValue)
                 Call mySerialLink.SendDataToSerialwithAck(strChannelBuffer)
