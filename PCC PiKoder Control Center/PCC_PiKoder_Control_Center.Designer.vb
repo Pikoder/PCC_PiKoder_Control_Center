@@ -28,6 +28,15 @@ Partial Class PCC_PiKoder_Control_Center
         Me.AvailableCOMPorts = New System.Windows.Forms.ListBox()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.Led2 = New LED()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.Label13 = New System.Windows.Forms.Label()
+        Me.Label14 = New System.Windows.Forms.Label()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
         Me.GroupBox12 = New System.Windows.Forms.GroupBox()
@@ -82,15 +91,7 @@ Partial Class PCC_PiKoder_Control_Center
         Me.strCH_4_Current = New System.Windows.Forms.TextBox()
         Me.strCH_3_Current = New System.Windows.Forms.TextBox()
         Me.strCH_2_Current = New System.Windows.Forms.TextBox()
-        Me.Label14 = New System.Windows.Forms.Label()
-        Me.Label13 = New System.Windows.Forms.Label()
         Me.strCH_1_Current = New System.Windows.Forms.TextBox()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.Label9 = New System.Windows.Forms.Label()
-        Me.Label8 = New System.Windows.Forms.Label()
-        Me.Label7 = New System.Windows.Forms.Label()
-        Me.Label6 = New System.Windows.Forms.Label()
-        Me.Label5 = New System.Windows.Forms.Label()
         Me.GroupBox5 = New System.Windows.Forms.GroupBox()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
@@ -108,7 +109,15 @@ Partial Class PCC_PiKoder_Control_Center
         Me.PPM_Channels = New System.Windows.Forms.NumericUpDown()
         Me.tHeartBeat = New System.Windows.Forms.Timer(Me.components)
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
-        Me.Led2 = New LED()
+        Me.GroupBox18 = New System.Windows.Forms.GroupBox()
+        Me.ListBox8 = New System.Windows.Forms.ListBox()
+        Me.ListBox7 = New System.Windows.Forms.ListBox()
+        Me.ListBox6 = New System.Windows.Forms.ListBox()
+        Me.ListBox5 = New System.Windows.Forms.ListBox()
+        Me.ListBox4 = New System.Windows.Forms.ListBox()
+        Me.ListBox3 = New System.Windows.Forms.ListBox()
+        Me.ListBox2 = New System.Windows.Forms.ListBox()
+        Me.ListBox1 = New System.Windows.Forms.ListBox()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
@@ -159,6 +168,7 @@ Partial Class PCC_PiKoder_Control_Center
         Me.GroupBox14.SuspendLayout()
         CType(Me.NumericUpDown2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PPM_Channels, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupBox18.SuspendLayout()
         Me.SuspendLayout()
         '
         'GroupBox1
@@ -200,7 +210,7 @@ Partial Class PCC_PiKoder_Control_Center
         '
         Me.TextBox1.Location = New System.Drawing.Point(12, 22)
         Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(279, 24)
+        Me.TextBox1.Size = New System.Drawing.Size(340, 24)
         Me.TextBox1.TabIndex = 22
         '
         'GroupBox2
@@ -215,10 +225,135 @@ Partial Class PCC_PiKoder_Control_Center
         Me.GroupBox2.Name = "GroupBox2"
         Me.GroupBox2.Padding = New System.Windows.Forms.Padding(0)
         Me.GroupBox2.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.GroupBox2.Size = New System.Drawing.Size(360, 75)
+        Me.GroupBox2.Size = New System.Drawing.Size(424, 74)
         Me.GroupBox2.TabIndex = 22
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Status"
+        '
+        'Led2
+        '
+        Me.Led2.BackColor = System.Drawing.SystemColors.ButtonFace
+        Me.Led2.Blink = False
+        Me.Led2.Color = LED.LEDColorSelection.LED_Red
+        Me.Led2.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Led2.Interval = CType(0, Short)
+        Me.Led2.Location = New System.Drawing.Point(370, 17)
+        Me.Led2.Name = "Led2"
+        Me.Led2.Size = New System.Drawing.Size(33, 35)
+        Me.Led2.State = False
+        Me.Led2.TabIndex = 23
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.BackColor = System.Drawing.SystemColors.Control
+        Me.Label5.Cursor = System.Windows.Forms.Cursors.Default
+        Me.Label5.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label5.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.Label5.Location = New System.Drawing.Point(6, 53)
+        Me.Label5.Name = "Label5"
+        Me.Label5.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.Label5.Size = New System.Drawing.Size(33, 29)
+        Me.Label5.TabIndex = 18
+        Me.Label5.Text = "1:"
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.BackColor = System.Drawing.SystemColors.Control
+        Me.Label6.Cursor = System.Windows.Forms.Cursors.Default
+        Me.Label6.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label6.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.Label6.Location = New System.Drawing.Point(6, 93)
+        Me.Label6.Name = "Label6"
+        Me.Label6.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.Label6.Size = New System.Drawing.Size(33, 29)
+        Me.Label6.TabIndex = 19
+        Me.Label6.Text = "2:"
+        '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.BackColor = System.Drawing.SystemColors.Control
+        Me.Label7.Cursor = System.Windows.Forms.Cursors.Default
+        Me.Label7.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label7.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.Label7.Location = New System.Drawing.Point(6, 135)
+        Me.Label7.Name = "Label7"
+        Me.Label7.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.Label7.Size = New System.Drawing.Size(33, 29)
+        Me.Label7.TabIndex = 20
+        Me.Label7.Text = "3:"
+        '
+        'Label8
+        '
+        Me.Label8.AutoSize = True
+        Me.Label8.BackColor = System.Drawing.SystemColors.Control
+        Me.Label8.Cursor = System.Windows.Forms.Cursors.Default
+        Me.Label8.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label8.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.Label8.Location = New System.Drawing.Point(6, 175)
+        Me.Label8.Name = "Label8"
+        Me.Label8.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.Label8.Size = New System.Drawing.Size(33, 29)
+        Me.Label8.TabIndex = 21
+        Me.Label8.Text = "4:"
+        '
+        'Label9
+        '
+        Me.Label9.AutoSize = True
+        Me.Label9.BackColor = System.Drawing.SystemColors.Control
+        Me.Label9.Cursor = System.Windows.Forms.Cursors.Default
+        Me.Label9.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label9.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.Label9.Location = New System.Drawing.Point(6, 218)
+        Me.Label9.Name = "Label9"
+        Me.Label9.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.Label9.Size = New System.Drawing.Size(33, 29)
+        Me.Label9.TabIndex = 22
+        Me.Label9.Text = "5:"
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.BackColor = System.Drawing.SystemColors.Control
+        Me.Label2.Cursor = System.Windows.Forms.Cursors.Default
+        Me.Label2.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label2.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.Label2.Location = New System.Drawing.Point(6, 259)
+        Me.Label2.Name = "Label2"
+        Me.Label2.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.Label2.Size = New System.Drawing.Size(33, 29)
+        Me.Label2.TabIndex = 26
+        Me.Label2.Text = "6:"
+        '
+        'Label13
+        '
+        Me.Label13.AutoSize = True
+        Me.Label13.BackColor = System.Drawing.SystemColors.Control
+        Me.Label13.Cursor = System.Windows.Forms.Cursors.Default
+        Me.Label13.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label13.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.Label13.Location = New System.Drawing.Point(6, 303)
+        Me.Label13.Name = "Label13"
+        Me.Label13.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.Label13.Size = New System.Drawing.Size(33, 29)
+        Me.Label13.TabIndex = 27
+        Me.Label13.Text = "7:"
+        '
+        'Label14
+        '
+        Me.Label14.AutoSize = True
+        Me.Label14.BackColor = System.Drawing.SystemColors.Control
+        Me.Label14.Cursor = System.Windows.Forms.Cursors.Default
+        Me.Label14.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label14.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.Label14.Location = New System.Drawing.Point(5, 342)
+        Me.Label14.Name = "Label14"
+        Me.Label14.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.Label14.Size = New System.Drawing.Size(33, 29)
+        Me.Label14.TabIndex = 28
+        Me.Label14.Text = "8:"
         '
         'GroupBox3
         '
@@ -231,7 +366,7 @@ Partial Class PCC_PiKoder_Control_Center
         Me.GroupBox3.Name = "GroupBox3"
         Me.GroupBox3.Padding = New System.Windows.Forms.Padding(0)
         Me.GroupBox3.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.GroupBox3.Size = New System.Drawing.Size(655, 107)
+        Me.GroupBox3.Size = New System.Drawing.Size(710, 107)
         Me.GroupBox3.TabIndex = 22
         Me.GroupBox3.TabStop = False
         Me.GroupBox3.Text = "Connection to PiKoder"
@@ -318,7 +453,7 @@ Partial Class PCC_PiKoder_Control_Center
         Me.GroupBox7.Controls.Add(Me.saveButton)
         Me.GroupBox7.Font = New System.Drawing.Font("Arial", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GroupBox7.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.GroupBox7.Location = New System.Drawing.Point(675, 440)
+        Me.GroupBox7.Location = New System.Drawing.Point(732, 440)
         Me.GroupBox7.Name = "GroupBox7"
         Me.GroupBox7.Padding = New System.Windows.Forms.Padding(0)
         Me.GroupBox7.RightToLeft = System.Windows.Forms.RightToLeft.No
@@ -363,6 +498,14 @@ Partial Class PCC_PiKoder_Control_Center
         Me.frmOuter.BackColor = System.Drawing.SystemColors.Control
         Me.frmOuter.Controls.Add(Me.GroupBox9)
         Me.frmOuter.Controls.Add(Me.GroupBox10)
+        Me.frmOuter.Controls.Add(Me.Label14)
+        Me.frmOuter.Controls.Add(Me.Label13)
+        Me.frmOuter.Controls.Add(Me.Label2)
+        Me.frmOuter.Controls.Add(Me.Label9)
+        Me.frmOuter.Controls.Add(Me.Label8)
+        Me.frmOuter.Controls.Add(Me.Label7)
+        Me.frmOuter.Controls.Add(Me.Label6)
+        Me.frmOuter.Controls.Add(Me.Label5)
         Me.frmOuter.Controls.Add(Me.GroupBox11)
         Me.frmOuter.Controls.Add(Me._Frame2_0)
         Me.frmOuter.Font = New System.Drawing.Font("Arial", 13.5!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -371,10 +514,10 @@ Partial Class PCC_PiKoder_Control_Center
         Me.frmOuter.Name = "frmOuter"
         Me.frmOuter.Padding = New System.Windows.Forms.Padding(0)
         Me.frmOuter.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.frmOuter.Size = New System.Drawing.Size(655, 397)
+        Me.frmOuter.Size = New System.Drawing.Size(710, 397)
         Me.frmOuter.TabIndex = 23
         Me.frmOuter.TabStop = False
-        Me.frmOuter.Text = "Channels [µs]"
+        Me.frmOuter.Text = "Channels"
         '
         'GroupBox9
         '
@@ -390,7 +533,7 @@ Partial Class PCC_PiKoder_Control_Center
         Me.GroupBox9.Controls.Add(Me.strCH_1_Min)
         Me.GroupBox9.Font = New System.Drawing.Font("Arial", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GroupBox9.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.GroupBox9.Location = New System.Drawing.Point(380, 24)
+        Me.GroupBox9.Location = New System.Drawing.Point(449, 24)
         Me.GroupBox9.Name = "GroupBox9"
         Me.GroupBox9.Padding = New System.Windows.Forms.Padding(0)
         Me.GroupBox9.RightToLeft = System.Windows.Forms.RightToLeft.No
@@ -509,7 +652,7 @@ Partial Class PCC_PiKoder_Control_Center
         Me.GroupBox10.Controls.Add(Me.strCH_1_Max)
         Me.GroupBox10.Font = New System.Drawing.Font("Arial", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GroupBox10.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.GroupBox10.Location = New System.Drawing.Point(469, 24)
+        Me.GroupBox10.Location = New System.Drawing.Point(535, 24)
         Me.GroupBox10.Name = "GroupBox10"
         Me.GroupBox10.Padding = New System.Windows.Forms.Padding(0)
         Me.GroupBox10.RightToLeft = System.Windows.Forms.RightToLeft.No
@@ -630,7 +773,7 @@ Partial Class PCC_PiKoder_Control_Center
         Me.GroupBox11.Controls.Add(Me.strCH_1_Neutral)
         Me.GroupBox11.Font = New System.Drawing.Font("Arial", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GroupBox11.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.GroupBox11.Location = New System.Drawing.Point(557, 24)
+        Me.GroupBox11.Location = New System.Drawing.Point(621, 24)
         Me.GroupBox11.Name = "GroupBox11"
         Me.GroupBox11.Padding = New System.Windows.Forms.Padding(0)
         Me.GroupBox11.RightToLeft = System.Windows.Forms.RightToLeft.No
@@ -738,30 +881,22 @@ Partial Class PCC_PiKoder_Control_Center
         Me._Frame2_0.Controls.Add(Me.strCH_4_Current)
         Me._Frame2_0.Controls.Add(Me.strCH_3_Current)
         Me._Frame2_0.Controls.Add(Me.strCH_2_Current)
-        Me._Frame2_0.Controls.Add(Me.Label14)
-        Me._Frame2_0.Controls.Add(Me.Label13)
         Me._Frame2_0.Controls.Add(Me.strCH_1_Current)
-        Me._Frame2_0.Controls.Add(Me.Label2)
-        Me._Frame2_0.Controls.Add(Me.Label9)
-        Me._Frame2_0.Controls.Add(Me.Label8)
-        Me._Frame2_0.Controls.Add(Me.Label7)
-        Me._Frame2_0.Controls.Add(Me.Label6)
-        Me._Frame2_0.Controls.Add(Me.Label5)
         Me._Frame2_0.Font = New System.Drawing.Font("Arial", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me._Frame2_0.ForeColor = System.Drawing.SystemColors.ControlText
-        Me._Frame2_0.Location = New System.Drawing.Point(14, 24)
+        Me._Frame2_0.Location = New System.Drawing.Point(110, 24)
         Me._Frame2_0.Name = "_Frame2_0"
         Me._Frame2_0.Padding = New System.Windows.Forms.Padding(0)
         Me._Frame2_0.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me._Frame2_0.Size = New System.Drawing.Size(360, 370)
+        Me._Frame2_0.Size = New System.Drawing.Size(333, 370)
         Me._Frame2_0.TabIndex = 3
         Me._Frame2_0.TabStop = False
-        Me._Frame2_0.Text = "Position"
+        Me._Frame2_0.Text = "Position [µs]"
         '
         'ch8_HScrollBar
         '
         Me.ch8_HScrollBar.LargeChange = 1
-        Me.ch8_HScrollBar.Location = New System.Drawing.Point(122, 315)
+        Me.ch8_HScrollBar.Location = New System.Drawing.Point(95, 315)
         Me.ch8_HScrollBar.Margin = New System.Windows.Forms.Padding(2)
         Me.ch8_HScrollBar.Maximum = 2500
         Me.ch8_HScrollBar.Name = "ch8_HScrollBar"
@@ -772,7 +907,7 @@ Partial Class PCC_PiKoder_Control_Center
         'ch7_HScrollBar
         '
         Me.ch7_HScrollBar.LargeChange = 1
-        Me.ch7_HScrollBar.Location = New System.Drawing.Point(122, 274)
+        Me.ch7_HScrollBar.Location = New System.Drawing.Point(95, 274)
         Me.ch7_HScrollBar.Margin = New System.Windows.Forms.Padding(2)
         Me.ch7_HScrollBar.Maximum = 2500
         Me.ch7_HScrollBar.Name = "ch7_HScrollBar"
@@ -783,7 +918,7 @@ Partial Class PCC_PiKoder_Control_Center
         'ch6_HScrollBar
         '
         Me.ch6_HScrollBar.LargeChange = 1
-        Me.ch6_HScrollBar.Location = New System.Drawing.Point(122, 233)
+        Me.ch6_HScrollBar.Location = New System.Drawing.Point(95, 233)
         Me.ch6_HScrollBar.Margin = New System.Windows.Forms.Padding(2)
         Me.ch6_HScrollBar.Maximum = 2500
         Me.ch6_HScrollBar.Name = "ch6_HScrollBar"
@@ -794,7 +929,7 @@ Partial Class PCC_PiKoder_Control_Center
         'ch5_HScrollBar
         '
         Me.ch5_HScrollBar.LargeChange = 1
-        Me.ch5_HScrollBar.Location = New System.Drawing.Point(122, 194)
+        Me.ch5_HScrollBar.Location = New System.Drawing.Point(95, 194)
         Me.ch5_HScrollBar.Margin = New System.Windows.Forms.Padding(2)
         Me.ch5_HScrollBar.Maximum = 2500
         Me.ch5_HScrollBar.Name = "ch5_HScrollBar"
@@ -805,7 +940,7 @@ Partial Class PCC_PiKoder_Control_Center
         'ch4_HScrollBar
         '
         Me.ch4_HScrollBar.LargeChange = 1
-        Me.ch4_HScrollBar.Location = New System.Drawing.Point(122, 150)
+        Me.ch4_HScrollBar.Location = New System.Drawing.Point(95, 150)
         Me.ch4_HScrollBar.Margin = New System.Windows.Forms.Padding(2)
         Me.ch4_HScrollBar.Maximum = 2500
         Me.ch4_HScrollBar.Name = "ch4_HScrollBar"
@@ -816,7 +951,7 @@ Partial Class PCC_PiKoder_Control_Center
         'ch3_HScrollBar
         '
         Me.ch3_HScrollBar.LargeChange = 1
-        Me.ch3_HScrollBar.Location = New System.Drawing.Point(122, 107)
+        Me.ch3_HScrollBar.Location = New System.Drawing.Point(95, 107)
         Me.ch3_HScrollBar.Margin = New System.Windows.Forms.Padding(2)
         Me.ch3_HScrollBar.Maximum = 2500
         Me.ch3_HScrollBar.Name = "ch3_HScrollBar"
@@ -827,7 +962,7 @@ Partial Class PCC_PiKoder_Control_Center
         'ch2_HScrollBar
         '
         Me.ch2_HScrollBar.LargeChange = 1
-        Me.ch2_HScrollBar.Location = New System.Drawing.Point(122, 66)
+        Me.ch2_HScrollBar.Location = New System.Drawing.Point(95, 66)
         Me.ch2_HScrollBar.Margin = New System.Windows.Forms.Padding(2)
         Me.ch2_HScrollBar.Maximum = 2500
         Me.ch2_HScrollBar.Name = "ch2_HScrollBar"
@@ -838,7 +973,7 @@ Partial Class PCC_PiKoder_Control_Center
         'ch1_HScrollBar
         '
         Me.ch1_HScrollBar.LargeChange = 1
-        Me.ch1_HScrollBar.Location = New System.Drawing.Point(122, 26)
+        Me.ch1_HScrollBar.Location = New System.Drawing.Point(95, 26)
         Me.ch1_HScrollBar.Margin = New System.Windows.Forms.Padding(2)
         Me.ch1_HScrollBar.Maximum = 2500
         Me.ch1_HScrollBar.Name = "ch1_HScrollBar"
@@ -853,7 +988,7 @@ Partial Class PCC_PiKoder_Control_Center
         Me.strCH_8_Current.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.strCH_8_Current.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.strCH_8_Current.ForeColor = System.Drawing.SystemColors.WindowText
-        Me.strCH_8_Current.Location = New System.Drawing.Point(42, 313)
+        Me.strCH_8_Current.Location = New System.Drawing.Point(15, 313)
         Me.strCH_8_Current.MaxLength = 4
         Me.strCH_8_Current.Name = "strCH_8_Current"
         Me.strCH_8_Current.ReadOnly = True
@@ -869,7 +1004,7 @@ Partial Class PCC_PiKoder_Control_Center
         Me.strCH_7_Current.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.strCH_7_Current.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.strCH_7_Current.ForeColor = System.Drawing.SystemColors.WindowText
-        Me.strCH_7_Current.Location = New System.Drawing.Point(42, 273)
+        Me.strCH_7_Current.Location = New System.Drawing.Point(14, 273)
         Me.strCH_7_Current.MaxLength = 4
         Me.strCH_7_Current.Name = "strCH_7_Current"
         Me.strCH_7_Current.ReadOnly = True
@@ -885,7 +1020,7 @@ Partial Class PCC_PiKoder_Control_Center
         Me.strCH_6_Current.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.strCH_6_Current.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.strCH_6_Current.ForeColor = System.Drawing.SystemColors.WindowText
-        Me.strCH_6_Current.Location = New System.Drawing.Point(41, 231)
+        Me.strCH_6_Current.Location = New System.Drawing.Point(13, 231)
         Me.strCH_6_Current.MaxLength = 4
         Me.strCH_6_Current.Name = "strCH_6_Current"
         Me.strCH_6_Current.ReadOnly = True
@@ -901,7 +1036,7 @@ Partial Class PCC_PiKoder_Control_Center
         Me.strCH_5_Current.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.strCH_5_Current.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.strCH_5_Current.ForeColor = System.Drawing.SystemColors.WindowText
-        Me.strCH_5_Current.Location = New System.Drawing.Point(40, 191)
+        Me.strCH_5_Current.Location = New System.Drawing.Point(13, 191)
         Me.strCH_5_Current.MaxLength = 4
         Me.strCH_5_Current.Name = "strCH_5_Current"
         Me.strCH_5_Current.ReadOnly = True
@@ -917,7 +1052,7 @@ Partial Class PCC_PiKoder_Control_Center
         Me.strCH_4_Current.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.strCH_4_Current.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.strCH_4_Current.ForeColor = System.Drawing.SystemColors.WindowText
-        Me.strCH_4_Current.Location = New System.Drawing.Point(39, 148)
+        Me.strCH_4_Current.Location = New System.Drawing.Point(12, 148)
         Me.strCH_4_Current.MaxLength = 4
         Me.strCH_4_Current.Name = "strCH_4_Current"
         Me.strCH_4_Current.ReadOnly = True
@@ -933,7 +1068,7 @@ Partial Class PCC_PiKoder_Control_Center
         Me.strCH_3_Current.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.strCH_3_Current.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.strCH_3_Current.ForeColor = System.Drawing.SystemColors.WindowText
-        Me.strCH_3_Current.Location = New System.Drawing.Point(39, 107)
+        Me.strCH_3_Current.Location = New System.Drawing.Point(11, 107)
         Me.strCH_3_Current.MaxLength = 4
         Me.strCH_3_Current.Name = "strCH_3_Current"
         Me.strCH_3_Current.ReadOnly = True
@@ -949,7 +1084,7 @@ Partial Class PCC_PiKoder_Control_Center
         Me.strCH_2_Current.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.strCH_2_Current.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.strCH_2_Current.ForeColor = System.Drawing.SystemColors.WindowText
-        Me.strCH_2_Current.Location = New System.Drawing.Point(38, 65)
+        Me.strCH_2_Current.Location = New System.Drawing.Point(10, 65)
         Me.strCH_2_Current.MaxLength = 4
         Me.strCH_2_Current.Name = "strCH_2_Current"
         Me.strCH_2_Current.ReadOnly = True
@@ -958,34 +1093,6 @@ Partial Class PCC_PiKoder_Control_Center
         Me.strCH_2_Current.TabIndex = 6
         Me.strCH_2_Current.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
-        'Label14
-        '
-        Me.Label14.AutoSize = True
-        Me.Label14.BackColor = System.Drawing.SystemColors.Control
-        Me.Label14.Cursor = System.Windows.Forms.Cursors.Default
-        Me.Label14.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label14.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.Label14.Location = New System.Drawing.Point(13, 317)
-        Me.Label14.Name = "Label14"
-        Me.Label14.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Label14.Size = New System.Drawing.Size(32, 27)
-        Me.Label14.TabIndex = 28
-        Me.Label14.Text = "8:"
-        '
-        'Label13
-        '
-        Me.Label13.AutoSize = True
-        Me.Label13.BackColor = System.Drawing.SystemColors.Control
-        Me.Label13.Cursor = System.Windows.Forms.Cursors.Default
-        Me.Label13.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label13.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.Label13.Location = New System.Drawing.Point(13, 276)
-        Me.Label13.Name = "Label13"
-        Me.Label13.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Label13.Size = New System.Drawing.Size(32, 27)
-        Me.Label13.TabIndex = 27
-        Me.Label13.Text = "7:"
-        '
         'strCH_1_Current
         '
         Me.strCH_1_Current.AcceptsReturn = True
@@ -993,7 +1100,7 @@ Partial Class PCC_PiKoder_Control_Center
         Me.strCH_1_Current.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.strCH_1_Current.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.strCH_1_Current.ForeColor = System.Drawing.SystemColors.WindowText
-        Me.strCH_1_Current.Location = New System.Drawing.Point(38, 24)
+        Me.strCH_1_Current.Location = New System.Drawing.Point(10, 24)
         Me.strCH_1_Current.MaxLength = 6
         Me.strCH_1_Current.Name = "strCH_1_Current"
         Me.strCH_1_Current.ReadOnly = True
@@ -1001,90 +1108,6 @@ Partial Class PCC_PiKoder_Control_Center
         Me.strCH_1_Current.Size = New System.Drawing.Size(73, 35)
         Me.strCH_1_Current.TabIndex = 1
         Me.strCH_1_Current.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.BackColor = System.Drawing.SystemColors.Control
-        Me.Label2.Cursor = System.Windows.Forms.Cursors.Default
-        Me.Label2.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.Label2.Location = New System.Drawing.Point(13, 235)
-        Me.Label2.Name = "Label2"
-        Me.Label2.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Label2.Size = New System.Drawing.Size(32, 27)
-        Me.Label2.TabIndex = 26
-        Me.Label2.Text = "6:"
-        '
-        'Label9
-        '
-        Me.Label9.AutoSize = True
-        Me.Label9.BackColor = System.Drawing.SystemColors.Control
-        Me.Label9.Cursor = System.Windows.Forms.Cursors.Default
-        Me.Label9.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label9.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.Label9.Location = New System.Drawing.Point(12, 195)
-        Me.Label9.Name = "Label9"
-        Me.Label9.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Label9.Size = New System.Drawing.Size(32, 27)
-        Me.Label9.TabIndex = 22
-        Me.Label9.Text = "5:"
-        '
-        'Label8
-        '
-        Me.Label8.AutoSize = True
-        Me.Label8.BackColor = System.Drawing.SystemColors.Control
-        Me.Label8.Cursor = System.Windows.Forms.Cursors.Default
-        Me.Label8.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label8.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.Label8.Location = New System.Drawing.Point(13, 151)
-        Me.Label8.Name = "Label8"
-        Me.Label8.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Label8.Size = New System.Drawing.Size(32, 27)
-        Me.Label8.TabIndex = 21
-        Me.Label8.Text = "4:"
-        '
-        'Label7
-        '
-        Me.Label7.AutoSize = True
-        Me.Label7.BackColor = System.Drawing.SystemColors.Control
-        Me.Label7.Cursor = System.Windows.Forms.Cursors.Default
-        Me.Label7.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label7.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.Label7.Location = New System.Drawing.Point(10, 109)
-        Me.Label7.Name = "Label7"
-        Me.Label7.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Label7.Size = New System.Drawing.Size(32, 27)
-        Me.Label7.TabIndex = 20
-        Me.Label7.Text = "3:"
-        '
-        'Label6
-        '
-        Me.Label6.AutoSize = True
-        Me.Label6.BackColor = System.Drawing.SystemColors.Control
-        Me.Label6.Cursor = System.Windows.Forms.Cursors.Default
-        Me.Label6.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label6.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.Label6.Location = New System.Drawing.Point(9, 68)
-        Me.Label6.Name = "Label6"
-        Me.Label6.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Label6.Size = New System.Drawing.Size(32, 27)
-        Me.Label6.TabIndex = 19
-        Me.Label6.Text = "2:"
-        '
-        'Label5
-        '
-        Me.Label5.AutoSize = True
-        Me.Label5.BackColor = System.Drawing.SystemColors.Control
-        Me.Label5.Cursor = System.Windows.Forms.Cursors.Default
-        Me.Label5.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label5.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.Label5.Location = New System.Drawing.Point(7, 27)
-        Me.Label5.Name = "Label5"
-        Me.Label5.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Label5.Size = New System.Drawing.Size(32, 27)
-        Me.Label5.TabIndex = 18
-        Me.Label5.Text = "1:"
         '
         'GroupBox5
         '
@@ -1095,7 +1118,7 @@ Partial Class PCC_PiKoder_Control_Center
         Me.GroupBox5.Controls.Add(Me.TypeId)
         Me.GroupBox5.Font = New System.Drawing.Font("Arial", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GroupBox5.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.GroupBox5.Location = New System.Drawing.Point(677, 10)
+        Me.GroupBox5.Location = New System.Drawing.Point(730, 10)
         Me.GroupBox5.Name = "GroupBox5"
         Me.GroupBox5.Padding = New System.Windows.Forms.Padding(0)
         Me.GroupBox5.RightToLeft = System.Windows.Forms.RightToLeft.No
@@ -1147,7 +1170,7 @@ Partial Class PCC_PiKoder_Control_Center
         Me.GroupBox6.Controls.Add(Me.GroupBox4)
         Me.GroupBox6.Font = New System.Drawing.Font("Arial", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GroupBox6.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.GroupBox6.Location = New System.Drawing.Point(677, 126)
+        Me.GroupBox6.Location = New System.Drawing.Point(732, 126)
         Me.GroupBox6.Name = "GroupBox6"
         Me.GroupBox6.Padding = New System.Windows.Forms.Padding(0)
         Me.GroupBox6.RightToLeft = System.Windows.Forms.RightToLeft.No
@@ -1295,24 +1318,131 @@ Partial Class PCC_PiKoder_Control_Center
         Me.Timer1.Enabled = True
         Me.Timer1.Interval = 1
         '
-        'Led2
+        'GroupBox18
         '
-        Me.Led2.BackColor = System.Drawing.SystemColors.ButtonFace
-        Me.Led2.Blink = False
-        Me.Led2.Color = LED.LEDColorSelection.LED_Red
-        Me.Led2.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Led2.Interval = CType(0, Short)
-        Me.Led2.Location = New System.Drawing.Point(311, 18)
-        Me.Led2.Name = "Led2"
-        Me.Led2.Size = New System.Drawing.Size(33, 35)
-        Me.Led2.State = False
-        Me.Led2.TabIndex = 23
+        Me.GroupBox18.AutoSize = True
+        Me.GroupBox18.BackColor = System.Drawing.SystemColors.Control
+        Me.GroupBox18.Controls.Add(Me.ListBox8)
+        Me.GroupBox18.Controls.Add(Me.ListBox7)
+        Me.GroupBox18.Controls.Add(Me.ListBox6)
+        Me.GroupBox18.Controls.Add(Me.ListBox5)
+        Me.GroupBox18.Controls.Add(Me.ListBox4)
+        Me.GroupBox18.Controls.Add(Me.ListBox3)
+        Me.GroupBox18.Controls.Add(Me.ListBox2)
+        Me.GroupBox18.Controls.Add(Me.ListBox1)
+        Me.GroupBox18.Font = New System.Drawing.Font("Arial", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.GroupBox18.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.GroupBox18.Location = New System.Drawing.Point(49, 148)
+        Me.GroupBox18.Name = "GroupBox18"
+        Me.GroupBox18.Padding = New System.Windows.Forms.Padding(0)
+        Me.GroupBox18.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.GroupBox18.Size = New System.Drawing.Size(69, 370)
+        Me.GroupBox18.TabIndex = 28
+        Me.GroupBox18.TabStop = False
+        Me.GroupBox18.Text = "Type"
+        '
+        'ListBox8
+        '
+        Me.ListBox8.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Bold)
+        Me.ListBox8.ForeColor = System.Drawing.SystemColors.Window
+        Me.ListBox8.FormattingEnabled = True
+        Me.ListBox8.ItemHeight = 29
+        Me.ListBox8.Items.AddRange(New Object() {"P", "S"})
+        Me.ListBox8.Location = New System.Drawing.Point(8, 315)
+        Me.ListBox8.Name = "ListBox8"
+        Me.ListBox8.Size = New System.Drawing.Size(43, 33)
+        Me.ListBox8.TabIndex = 33
+        '
+        'ListBox7
+        '
+        Me.ListBox7.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Bold)
+        Me.ListBox7.ForeColor = System.Drawing.SystemColors.Window
+        Me.ListBox7.FormattingEnabled = True
+        Me.ListBox7.ItemHeight = 29
+        Me.ListBox7.Items.AddRange(New Object() {"P", "S"})
+        Me.ListBox7.Location = New System.Drawing.Point(8, 276)
+        Me.ListBox7.Name = "ListBox7"
+        Me.ListBox7.Size = New System.Drawing.Size(43, 33)
+        Me.ListBox7.TabIndex = 32
+        '
+        'ListBox6
+        '
+        Me.ListBox6.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Bold)
+        Me.ListBox6.ForeColor = System.Drawing.SystemColors.Window
+        Me.ListBox6.FormattingEnabled = True
+        Me.ListBox6.ItemHeight = 29
+        Me.ListBox6.Items.AddRange(New Object() {"P", "S"})
+        Me.ListBox6.Location = New System.Drawing.Point(8, 233)
+        Me.ListBox6.Name = "ListBox6"
+        Me.ListBox6.Size = New System.Drawing.Size(43, 33)
+        Me.ListBox6.TabIndex = 31
+        '
+        'ListBox5
+        '
+        Me.ListBox5.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Bold)
+        Me.ListBox5.ForeColor = System.Drawing.SystemColors.Window
+        Me.ListBox5.FormattingEnabled = True
+        Me.ListBox5.ItemHeight = 29
+        Me.ListBox5.Items.AddRange(New Object() {"P", "S"})
+        Me.ListBox5.Location = New System.Drawing.Point(8, 191)
+        Me.ListBox5.Name = "ListBox5"
+        Me.ListBox5.Size = New System.Drawing.Size(43, 33)
+        Me.ListBox5.TabIndex = 30
+        '
+        'ListBox4
+        '
+        Me.ListBox4.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Bold)
+        Me.ListBox4.ForeColor = System.Drawing.SystemColors.Window
+        Me.ListBox4.FormattingEnabled = True
+        Me.ListBox4.ItemHeight = 29
+        Me.ListBox4.Items.AddRange(New Object() {"P", "S"})
+        Me.ListBox4.Location = New System.Drawing.Point(8, 148)
+        Me.ListBox4.Name = "ListBox4"
+        Me.ListBox4.Size = New System.Drawing.Size(43, 33)
+        Me.ListBox4.TabIndex = 29
+        '
+        'ListBox3
+        '
+        Me.ListBox3.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Bold)
+        Me.ListBox3.ForeColor = System.Drawing.SystemColors.Window
+        Me.ListBox3.FormattingEnabled = True
+        Me.ListBox3.ItemHeight = 29
+        Me.ListBox3.Items.AddRange(New Object() {"P", "S"})
+        Me.ListBox3.Location = New System.Drawing.Point(8, 106)
+        Me.ListBox3.Name = "ListBox3"
+        Me.ListBox3.Size = New System.Drawing.Size(43, 33)
+        Me.ListBox3.TabIndex = 28
+        '
+        'ListBox2
+        '
+        Me.ListBox2.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Bold)
+        Me.ListBox2.ForeColor = System.Drawing.Color.White
+        Me.ListBox2.FormattingEnabled = True
+        Me.ListBox2.ItemHeight = 29
+        Me.ListBox2.Items.AddRange(New Object() {"P", "S"})
+        Me.ListBox2.Location = New System.Drawing.Point(8, 67)
+        Me.ListBox2.Name = "ListBox2"
+        Me.ListBox2.Size = New System.Drawing.Size(43, 33)
+        Me.ListBox2.TabIndex = 27
+        '
+        'ListBox1
+        '
+        Me.ListBox1.Font = New System.Drawing.Font("Arial", 18.0!, System.Drawing.FontStyle.Bold)
+        Me.ListBox1.ForeColor = System.Drawing.SystemColors.Window
+        Me.ListBox1.FormattingEnabled = True
+        Me.ListBox1.ItemHeight = 29
+        Me.ListBox1.Items.AddRange(New Object() {"P", "S"})
+        Me.ListBox1.Location = New System.Drawing.Point(8, 27)
+        Me.ListBox1.Name = "ListBox1"
+        Me.ListBox1.Size = New System.Drawing.Size(43, 33)
+        Me.ListBox1.TabIndex = 26
         '
         'PCC_PiKoder_Control_Center
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(890, 529)
+        Me.ClientSize = New System.Drawing.Size(949, 529)
+        Me.Controls.Add(Me.GroupBox18)
         Me.Controls.Add(Me.GroupBox5)
         Me.Controls.Add(Me.GroupBox7)
         Me.Controls.Add(Me.frmOuter)
@@ -1379,7 +1509,9 @@ Partial Class PCC_PiKoder_Control_Center
         Me.GroupBox14.ResumeLayout(False)
         CType(Me.NumericUpDown2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PPM_Channels, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GroupBox18.ResumeLayout(False)
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
     Public WithEvents GroupBox1 As System.Windows.Forms.GroupBox
@@ -1424,25 +1556,8 @@ Partial Class PCC_PiKoder_Control_Center
     Friend WithEvents strCH_3_Neutral As System.Windows.Forms.NumericUpDown
     Friend WithEvents strCH_2_Neutral As System.Windows.Forms.NumericUpDown
     Friend WithEvents strCH_1_Neutral As System.Windows.Forms.NumericUpDown
-    Public WithEvents _Frame2_0 As System.Windows.Forms.GroupBox
-    Friend WithEvents ch8_HScrollBar As System.Windows.Forms.HScrollBar
-    Friend WithEvents ch7_HScrollBar As System.Windows.Forms.HScrollBar
-    Friend WithEvents ch6_HScrollBar As System.Windows.Forms.HScrollBar
-    Friend WithEvents ch5_HScrollBar As System.Windows.Forms.HScrollBar
-    Friend WithEvents ch4_HScrollBar As System.Windows.Forms.HScrollBar
-    Friend WithEvents ch3_HScrollBar As System.Windows.Forms.HScrollBar
-    Friend WithEvents ch2_HScrollBar As System.Windows.Forms.HScrollBar
-    Friend WithEvents ch1_HScrollBar As System.Windows.Forms.HScrollBar
-    Public WithEvents strCH_8_Current As System.Windows.Forms.TextBox
-    Public WithEvents strCH_7_Current As System.Windows.Forms.TextBox
-    Public WithEvents strCH_6_Current As System.Windows.Forms.TextBox
-    Public WithEvents strCH_5_Current As System.Windows.Forms.TextBox
-    Public WithEvents strCH_4_Current As System.Windows.Forms.TextBox
-    Public WithEvents strCH_3_Current As System.Windows.Forms.TextBox
-    Public WithEvents strCH_2_Current As System.Windows.Forms.TextBox
     Public WithEvents Label14 As System.Windows.Forms.Label
     Public WithEvents Label13 As System.Windows.Forms.Label
-    Public WithEvents strCH_1_Current As System.Windows.Forms.TextBox
     Public WithEvents Label2 As System.Windows.Forms.Label
     Public WithEvents Label9 As System.Windows.Forms.Label
     Public WithEvents Label8 As System.Windows.Forms.Label
@@ -1468,4 +1583,30 @@ Partial Class PCC_PiKoder_Control_Center
     Friend WithEvents NumericUpDown2 As System.Windows.Forms.NumericUpDown
     Friend WithEvents PPM_Channels As System.Windows.Forms.NumericUpDown
     Friend WithEvents Timer1 As System.Windows.Forms.Timer
+    Public WithEvents GroupBox18 As System.Windows.Forms.GroupBox
+    Public WithEvents _Frame2_0 As System.Windows.Forms.GroupBox
+    Friend WithEvents ch8_HScrollBar As System.Windows.Forms.HScrollBar
+    Friend WithEvents ch7_HScrollBar As System.Windows.Forms.HScrollBar
+    Friend WithEvents ch6_HScrollBar As System.Windows.Forms.HScrollBar
+    Friend WithEvents ch5_HScrollBar As System.Windows.Forms.HScrollBar
+    Friend WithEvents ch4_HScrollBar As System.Windows.Forms.HScrollBar
+    Friend WithEvents ch3_HScrollBar As System.Windows.Forms.HScrollBar
+    Friend WithEvents ch2_HScrollBar As System.Windows.Forms.HScrollBar
+    Friend WithEvents ch1_HScrollBar As System.Windows.Forms.HScrollBar
+    Public WithEvents strCH_8_Current As System.Windows.Forms.TextBox
+    Public WithEvents strCH_7_Current As System.Windows.Forms.TextBox
+    Public WithEvents strCH_6_Current As System.Windows.Forms.TextBox
+    Public WithEvents strCH_5_Current As System.Windows.Forms.TextBox
+    Public WithEvents strCH_4_Current As System.Windows.Forms.TextBox
+    Public WithEvents strCH_3_Current As System.Windows.Forms.TextBox
+    Public WithEvents strCH_2_Current As System.Windows.Forms.TextBox
+    Public WithEvents strCH_1_Current As System.Windows.Forms.TextBox
+    Friend WithEvents ListBox7 As System.Windows.Forms.ListBox
+    Friend WithEvents ListBox6 As System.Windows.Forms.ListBox
+    Friend WithEvents ListBox5 As System.Windows.Forms.ListBox
+    Friend WithEvents ListBox4 As System.Windows.Forms.ListBox
+    Friend WithEvents ListBox3 As System.Windows.Forms.ListBox
+    Friend WithEvents ListBox2 As System.Windows.Forms.ListBox
+    Friend WithEvents ListBox1 As System.Windows.Forms.ListBox
+    Protected WithEvents ListBox8 As System.Windows.Forms.ListBox
 End Class

@@ -334,6 +334,33 @@ Public Class SerialLink
             System.Threading.Thread.Sleep(20) 'wait for next frame and allow for task switch
         Loop
     End Function
+    Public Function GetIOType() As Integer
+        Dim j As Integer
+        Dim iRetCode As Integer
+        Dim StartTime As DateTime
+        Dim myChar As Char
+        StartTime = Now
+        Do
+            Try
+                If mySerialPort.BytesToRead >= 5 Then ' make sure to receive complete message
+                    For i = 1 To mySerialPort.BytesToRead
+                        myChar = Chr(mySerialPort.ReadByte)
+                        If myChar = "P" Then iRetCode = 0
+                        If myChar = "S" Then iRetCode = 1
+                    Next
+                    Return iRetCode
+                End If
+            Catch ex As Exception
+            End Try
+            'check for TimeOut
+            j = j + 1
+            If j > 10 Then
+                Return 2 : Exit Do ' timeout exit
+            End If
+            System.Threading.Thread.Sleep(20) 'wait for next frame and allow for task switch
+        Loop
+    End Function
+
 
     Public Sub GetStatusRecord(ByRef SerialInputString As String)
         Dim j As Integer = 0

@@ -25,10 +25,13 @@ Public Class PCC_PiKoder_Control_Center
 
     ' declaration of variables
     Dim boolErrorFlag As Boolean ' global flag for errors in communication
+    Dim IOSwitching As Boolean = False
+    Dim bDataLoaded As Boolean = False ' flag to avoid data updates when no pikoder is present 
     Dim boolSentChangeValueNotRequired(24) As Boolean 'avoid unnecessary sending of param. changes to PiKoder
     Dim sDefaultMinValue As String = "750" ' default values for USB2PMM
     Dim sDefaultMaxValue As String = "2250"
     Dim HPMath As Boolean = False ' indicating that high precision computing is required
+    Dim iChannelSetting(8) As Integer ' contains the current output type (would be 1 for P(WM) and 2 fpr S(witch)
 
     ' declaration of subroutines
     ''' <summary>
@@ -339,6 +342,7 @@ ErrorExit:
         Timer1.Enabled = True
         TypeId.Text = ""
         HPMath = False
+        bDataLoaded = False
 
         ' delete text fields
         strCH_1_Current.Text = ""
@@ -394,6 +398,23 @@ ErrorExit:
 
         PPM_Channels.ForeColor = Color.White
         PPM_Mode.ForeColor = Color.White
+
+        ListBox1.ForeColor = Color.White
+        ListBox1.Enabled = False
+        ListBox2.ForeColor = Color.White
+        ListBox2.Enabled = False
+        ListBox3.ForeColor = Color.White
+        ListBox3.Enabled = False
+        ListBox4.ForeColor = Color.White
+        ListBox4.Enabled = False
+        ListBox5.ForeColor = Color.White
+        ListBox5.Enabled = False
+        ListBox6.ForeColor = Color.White
+        ListBox6.Enabled = False
+        ListBox7.ForeColor = Color.White
+        ListBox7.Enabled = False
+        ListBox8.ForeColor = Color.White
+        ListBox8.Enabled = False
 
         ' close port
         mySerialLink.MyForm_Dispose()
@@ -1104,6 +1125,8 @@ ErrorExit:
         GroupBox7.Enabled = True 'Save Parameters
         GroupBox7.Visible = True
 
+        IOSwitching = False 'Better safe than sorry
+
         If mySerialLink.SerialLinkConnected() Then
             If Not boolErrorFlag Then
                 'request status information from SSC    
@@ -1111,145 +1134,146 @@ ErrorExit:
                 Call mySerialLink.GetFirmwareVersion(strChannelBuffer)
                 If strChannelBuffer <> "TimeOut" Then
                     strSSC_Firmware.Text = strChannelBuffer
-                    If Val(strChannelBuffer) > 2.06 Then
+                    If Val(strChannelBuffer) > 2.07 Then
                         MsgBox("The PiKoder firmware version found is not supported! Please goto www.pikoder.com and upgrade PCC Control Center to the latest version.", MsgBoxStyle.OkOnly, "Error Message")
                         End
+                    ElseIf Val(strChannelBuffer) = 2.07 Then
+                        IOSwitching = True
                     ElseIf Val(strChannelBuffer) < 2.0 Then
                         MsgBox("The PiKoder firmware version found is not supported! Please goto www.pikoder.com and upgrade the PiKoder firmware to the latest version.", MsgBoxStyle.OkOnly, "Error Message")
                         End
-
                     End If
                 Else ' error message
                     boolErrorFlag = True
                 End If
-            End If
+        End If
 
-            'retrieve information for channel 1
-            Call RetrieveChannel1Information()
+        'retrieve information for channel 1
+        Call RetrieveChannel1Information()
 
-            'retrieve information for channel 2
-            Call RetrieveChannel2Information()
+        'retrieve information for channel 2
+        Call RetrieveChannel2Information()
 
-            'retrieve information for channel 3
-            Call RetrieveChannel3Information()
+        'retrieve information for channel 3
+        Call RetrieveChannel3Information()
 
-            'retrieve information for channel 4
-            Call RetrieveChannel4Information()
+        'retrieve information for channel 4
+        Call RetrieveChannel4Information()
 
-            'retrieve information for channel 5
-            Call RetrieveChannel5Information()
+        'retrieve information for channel 5
+        Call RetrieveChannel5Information()
 
-            'retrieve information for channel 6
-            Call RetrieveChannel6Information()
+        'retrieve information for channel 6
+        Call RetrieveChannel6Information()
 
-            'retrieve information for channel 7
-            Call RetrieveChannel7Information()
+        'retrieve information for channel 7
+        Call RetrieveChannel7Information()
 
-            'retrieve information for channel 8
-            Call RetrieveChannel8Information()
+        'retrieve information for channel 8
+        Call RetrieveChannel8Information()
 
-            If Not boolErrorFlag Then
-                Call mySerialLink.SendDataToSerial("N1?")
-                Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
-                If strChannelBuffer <> "TimeOut" Then
-                    boolSentChangeValueNotRequired(16) = True
-                    strCH_1_Neutral.Maximum = 2500
-                    strCH_1_Neutral.Value = Val(strChannelBuffer)
-                    strCH_1_Neutral.ForeColor = Color.Black
-                End If
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("N1?")
+            Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+            If strChannelBuffer <> "TimeOut" Then
+                boolSentChangeValueNotRequired(16) = True
+                strCH_1_Neutral.Maximum = 2500
+                strCH_1_Neutral.Value = Val(strChannelBuffer)
+                strCH_1_Neutral.ForeColor = Color.Black
             End If
-            If Not boolErrorFlag Then
-                Call mySerialLink.SendDataToSerial("N2?")
-                Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
-                If strChannelBuffer <> "TimeOut" Then
-                    boolSentChangeValueNotRequired(17) = True
-                    strCH_2_Neutral.Maximum = 2500
-                    strCH_2_Neutral.Value = Val(strChannelBuffer)
-                    strCH_2_Neutral.ForeColor = Color.Black
-                End If
+        End If
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("N2?")
+            Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+            If strChannelBuffer <> "TimeOut" Then
+                boolSentChangeValueNotRequired(17) = True
+                strCH_2_Neutral.Maximum = 2500
+                strCH_2_Neutral.Value = Val(strChannelBuffer)
+                strCH_2_Neutral.ForeColor = Color.Black
             End If
-            If Not boolErrorFlag Then
-                Call mySerialLink.SendDataToSerial("N3?")
-                Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
-                If strChannelBuffer <> "TimeOut" Then
-                    boolSentChangeValueNotRequired(18) = True
-                    strCH_3_Neutral.Maximum = 2500
-                    strCH_3_Neutral.Value = Val(strChannelBuffer)
-                    strCH_3_Neutral.ForeColor = Color.Black
-                End If
+        End If
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("N3?")
+            Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+            If strChannelBuffer <> "TimeOut" Then
+                boolSentChangeValueNotRequired(18) = True
+                strCH_3_Neutral.Maximum = 2500
+                strCH_3_Neutral.Value = Val(strChannelBuffer)
+                strCH_3_Neutral.ForeColor = Color.Black
             End If
-            If Not boolErrorFlag Then
-                Call mySerialLink.SendDataToSerial("N4?")
-                Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
-                If strChannelBuffer <> "TimeOut" Then
-                    boolSentChangeValueNotRequired(19) = True
-                    strCH_4_Neutral.Maximum = 2500
-                    strCH_4_Neutral.Value = Val(strChannelBuffer)
-                    strCH_4_Neutral.ForeColor = Color.Black
-                End If
+        End If
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("N4?")
+            Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+            If strChannelBuffer <> "TimeOut" Then
+                boolSentChangeValueNotRequired(19) = True
+                strCH_4_Neutral.Maximum = 2500
+                strCH_4_Neutral.Value = Val(strChannelBuffer)
+                strCH_4_Neutral.ForeColor = Color.Black
             End If
-            If Not boolErrorFlag Then
-                Call mySerialLink.SendDataToSerial("N5?")
-                Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
-                If strChannelBuffer <> "TimeOut" Then
-                    boolSentChangeValueNotRequired(20) = True
-                    strCH_5_Neutral.Maximum = 2500
-                    strCH_5_Neutral.Value = Val(strChannelBuffer)
-                    strCH_5_Neutral.ForeColor = Color.Black
-                End If
+        End If
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("N5?")
+            Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+            If strChannelBuffer <> "TimeOut" Then
+                boolSentChangeValueNotRequired(20) = True
+                strCH_5_Neutral.Maximum = 2500
+                strCH_5_Neutral.Value = Val(strChannelBuffer)
+                strCH_5_Neutral.ForeColor = Color.Black
             End If
-            If Not boolErrorFlag Then
-                Call mySerialLink.SendDataToSerial("N6?")
-                Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
-                If strChannelBuffer <> "TimeOut" Then
-                    boolSentChangeValueNotRequired(21) = True
-                    strCH_6_Neutral.Maximum = 2500
-                    strCH_6_Neutral.Value = Val(strChannelBuffer)
-                    strCH_6_Neutral.ForeColor = Color.Black
-                End If
+        End If
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("N6?")
+            Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+            If strChannelBuffer <> "TimeOut" Then
+                boolSentChangeValueNotRequired(21) = True
+                strCH_6_Neutral.Maximum = 2500
+                strCH_6_Neutral.Value = Val(strChannelBuffer)
+                strCH_6_Neutral.ForeColor = Color.Black
             End If
-            If Not boolErrorFlag Then
-                Call mySerialLink.SendDataToSerial("N7?")
-                Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
-                If strChannelBuffer <> "TimeOut" Then
-                    boolSentChangeValueNotRequired(22) = True
-                    strCH_7_Neutral.Maximum = 2500
-                    strCH_7_Neutral.Value = Val(strChannelBuffer)
-                    strCH_7_Neutral.ForeColor = Color.Black
-                End If
+        End If
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("N7?")
+            Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+            If strChannelBuffer <> "TimeOut" Then
+                boolSentChangeValueNotRequired(22) = True
+                strCH_7_Neutral.Maximum = 2500
+                strCH_7_Neutral.Value = Val(strChannelBuffer)
+                strCH_7_Neutral.ForeColor = Color.Black
             End If
-            If Not boolErrorFlag Then
-                Call mySerialLink.SendDataToSerial("N8?")
-                Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
-                If strChannelBuffer <> "TimeOut" Then
-                    boolSentChangeValueNotRequired(23) = True
-                    strCH_8_Neutral.Maximum = 2500
-                    strCH_8_Neutral.Value = Val(strChannelBuffer)
-                    strCH_8_Neutral.ForeColor = Color.Black
-                End If
+        End If
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("N8?")
+            Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+            If strChannelBuffer <> "TimeOut" Then
+                boolSentChangeValueNotRequired(23) = True
+                strCH_8_Neutral.Maximum = 2500
+                strCH_8_Neutral.Value = Val(strChannelBuffer)
+                strCH_8_Neutral.ForeColor = Color.Black
             End If
-            'retrieve min & max information for all channels
-            'channel 1
-            If Not boolErrorFlag Then
-                Call mySerialLink.SendDataToSerial("L1?")
-                Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
-                If strChannelBuffer <> "TimeOut" Then
-                    boolSentChangeValueNotRequired(0) = True
-                    strCH_1_Min.Value = Val(strChannelBuffer)
-                    ch1_HScrollBar.Minimum = strCH_1_Min.Value
-                    strCH_1_Min.ForeColor = Color.Black
-                End If
+        End If
+        'retrieve min & max information for all channels
+        'channel 1
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("L1?")
+            Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+            If strChannelBuffer <> "TimeOut" Then
+                boolSentChangeValueNotRequired(0) = True
+                strCH_1_Min.Value = Val(strChannelBuffer)
+                ch1_HScrollBar.Minimum = strCH_1_Min.Value
+                strCH_1_Min.ForeColor = Color.Black
             End If
-            If Not boolErrorFlag Then
-                Call mySerialLink.SendDataToSerial("U1?")
-                Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
-                If strChannelBuffer <> "TimeOut" Then
-                    boolSentChangeValueNotRequired(1) = True
-                    strCH_1_Max.Value = Val(strChannelBuffer)
-                    ch1_HScrollBar.Maximum = strCH_1_Max.Value
-                    strCH_1_Max.ForeColor = Color.Black
-                End If
+        End If
+        If Not boolErrorFlag Then
+            Call mySerialLink.SendDataToSerial("U1?")
+            Call mySerialLink.GetNeutralPosition(strChannelBuffer, 8)
+            If strChannelBuffer <> "TimeOut" Then
+                boolSentChangeValueNotRequired(1) = True
+                strCH_1_Max.Value = Val(strChannelBuffer)
+                ch1_HScrollBar.Maximum = strCH_1_Max.Value
+                strCH_1_Max.ForeColor = Color.Black
             End If
+        End If
         End If
 
         'channel 2
@@ -1426,10 +1450,111 @@ ErrorExit:
             End If
         End If
 
+        If IOSwitching Then
+            If Not boolErrorFlag Then
+                Call mySerialLink.SendDataToSerial("O1?")
+                iChannelSetting(1) = mySerialLink.GetIOType()
+                If (iChannelSetting(1) = 2) Then
+                    boolErrorFlag = True
+                End If
+                ListBox1.Enabled = True
+                ListBox1.SelectedIndex = iChannelSetting(1)
+                ListBox1.ClearSelected()
+                ListBox1.ForeColor = Color.Black
+            End If
+
+            If Not boolErrorFlag Then
+                Call mySerialLink.SendDataToSerial("O2?")
+                iChannelSetting(2) = mySerialLink.GetIOType()
+                If (iChannelSetting(2) = 2) Then
+                    boolErrorFlag = True
+                End If
+                ListBox2.Enabled = True
+                ListBox2.SelectedIndex = iChannelSetting(2)
+                ListBox2.ClearSelected()
+                ListBox2.ForeColor = Color.Black
+            End If
+
+            If Not boolErrorFlag Then
+                Call mySerialLink.SendDataToSerial("O3?")
+                iChannelSetting(3) = mySerialLink.GetIOType()
+                If (iChannelSetting(3) = 2) Then
+                    boolErrorFlag = True
+                End If
+                ListBox3.Enabled = True
+                ListBox3.SelectedIndex = iChannelSetting(3)
+                ListBox3.ClearSelected()
+                ListBox3.ForeColor = Color.Black
+            End If
+
+            If Not boolErrorFlag Then
+                Call mySerialLink.SendDataToSerial("O4?")
+                iChannelSetting(4) = mySerialLink.GetIOType()
+                If (iChannelSetting(4) = 2) Then
+                    boolErrorFlag = True
+                End If
+                ListBox4.Enabled = True
+                ListBox4.SelectedIndex = iChannelSetting(4)
+                ListBox4.ClearSelected()
+                ListBox4.ForeColor = Color.Black
+            End If
+
+            If Not boolErrorFlag Then
+                Call mySerialLink.SendDataToSerial("O5?")
+                iChannelSetting(5) = mySerialLink.GetIOType()
+                If (iChannelSetting(5) = 2) Then
+                    boolErrorFlag = True
+                End If
+                ListBox5.Enabled = True
+                ListBox5.SelectedIndex = iChannelSetting(5)
+                ListBox5.ClearSelected()
+                ListBox5.ForeColor = Color.Black
+            End If
+
+            If Not boolErrorFlag Then
+                Call mySerialLink.SendDataToSerial("O6?")
+                iChannelSetting(6) = mySerialLink.GetIOType()
+                If (iChannelSetting(6) = 2) Then
+                    boolErrorFlag = True
+                End If
+                ListBox6.Enabled = True
+                ListBox6.SelectedIndex = iChannelSetting(6)
+                ListBox6.ClearSelected()
+                ListBox6.ForeColor = Color.Black
+            End If
+
+            If Not boolErrorFlag Then
+                Call mySerialLink.SendDataToSerial("O7?")
+                iChannelSetting(7) = mySerialLink.GetIOType()
+                If (iChannelSetting(7) = 2) Then
+                    boolErrorFlag = True
+                End If
+                ListBox7.Enabled = True
+                ListBox7.SelectedIndex = iChannelSetting(7)
+                ListBox7.ClearSelected()
+                ListBox7.ForeColor = Color.Black
+            End If
+
+            If Not boolErrorFlag Then
+                Call mySerialLink.SendDataToSerial("O8?")
+                iChannelSetting(8) = mySerialLink.GetIOType()
+                If (iChannelSetting(8) = 2) Then
+                    boolErrorFlag = True
+                End If
+                ListBox8.Enabled = True
+                ListBox8.SelectedIndex = iChannelSetting(8)
+                ListBox8.ClearSelected()
+                ListBox8.ForeColor = Color.Black
+            End If
+
+        End If
+
         GroupBox13.Enabled = False '# PPM Channels
         GroupBox13.Visible = False
         GroupBox17.Enabled = False 'PPM mode
         GroupBox17.Visible = False
+
+        bDataLoaded = True
 
     End Sub
 
@@ -2038,7 +2163,6 @@ ErrorExit:
             boolSentChangeValueNotRequired(15) = False
         End If
     End Sub
-
     Private Sub ch1_HScrollBar_Scroll(ByVal sender As System.Object, ByVal e As System.Windows.Forms.ScrollEventArgs) Handles ch1_HScrollBar.Scroll
         strCH_1_Current.Text = Convert.ToString(ch1_HScrollBar.Value)
         If (HPMath) Then
@@ -2047,7 +2171,6 @@ ErrorExit:
             Call mySerialLink.SendPulseLengthToPiKoder(1, Convert.ToString(ch1_HScrollBar.Value))
         End If
     End Sub
-
     Private Sub ch2_HScrollBar_Scroll(ByVal sender As System.Object, ByVal e As System.Windows.Forms.ScrollEventArgs) Handles ch2_HScrollBar.Scroll
         strCH_2_Current.Text = Convert.ToString(ch2_HScrollBar.Value)
         If (HPMath) Then
@@ -2056,7 +2179,6 @@ ErrorExit:
             Call mySerialLink.SendPulseLengthToPiKoder(2, Convert.ToString(ch2_HScrollBar.Value))
         End If
     End Sub
-
     Private Sub ch3_HScrollBar_Scroll(ByVal sender As System.Object, ByVal e As System.Windows.Forms.ScrollEventArgs) Handles ch3_HScrollBar.Scroll
         strCH_3_Current.Text = Convert.ToString(ch3_HScrollBar.Value)
         If (HPMath) Then
@@ -2074,7 +2196,6 @@ ErrorExit:
             Call mySerialLink.SendPulseLengthToPiKoder(4, Convert.ToString(ch4_HScrollBar.Value))
         End If
     End Sub
-
     Private Sub ch5_HScrollBar_Scroll(ByVal sender As System.Object, ByVal e As System.Windows.Forms.ScrollEventArgs) Handles ch5_HScrollBar.Scroll
         strCH_5_Current.Text = Convert.ToString(ch5_HScrollBar.Value)
         If (HPMath) Then
@@ -2083,7 +2204,6 @@ ErrorExit:
             Call mySerialLink.SendPulseLengthToPiKoder(5, Convert.ToString(ch5_HScrollBar.Value))
         End If
     End Sub
-
     Private Sub ch6_HScrollBar_Scroll(ByVal sender As System.Object, ByVal e As System.Windows.Forms.ScrollEventArgs) Handles ch6_HScrollBar.Scroll
         strCH_6_Current.Text = Convert.ToString(ch6_HScrollBar.Value)
         If (HPMath) Then
@@ -2101,7 +2221,6 @@ ErrorExit:
             Call mySerialLink.SendPulseLengthToPiKoder(7, Convert.ToString(ch7_HScrollBar.Value))
         End If
     End Sub
-
     Private Sub ch8_HScrollBar_Scroll(ByVal sender As System.Object, ByVal e As System.Windows.Forms.ScrollEventArgs) Handles ch8_HScrollBar.Scroll
         strCH_8_Current.Text = Convert.ToString(ch8_HScrollBar.Value)
         If (HPMath) Then
@@ -2110,7 +2229,6 @@ ErrorExit:
             Call mySerialLink.SendPulseLengthToPiKoder(8, Convert.ToString(ch8_HScrollBar.Value))
         End If
     End Sub
-
     Private Sub TimeOut_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles TimeOut.ValueChanged
         Dim myStringBuffer As String = "" ' used for temporary storage of value
         If mySerialLink.SerialLinkConnected Then
@@ -2147,7 +2265,7 @@ ErrorExit:
             PPM_Mode.ClearSelected()
         End If
     End Sub
-      Private Sub RetrieveChannel1HPInformation()
+    Private Sub RetrieveChannel1HPInformation()
         Dim strChannelBuffer As String = ""
         If Not boolErrorFlag Then
             Call mySerialLink.SendDataToSerial("1?")
@@ -2323,5 +2441,142 @@ ErrorExit:
             End If
         End If
     End Sub
+    Private Sub ListBox1_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ListBox1.SelectedIndexChanged
+        If (ListBox1.SelectedItem = Nothing) Then Exit Sub
+        If Not bDataLoaded Then Exit Sub
+        If Not boolErrorFlag Then
+            If (ListBox1.SelectedIndex = 0) Then
+                iChannelSetting(1) = 0
+                Call mySerialLink.SendDataToSerial("O1=P")
+            Else
+                iChannelSetting(1) = 1
+                Call mySerialLink.SendDataToSerial("O1=S")
+            End If
+            If (mySerialLink.GetErrorCode() = 2) Then
+                boolErrorFlag = True
+            End If
+        End If
+        ListBox1.SelectedItem = Nothing
+    End Sub
+    Private Sub ListBox2_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ListBox2.SelectedIndexChanged
+        If (ListBox2.SelectedItem = Nothing) Then Exit Sub
+        If Not bDataLoaded Then Exit Sub
+        If Not boolErrorFlag Then
+            If (ListBox2.SelectedIndex = 0) Then
+                iChannelSetting(2) = 0
+                Call mySerialLink.SendDataToSerial("O2=P")
+            Else
+                iChannelSetting(2) = 1
+                Call mySerialLink.SendDataToSerial("O2=S")
+            End If
+            If (mySerialLink.GetErrorCode() = 2) Then
+                boolErrorFlag = True
+            End If
+        End If
+        ListBox2.SelectedItem = Nothing
+    End Sub
+    Private Sub ListBox3_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ListBox3.SelectedIndexChanged
+        If (ListBox3.SelectedItem = Nothing) Then Exit Sub
+        If Not bDataLoaded Then Exit Sub
+        If Not boolErrorFlag Then
+            If (ListBox3.SelectedIndex = 0) Then
+                iChannelSetting(3) = 0
+                Call mySerialLink.SendDataToSerial("O3=P")
+            Else
+                iChannelSetting(3) = 1
+                Call mySerialLink.SendDataToSerial("O3=S")
+            End If
+            If (mySerialLink.GetErrorCode() = 2) Then
+                boolErrorFlag = True
+            End If
+        End If
+        ListBox3.SelectedItem = Nothing
+    End Sub
+    Private Sub ListBox4_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ListBox4.SelectedIndexChanged
+        If (ListBox4.SelectedItem = Nothing) Then Exit Sub
+        If Not bDataLoaded Then Exit Sub
+        If Not boolErrorFlag Then
+            If (ListBox4.SelectedIndex = 0) Then
+                iChannelSetting(4) = 0
+                Call mySerialLink.SendDataToSerial("O4=P")
+            Else
+                iChannelSetting(4) = 1
+                Call mySerialLink.SendDataToSerial("O4=S")
+            End If
+            If (mySerialLink.GetErrorCode() = 2) Then
+                boolErrorFlag = True
+            End If
+        End If
+        ListBox4.SelectedItem = Nothing
+    End Sub
+    Private Sub ListBox5_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ListBox5.SelectedIndexChanged
+        If (ListBox5.SelectedItem = Nothing) Then Exit Sub
+        If Not bDataLoaded Then Exit Sub
+        If Not boolErrorFlag Then
+            If (ListBox5.SelectedIndex = 0) Then
+                iChannelSetting(5) = 0
+                Call mySerialLink.SendDataToSerial("O5=P")
+            Else
+                iChannelSetting(5) = 1
+                Call mySerialLink.SendDataToSerial("O5=S")
+            End If
+            If (mySerialLink.GetErrorCode() = 2) Then
+                boolErrorFlag = True
+            End If
+        End If
+        ListBox5.SelectedItem = Nothing
+    End Sub
+    Private Sub ListBox6_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ListBox6.SelectedIndexChanged
+        If (ListBox6.SelectedItem = Nothing) Then Exit Sub
+        If Not bDataLoaded Then Exit Sub
+        If Not boolErrorFlag Then
+            If (ListBox6.SelectedIndex = 0) Then
+                iChannelSetting(6) = 0
+                Call mySerialLink.SendDataToSerial("O6=P")
+            Else
+                iChannelSetting(6) = 1
+                Call mySerialLink.SendDataToSerial("O6=S")
+            End If
+            If (mySerialLink.GetErrorCode() = 2) Then
+                boolErrorFlag = True
+            End If
+        End If
+        ListBox6.SelectedItem = Nothing
+    End Sub
+    Private Sub ListBox7_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ListBox7.SelectedIndexChanged
+        If (ListBox7.SelectedItem = Nothing) Then Exit Sub
+        If Not bDataLoaded Then Exit Sub
+        If Not boolErrorFlag Then
+            If (ListBox7.SelectedIndex = 0) Then
+                iChannelSetting(7) = 0
+                Call mySerialLink.SendDataToSerial("O7=P")
+            Else
+                iChannelSetting(7) = 1
+                Call mySerialLink.SendDataToSerial("O7=S")
+            End If
+            If (mySerialLink.GetErrorCode() = 2) Then
+                boolErrorFlag = True
+            End If
+        End If
+        ListBox7.SelectedItem = Nothing
+    End Sub
+    Private Sub ListBox8_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ListBox8.SelectedIndexChanged
+        If (ListBox8.SelectedItem = Nothing) Then Exit Sub
+        If Not bDataLoaded Then Exit Sub
+        If Not boolErrorFlag Then
+            If (ListBox8.SelectedIndex = 0) Then
+                iChannelSetting(8) = 0
+                Call mySerialLink.SendDataToSerial("O8=P")
+            Else
+                iChannelSetting(8) = 1
+                Call mySerialLink.SendDataToSerial("O8=S")
+            End If
+            If (mySerialLink.GetErrorCode() = 2) Then
+                boolErrorFlag = True
+            End If
+        End If
+        ListBox8.SelectedItem = Nothing
+    End Sub
+
 End Class
 
