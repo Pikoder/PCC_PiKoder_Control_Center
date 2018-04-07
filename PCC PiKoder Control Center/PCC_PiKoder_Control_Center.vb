@@ -6,7 +6,7 @@ Public Class PCC_PiKoder_Control_Center
 
     ' This is a program for evaluating the PiKoder platform - please refer to http://pikoder.com for more details.
     ' 
-    ' Copyright 2015-2017 Gregor Schlechtriem
+    ' Copyright 2015-2018 Gregor Schlechtriem
     '
     ' Licensed under the Apache License, Version 2.0 (the "License");
     ' you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ Public Class PCC_PiKoder_Control_Center
     Dim sDefaultMinValue As String = "750" ' default values for USB2PMM
     Dim sDefaultMaxValue As String = "2250"
     Dim HPMath As Boolean = False ' indicating that high precision computing is required
-    Dim iChannelSetting(8) As Integer ' contains the current output type (would be 1 for P(WM) and 2 fpr S(witch)
+    Dim iChannelSetting(8) As Integer ' contains the current output type (would be 1 for P(WM) and 2 for S(witch)
 
     ' declaration of subroutines
     ''' <summary>
@@ -1126,6 +1126,7 @@ ErrorExit:
         GroupBox7.Visible = True
 
         IOSwitching = False 'Better safe than sorry
+        bDataLoaded = False 'Avoid overridding of channel type due to re-reading data after value change
 
         If mySerialLink.SerialLinkConnected() Then
             If Not boolErrorFlag Then
