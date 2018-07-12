@@ -12,7 +12,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("")> 
 <Assembly: AssemblyCompany("")> 
 <Assembly: AssemblyProduct("PCC PiKoder Control Center")> 
-<Assembly: AssemblyCopyright("Copyright ©2015-2017")> 
+<Assembly: AssemblyCopyright("Copyright ©2015-2018")> 
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(True)> 
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' übernehmen, indem Sie "*" eingeben:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("0.0.1.1")> 
-<Assembly: AssemblyFileVersion("1.0.7.1")> 
+<Assembly: AssemblyVersion("0.0.1.2")> 
+<Assembly: AssemblyFileVersion("1.0.7.2")> 

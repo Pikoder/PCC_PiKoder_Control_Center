@@ -777,6 +777,9 @@ ErrorExit:
         GroupBox7.Enabled = True 'Save Parameters
         GroupBox7.Visible = True
 
+        IOSwitching = False 'Better safe than sorry
+        bDataLoaded = False 'Avoid overridding of channel type due to re-reading data after value change
+
         If mySerialLink.SerialLinkConnected() Then
             If Not boolErrorFlag Then
                 'request status information from SSC    
@@ -784,13 +787,14 @@ ErrorExit:
                 Call mySerialLink.GetFirmwareVersion(strChannelBuffer)
                 If strChannelBuffer <> "TimeOut" Then
                     strSSC_Firmware.Text = strChannelBuffer
-                    If Val(strChannelBuffer) > 2.03 Then
+                    If Val(strChannelBuffer) > 2.04 Then
                         MsgBox("The PiKoder firmware version found is not supported! Please goto www.pikoder.com and upgrade PCC Control Center to the latest version.", MsgBoxStyle.OkOnly, "Error Message")
                         End
+                    ElseIf Val(strChannelBuffer) = 2.04 Then
+                        IOSwitching = True
                     ElseIf Val(strChannelBuffer) < 2.03 Then
                         MsgBox("The PiKoder firmware version found is not supported! Please goto www.pikoder.com and upgrade the PiKoder firmware to the latest version.", MsgBoxStyle.OkOnly, "Error Message")
                         End
-
                     End If
                 Else ' error message
                     boolErrorFlag = True
@@ -1102,10 +1106,111 @@ ErrorExit:
             End If
         End If
 
+        If IOSwitching Then
+            If Not boolErrorFlag Then
+                Call mySerialLink.SendDataToSerial("O1?")
+                iChannelSetting(1) = mySerialLink.GetIOType()
+                If (iChannelSetting(1) = 2) Then
+                    boolErrorFlag = True
+                End If
+                ListBox1.Enabled = True
+                ListBox1.SelectedIndex = iChannelSetting(1)
+                ListBox1.ClearSelected()
+                ListBox1.ForeColor = Color.Black
+            End If
+
+            If Not boolErrorFlag Then
+                Call mySerialLink.SendDataToSerial("O2?")
+                iChannelSetting(2) = mySerialLink.GetIOType()
+                If (iChannelSetting(2) = 2) Then
+                    boolErrorFlag = True
+                End If
+                ListBox2.Enabled = True
+                ListBox2.SelectedIndex = iChannelSetting(2)
+                ListBox2.ClearSelected()
+                ListBox2.ForeColor = Color.Black
+            End If
+
+            If Not boolErrorFlag Then
+                Call mySerialLink.SendDataToSerial("O3?")
+                iChannelSetting(3) = mySerialLink.GetIOType()
+                If (iChannelSetting(3) = 2) Then
+                    boolErrorFlag = True
+                End If
+                ListBox3.Enabled = True
+                ListBox3.SelectedIndex = iChannelSetting(3)
+                ListBox3.ClearSelected()
+                ListBox3.ForeColor = Color.Black
+            End If
+
+            If Not boolErrorFlag Then
+                Call mySerialLink.SendDataToSerial("O4?")
+                iChannelSetting(4) = mySerialLink.GetIOType()
+                If (iChannelSetting(4) = 2) Then
+                    boolErrorFlag = True
+                End If
+                ListBox4.Enabled = True
+                ListBox4.SelectedIndex = iChannelSetting(4)
+                ListBox4.ClearSelected()
+                ListBox4.ForeColor = Color.Black
+            End If
+
+            If Not boolErrorFlag Then
+                Call mySerialLink.SendDataToSerial("O5?")
+                iChannelSetting(5) = mySerialLink.GetIOType()
+                If (iChannelSetting(5) = 2) Then
+                    boolErrorFlag = True
+                End If
+                ListBox5.Enabled = True
+                ListBox5.SelectedIndex = iChannelSetting(5)
+                ListBox5.ClearSelected()
+                ListBox5.ForeColor = Color.Black
+            End If
+
+            If Not boolErrorFlag Then
+                Call mySerialLink.SendDataToSerial("O6?")
+                iChannelSetting(6) = mySerialLink.GetIOType()
+                If (iChannelSetting(6) = 2) Then
+                    boolErrorFlag = True
+                End If
+                ListBox6.Enabled = True
+                ListBox6.SelectedIndex = iChannelSetting(6)
+                ListBox6.ClearSelected()
+                ListBox6.ForeColor = Color.Black
+            End If
+
+            If Not boolErrorFlag Then
+                Call mySerialLink.SendDataToSerial("O7?")
+                iChannelSetting(7) = mySerialLink.GetIOType()
+                If (iChannelSetting(7) = 2) Then
+                    boolErrorFlag = True
+                End If
+                ListBox7.Enabled = True
+                ListBox7.SelectedIndex = iChannelSetting(7)
+                ListBox7.ClearSelected()
+                ListBox7.ForeColor = Color.Black
+            End If
+
+            If Not boolErrorFlag Then
+                Call mySerialLink.SendDataToSerial("O8?")
+                iChannelSetting(8) = mySerialLink.GetIOType()
+                If (iChannelSetting(8) = 2) Then
+                    boolErrorFlag = True
+                End If
+                ListBox8.Enabled = True
+                ListBox8.SelectedIndex = iChannelSetting(8)
+                ListBox8.ClearSelected()
+                ListBox8.ForeColor = Color.Black
+            End If
+
+        End If
+
         GroupBox13.Enabled = False '# PPM Channels
         GroupBox13.Visible = False
         GroupBox17.Enabled = False 'PPM mode
         GroupBox17.Visible = False
+
+        bDataLoaded = True
 
     End Sub
     Private Sub RetrieveSSCParameters()
@@ -1135,10 +1240,10 @@ ErrorExit:
                 Call mySerialLink.GetFirmwareVersion(strChannelBuffer)
                 If strChannelBuffer <> "TimeOut" Then
                     strSSC_Firmware.Text = strChannelBuffer
-                    If Val(strChannelBuffer) > 2.07 Then
+                    If Val(strChannelBuffer) > 2.08 Then
                         MsgBox("The PiKoder firmware version found is not supported! Please goto www.pikoder.com and upgrade PCC Control Center to the latest version.", MsgBoxStyle.OkOnly, "Error Message")
                         End
-                    ElseIf Val(strChannelBuffer) = 2.07 Then
+                    ElseIf Val(strChannelBuffer) >= 2.07 Then
                         IOSwitching = True
                     ElseIf Val(strChannelBuffer) < 2.0 Then
                         MsgBox("The PiKoder firmware version found is not supported! Please goto www.pikoder.com and upgrade the PiKoder firmware to the latest version.", MsgBoxStyle.OkOnly, "Error Message")
