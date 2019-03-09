@@ -1,6 +1,6 @@
 Option Strict Off
 Option Explicit On
-Friend Class LED
+Public Class LED
     Inherits System.Windows.Forms.UserControl
     Public Event IntervalChange()
     Public Event StateChange()

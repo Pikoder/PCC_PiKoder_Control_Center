@@ -14,7 +14,7 @@ Public Class SerialLink
     ' such as GetPulseLength() and SentPulseLength(). Please refer to the definitons for more
     ' details.
     '
-    ' Copyright 2015 Gregor Schlechtriem
+    ' Copyright 2015-2019 Gregor Schlechtriem
     '
     ' Licensed under the Apache License, Version 2.0 (the "License");
     ' you may not use this file except in compliance with the License.
@@ -30,7 +30,6 @@ Public Class SerialLink
     '
     Private mySerialPort As New SerialPort
     Private Connected As Boolean = False ' connection status
-
     Public Function SerialLinkConnected() As Boolean
         Return Connected
     End Function
@@ -45,6 +44,8 @@ Public Class SerialLink
                 .Parity = Parity.None
                 .StopBits = StopBits.One
                 .Handshake = Handshake.None
+                .WriteTimeout = 100
+                .ReadTimeout = 100
             End With
             mySerialPort.Open()
             Connected = True
@@ -55,244 +56,45 @@ Public Class SerialLink
             Return False
         End Try
     End Function
-    Public Sub GetHPPulseLength(ByRef SerialInputString As String)
-        Dim i As Integer
+    Public Function SerialReceiver() As String
+        Dim myMessage As String = ""
+        Dim Receiving As Boolean = True
+        Dim messageStarted As Boolean = False
+        Dim eomDetect As Integer = 2
+        Dim myByte As Byte
         Dim j As Integer = 0
-        Dim myByte As Char
-        SerialInputString = ""
-        Do
-            If Connected And (mySerialPort.BytesToRead >= 9) Then ' make sure to receive complete message
-                For i = 1 To mySerialPort.BytesToRead
-                    myByte = Chr(mySerialPort.ReadByte)
-                    If IsNumeric(myByte) Then SerialInputString = SerialInputString + myByte
-                Next
-                If ValidateHPPulseValue(SerialInputString) Then Return
-            End If
-            'check for TimeOut
-            j = j + 1
-            If j > 10 Then
-                SerialInputString = "TimeOut" : Exit Do ' timeout exit
-            End If
-            System.Threading.Thread.Sleep(20) 'wait for next frame and allow for task switch
-        Loop
-    End Sub
-    Public Sub GetPulseLength(ByRef SerialInputString As String)
-        Dim i As Integer
-        Dim j As Integer = 0
-        Dim myByte As Char
-        SerialInputString = ""
-        Do
-            If Connected And (mySerialPort.BytesToRead >= 8) Then ' make sure to receive complete message
-                For i = 1 To mySerialPort.BytesToRead
-                    myByte = Chr(mySerialPort.ReadByte)
-                    If IsNumeric(myByte) Then SerialInputString = SerialInputString + myByte
-                Next
-                If ValidatePulseValue(SerialInputString) Then Return
-            End If
-            'check for TimeOut
-            j = j + 1
-            If j > 10 Then
-                SerialInputString = "TimeOut" : Exit Do ' timeout exit
-            End If
-            System.Threading.Thread.Sleep(20) 'wait for next frame and allow for task switch
-        Loop
-    End Sub
 
-    Public Sub GetTimeOut(ByRef SerialInputString As String, ByVal intCharsToRead As Integer)
-        Dim i As Integer
-        Dim j As Integer = 0
-        Dim myByte As Char
-        SerialInputString = ""
-        '
-        Call SendDataToSerial("T?")
-        Do
-            If Connected And (mySerialPort.BytesToRead >= intCharsToRead) Then ' make sure to receive complete message
-                For i = 1 To mySerialPort.BytesToRead
-                    myByte = Chr(mySerialPort.ReadByte)
-                    If IsNumeric(myByte) Then SerialInputString = SerialInputString + myByte
-                Next
-                Return
-            End If
-            'check for TimeOut
-            j = j + 1
-            If j > 10 Then
-                SerialInputString = "TimeOut" : Exit Do ' timeout exit
-            End If
-            System.Threading.Thread.Sleep(20) 'wait for next frame and allow for task switch
-        Loop
-    End Sub
-    Public Sub GetMiniSSCOffset(ByRef SerialInputString As String, ByVal intCharsToRead As Integer)
-        Dim i As Integer
-        Dim j As Integer = 0
-        Dim myByte As Char
-        SerialInputString = ""
-        Do
-            If Connected And (mySerialPort.BytesToRead >= intCharsToRead) Then ' make sure to receive complete message
-                For i = 1 To mySerialPort.BytesToRead
-                    myByte = Chr(mySerialPort.ReadByte)
-                    If IsNumeric(myByte) Then SerialInputString = SerialInputString + myByte
-                Next
-                If ValidateZeroOffset(SerialInputString) Then Return
-            End If
-            'check for TimeOut
-            j = j + 1
-            If j > 10 Then
-                SerialInputString = "TimeOut" : Exit Do ' timeout exit
-            End If
-            System.Threading.Thread.Sleep(20) 'wait for next frame and allow for task switch
-        Loop
-    End Sub
-    Public Sub GetNeutralPosition(ByRef SerialInputString As String, ByVal intCharsToRead As Integer)
-        Dim i As Integer
-        Dim j As Integer = 0
-        Dim myByte As Char
-        SerialInputString = ""
-        Do
-            If mySerialPort.BytesToRead >= intCharsToRead Then ' make sure to receive complete message
-                For i = 1 To mySerialPort.BytesToRead
-                    myByte = Chr(mySerialPort.ReadByte)
-                    If IsNumeric(myByte) Then SerialInputString = SerialInputString + myByte
-                Next
-                Return
-            End If
-            'check for TimeOut
-            j = j + 1
-            If j > 10 Then
-                SerialInputString = "TimeOut" : Exit Do ' timeout exit
-            End If
-            System.Threading.Thread.Sleep(20) 'wait for next frame and allow for task switch
-        Loop
-    End Sub
-
-    Public Sub GetFirmwareVersion(ByRef SerialInputString As String)
-        Dim j As Integer = 0
-        Dim i As Integer
-        Dim myByte As Char
-        SerialInputString = ""
-        Do
-            If mySerialPort.BytesToRead >= 8 Then ' make sure to receive complete message
-                For i = 1 To mySerialPort.BytesToRead
-                    myByte = Chr(mySerialPort.ReadByte)
-                    If myByte > Chr(31) Then SerialInputString = SerialInputString + myByte
-                Next
-                Return
-            End If
-            'check for TimeOut
-            j = j + 1
-            If j > 10 Then
-                SerialInputString = "TimeOut" : Exit Do ' timeout exit
-            End If
-            System.Threading.Thread.Sleep(20) 'wait for next frame and allow for task switch
-        Loop
-    End Sub
-    ''' <summary>
-    ''' This one still has to move to a separate class PPMChannel t.b.d.
-    ''' </summary>
-    ''' <param name="strVal"></param>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Private Function ValidatePulseValue(ByRef strVal As String) As Boolean
-        Dim intChannelPulseLength As Double
-        intChannelPulseLength = Val(strVal) 'no check on chars this time
-        If (intChannelPulseLength < 750) Or (intChannelPulseLength > 2250) Then
-            Return False
-        End If
-        'format string
-        If (intChannelPulseLength < 1000) And (Len(strVal) = 4) Then strVal = Mid(strVal, 2, 3)
-        Return True
-    End Function
-    ''' <summary>
-    ''' This one still has to move to a separate class PPMChannel t.b.d.
-    ''' </summary>
-    ''' <param name="strVal"></param>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Private Function ValidateHPPulseValue(ByRef strVal As String) As Boolean
-        Dim intChannelPulseLength As Double
-        intChannelPulseLength = Val(strVal) 'no check on chars this time
-        If (intChannelPulseLength < 3750) Or (intChannelPulseLength > 11250) Then
-            Return False
-        End If
-        'format string
-        If (intChannelPulseLength < 10000) And (Len(strVal) = 5) Then strVal = Mid(strVal, 2, 4)
-        Return True
-    End Function
-
-    Private Function ValidateZeroOffset(ByRef strVal As String) As Boolean
-        Dim intZeroOffset As Integer
-        intZeroOffset = Val(strVal) 'no check on chars this time
-        If (intZeroOffset < 0) Or (intZeroOffset > 248) Then
-            Return False
-        End If
-        'format string
-        Return True
-    End Function
-    Public Sub SendPulseLengthToPiKoder(ByVal iChannel As Integer, ByVal strPulseLength As String)
-        Dim strSendString As String
-        Dim iError As Integer
-        Do
-            strSendString = Chr(iChannel + Asc("0")) + "="
-            If Len(strPulseLength) = 3 Then strSendString = strSendString + "0"
-            strSendString = strSendString + strPulseLength
+        While (Receiving)                                                     'Setup an infinite loop
             Try
-                mySerialPort.Write(strSendString, 0, Len(strSendString))
-                iError = GetErrorCode()
-                If iError = 0 Then Exit Do ' job completed
-                If iError = 2 Then iError = GetErrorCode() ' retry after timeout
-            Catch ex As Exception
-                MessageBox.Show(ex.Message)
-                Connected = False
-            End Try
-        Loop While (iError <> 0) And Connected
-    End Sub
-    Public Sub SendHPPulseLengthToPiKoder(ByVal iChannel As Integer, ByVal strPulseLength As String)
-        Dim strSendString As String
-        Dim iError As Integer
-        Do
-            strSendString = Chr(iChannel + Asc("0")) + "="
-            If Len(strPulseLength) = 4 Then strSendString = strSendString + "0"
-            strSendString = strSendString + strPulseLength
-            Try
-                mySerialPort.Write(strSendString, 0, Len(strSendString))
-                iError = GetErrorCode()
-                If iError = 0 Then Exit Do ' job completed
-                If iError = 2 Then iError = GetErrorCode() ' retry after timeout
-            Catch ex As Exception
-                MessageBox.Show(ex.Message)
-                Connected = False
-            End Try
-        Loop While (iError <> 0) And Connected
-    End Sub
-    Public Sub SendTimeOutToPiKoder(ByVal strPulseLength As String)
-        Dim strSendString As String
-        strSendString = "T=" + strPulseLength
-        Try
-            mySerialPort.Write(strSendString, 0, Len(strSendString))
-            GetErrorCode()
-        Catch ex As Exception
-            MessageBox.Show(ex.Message)
-            Connected = False
-        End Try
-    End Sub
-    Public Sub SendMiniSSCOffsetToPiKoder(ByVal strPulseLength As String)
-        Dim strSendString As String
-        strSendString = "M=" + strPulseLength
-        Try
-            mySerialPort.Write(strSendString, 0, Len(strSendString))
-        Catch ex As Exception
-            MessageBox.Show(ex.Message)
-            Connected = False
-        End Try
-    End Sub
+                If (Connected And (mySerialPort.BytesToRead > 0)) Then ' make sure to receive complete message
+                    myByte = mySerialPort.ReadByte
+                    If ((myByte <> &HD) And (myByte <> &HA)) Then
+                        myMessage = myMessage + Chr(myByte) 'Convert bytes back to string
+                        messageStarted = True
+                    ElseIf (messageStarted) Then
+                        eomDetect = eomDetect - 1
+                        If (Not eomDetect) Then
+                            Receiving = False
+                        End If
+                    End If
+                End If
 
-    Public Sub SendDataToSerialwithAck(ByVal strWriteBuffer As String)
+            Catch ex As Exception
+                Return "TimeOut"
+            End Try
+
+        End While
+        Return myMessage
+    End Function
+    Public Function SendDataToSerialwithAck(ByVal strWriteBuffer As String) As String
         Try
             mySerialPort.Write(strWriteBuffer, 0, Len(strWriteBuffer))
-            GetErrorCode()
+            Return SerialReceiver()
         Catch ex As SystemException
             Connected = False
+            Return "?"
         End Try
-    End Sub
+    End Function
     Public Sub SendDataToSerial(ByVal strWriteBuffer As String)
         Try
             mySerialPort.Write(strWriteBuffer, 0, Len(strWriteBuffer))
@@ -300,7 +102,6 @@ Public Class SerialLink
             Connected = False
         End Try
     End Sub
-
     Public Sub SendBinaryDataToSerial(ByVal myByteArray() As Byte, ByVal numBytes As Integer)
         Try
             mySerialPort.Write(myByteArray, 0, numBytes)
@@ -308,95 +109,6 @@ Public Class SerialLink
             Connected = False
         End Try
     End Sub
-    Public Function GetErrorCode() As Integer
-        Dim j As Integer
-        Dim iRetCode As Integer
-        Dim StartTime As DateTime
-        Dim myChar As Char
-        StartTime = Now
-        Do
-            Try
-                If mySerialPort.BytesToRead >= 5 Then ' make sure to receive complete message
-                    For i = 1 To mySerialPort.BytesToRead
-                        myChar = Chr(mySerialPort.ReadByte)
-                        If myChar = "!" Then iRetCode = 0
-                        If myChar = "?" Then iRetCode = 1
-                    Next
-                    Return iRetCode
-                End If
-            Catch ex As Exception
-            End Try
-            'check for TimeOut
-            j = j + 1
-            If j > 10 Then
-                Return 2 : Exit Do ' timeout exit
-            End If
-            System.Threading.Thread.Sleep(20) 'wait for next frame and allow for task switch
-        Loop
-    End Function
-    Public Function GetIOType() As Integer
-        Dim j As Integer
-        Dim iRetCode As Integer
-        Dim StartTime As DateTime
-        Dim myChar As Char
-        StartTime = Now
-        Do
-            Try
-                If mySerialPort.BytesToRead >= 5 Then ' make sure to receive complete message
-                    For i = 1 To mySerialPort.BytesToRead
-                        myChar = Chr(mySerialPort.ReadByte)
-                        If myChar = "P" Then iRetCode = 0
-                        If myChar = "S" Then iRetCode = 1
-                    Next
-                    Return iRetCode
-                End If
-            Catch ex As Exception
-            End Try
-            'check for TimeOut
-            j = j + 1
-            If j > 10 Then
-                Return 2 : Exit Do ' timeout exit
-            End If
-            System.Threading.Thread.Sleep(20) 'wait for next frame and allow for task switch
-        Loop
-    End Function
-
-
-    Public Sub GetStatusRecord(ByRef SerialInputString As String)
-        Dim j As Integer = 0
-        Dim myByte As Char
-        Dim CpMode As Integer = 0
-        SerialInputString = ""
-        Do
-            While (Connected And (mySerialPort.BytesToRead > 0)) 'read complete message one by one
-                myByte = Chr(mySerialPort.ReadByte)
-                If ((myByte = Chr(10)) And (SerialInputString.Length = 0)) Then
-                    CpMode = CpMode + 1
-                ElseIf ((myByte = Chr(13)) And (SerialInputString.Length = 0)) Then
-                    CpMode = CpMode + 1
-                ElseIf ((myByte >= Chr(31)) And (CpMode = 2)) Then
-                    SerialInputString = SerialInputString + myByte
-                ElseIf ((myByte = Chr(10)) And (SerialInputString.Length > 0)) Then
-                    If (CpMode = 1) Then
-                        Return
-                    Else : CpMode = CpMode - 1
-                    End If
-                ElseIf ((myByte = Chr(13)) And (SerialInputString.Length > 0)) Then
-                    If (CpMode = 1) Then
-                        Return
-                    Else : CpMode = CpMode - 1
-                    End If
-                End If
-            End While
-            'check for TimeOut
-            j = j + 1
-            If j > 10 Then
-                SerialInputString = "TimeOut" : Exit Do ' timeout exit
-            End If
-            System.Threading.Thread.Sleep(20) 'wait for next frame and allow for task switch
-        Loop
-    End Sub
-
     Public Sub MyForm_Dispose()
         Try
             mySerialPort.Close()
@@ -413,8 +125,9 @@ Public Class SerialLink
     Public Function PiKoderConnected() As Boolean
         Dim strChannelBuffer As String = ""
         If Connected Then
-            Call SendDataToSerial("*")
-            If (GetErrorCode() = 1) Then Return True
+            If SendDataToSerialwithAck("*") = "?" Then
+                Return True
+            End If
         End If
         Return False
     End Function

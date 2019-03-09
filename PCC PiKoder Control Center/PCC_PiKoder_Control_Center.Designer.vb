@@ -23,12 +23,9 @@ Partial Class PCC_PiKoder_Control_Center
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(PCC_PiKoder_Control_Center))
-        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.Label1 = New System.Windows.Forms.Label()
         Me.AvailableCOMPorts = New System.Windows.Forms.ListBox()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
-        Me.Led2 = New LED()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
@@ -38,6 +35,10 @@ Partial Class PCC_PiKoder_Control_Center
         Me.Label13 = New System.Windows.Forms.Label()
         Me.Label14 = New System.Windows.Forms.Label()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.InfoSSID = New System.Windows.Forms.TextBox()
+        Me.ConnectWLAN = New System.Windows.Forms.CheckBox()
+        Me.ConnectCOM = New System.Windows.Forms.CheckBox()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
         Me.GroupBox12 = New System.Windows.Forms.GroupBox()
         Me.NumericUpDown1 = New System.Windows.Forms.NumericUpDown()
@@ -118,9 +119,10 @@ Partial Class PCC_PiKoder_Control_Center
         Me.ListBox3 = New System.Windows.Forms.ListBox()
         Me.ListBox2 = New System.Windows.Forms.ListBox()
         Me.ListBox1 = New System.Windows.Forms.ListBox()
-        Me.GroupBox1.SuspendLayout()
+        Me.Led2 = New LED()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
+        Me.GroupBox1.SuspendLayout()
         Me.GroupBox4.SuspendLayout()
         Me.GroupBox12.SuspendLayout()
         CType(Me.NumericUpDown1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -171,44 +173,18 @@ Partial Class PCC_PiKoder_Control_Center
         Me.GroupBox18.SuspendLayout()
         Me.SuspendLayout()
         '
-        'GroupBox1
-        '
-        Me.GroupBox1.AutoSize = True
-        Me.GroupBox1.BackColor = System.Drawing.SystemColors.Control
-        Me.GroupBox1.Controls.Add(Me.Label1)
-        Me.GroupBox1.Controls.Add(Me.AvailableCOMPorts)
-        Me.GroupBox1.Font = New System.Drawing.Font("Arial", 11.0!, System.Drawing.FontStyle.Bold)
-        Me.GroupBox1.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.GroupBox1.Location = New System.Drawing.Point(10, 20)
-        Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Padding = New System.Windows.Forms.Padding(0)
-        Me.GroupBox1.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.GroupBox1.Size = New System.Drawing.Size(259, 74)
-        Me.GroupBox1.TabIndex = 21
-        Me.GroupBox1.TabStop = False
-        Me.GroupBox1.Text = "COM"
-        '
-        'Label1
-        '
-        Me.Label1.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Bold)
-        Me.Label1.Location = New System.Drawing.Point(111, 21)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(136, 32)
-        Me.Label1.TabIndex = 2
-        Me.Label1.Text = "Select COM port and click to connect"
-        '
         'AvailableCOMPorts
         '
         Me.AvailableCOMPorts.FormattingEnabled = True
-        Me.AvailableCOMPorts.ItemHeight = 18
-        Me.AvailableCOMPorts.Location = New System.Drawing.Point(11, 29)
+        Me.AvailableCOMPorts.ItemHeight = 19
+        Me.AvailableCOMPorts.Location = New System.Drawing.Point(105, 17)
         Me.AvailableCOMPorts.Name = "AvailableCOMPorts"
-        Me.AvailableCOMPorts.Size = New System.Drawing.Size(87, 22)
+        Me.AvailableCOMPorts.Size = New System.Drawing.Size(87, 23)
         Me.AvailableCOMPorts.TabIndex = 0
         '
         'TextBox1
         '
-        Me.TextBox1.Location = New System.Drawing.Point(12, 22)
+        Me.TextBox1.Location = New System.Drawing.Point(12, 27)
         Me.TextBox1.Name = "TextBox1"
         Me.TextBox1.Size = New System.Drawing.Size(340, 24)
         Me.TextBox1.TabIndex = 22
@@ -221,27 +197,14 @@ Partial Class PCC_PiKoder_Control_Center
         Me.GroupBox2.Controls.Add(Me.TextBox1)
         Me.GroupBox2.Font = New System.Drawing.Font("Arial", 11.0!, System.Drawing.FontStyle.Bold)
         Me.GroupBox2.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.GroupBox2.Location = New System.Drawing.Point(278, 20)
+        Me.GroupBox2.Location = New System.Drawing.Point(284, 20)
         Me.GroupBox2.Name = "GroupBox2"
         Me.GroupBox2.Padding = New System.Windows.Forms.Padding(0)
         Me.GroupBox2.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.GroupBox2.Size = New System.Drawing.Size(424, 74)
+        Me.GroupBox2.Size = New System.Drawing.Size(418, 76)
         Me.GroupBox2.TabIndex = 22
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Status"
-        '
-        'Led2
-        '
-        Me.Led2.BackColor = System.Drawing.SystemColors.ButtonFace
-        Me.Led2.Blink = False
-        Me.Led2.Color = LED.LEDColorSelection.LED_Red
-        Me.Led2.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Led2.Interval = CType(0, Short)
-        Me.Led2.Location = New System.Drawing.Point(370, 17)
-        Me.Led2.Name = "Led2"
-        Me.Led2.Size = New System.Drawing.Size(33, 35)
-        Me.Led2.State = False
-        Me.Led2.TabIndex = 23
         '
         'Label5
         '
@@ -358,8 +321,11 @@ Partial Class PCC_PiKoder_Control_Center
         'GroupBox3
         '
         Me.GroupBox3.BackColor = System.Drawing.SystemColors.Control
-        Me.GroupBox3.Controls.Add(Me.GroupBox1)
+        Me.GroupBox3.Controls.Add(Me.InfoSSID)
+        Me.GroupBox3.Controls.Add(Me.ConnectWLAN)
+        Me.GroupBox3.Controls.Add(Me.ConnectCOM)
         Me.GroupBox3.Controls.Add(Me.GroupBox2)
+        Me.GroupBox3.Controls.Add(Me.GroupBox1)
         Me.GroupBox3.Font = New System.Drawing.Font("Arial", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GroupBox3.ForeColor = System.Drawing.SystemColors.ControlText
         Me.GroupBox3.Location = New System.Drawing.Point(14, 10)
@@ -370,6 +336,52 @@ Partial Class PCC_PiKoder_Control_Center
         Me.GroupBox3.TabIndex = 22
         Me.GroupBox3.TabStop = False
         Me.GroupBox3.Text = "Connection to PiKoder"
+        '
+        'InfoSSID
+        '
+        Me.InfoSSID.AcceptsReturn = True
+        Me.InfoSSID.BackColor = System.Drawing.SystemColors.Window
+        Me.InfoSSID.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.InfoSSID.Font = New System.Drawing.Font("Arial", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.InfoSSID.ForeColor = System.Drawing.SystemColors.WindowText
+        Me.InfoSSID.Location = New System.Drawing.Point(109, 65)
+        Me.InfoSSID.Margin = New System.Windows.Forms.Padding(2)
+        Me.InfoSSID.MaxLength = 4
+        Me.InfoSSID.Name = "InfoSSID"
+        Me.InfoSSID.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.InfoSSID.Size = New System.Drawing.Size(150, 26)
+        Me.InfoSSID.TabIndex = 21
+        '
+        'ConnectWLAN
+        '
+        Me.ConnectWLAN.AutoSize = True
+        Me.ConnectWLAN.Font = New System.Drawing.Font("Arial", 14.0!, System.Drawing.FontStyle.Bold)
+        Me.ConnectWLAN.Location = New System.Drawing.Point(20, 66)
+        Me.ConnectWLAN.Name = "ConnectWLAN"
+        Me.ConnectWLAN.Size = New System.Drawing.Size(84, 26)
+        Me.ConnectWLAN.TabIndex = 30
+        Me.ConnectWLAN.Text = "WLAN"
+        Me.ConnectWLAN.UseVisualStyleBackColor = True
+        '
+        'ConnectCOM
+        '
+        Me.ConnectCOM.AutoSize = True
+        Me.ConnectCOM.Font = New System.Drawing.Font("Arial", 14.0!, System.Drawing.FontStyle.Bold)
+        Me.ConnectCOM.Location = New System.Drawing.Point(20, 34)
+        Me.ConnectCOM.Name = "ConnectCOM"
+        Me.ConnectCOM.Size = New System.Drawing.Size(75, 26)
+        Me.ConnectCOM.TabIndex = 29
+        Me.ConnectCOM.Text = "COM"
+        Me.ConnectCOM.UseVisualStyleBackColor = True
+        '
+        'GroupBox1
+        '
+        Me.GroupBox1.Controls.Add(Me.AvailableCOMPorts)
+        Me.GroupBox1.Location = New System.Drawing.Point(4, 20)
+        Me.GroupBox1.Name = "GroupBox1"
+        Me.GroupBox1.Size = New System.Drawing.Size(274, 76)
+        Me.GroupBox1.TabIndex = 31
+        Me.GroupBox1.TabStop = False
         '
         'GroupBox4
         '
@@ -898,88 +910,96 @@ Partial Class PCC_PiKoder_Control_Center
         Me.ch8_HScrollBar.LargeChange = 1
         Me.ch8_HScrollBar.Location = New System.Drawing.Point(95, 315)
         Me.ch8_HScrollBar.Margin = New System.Windows.Forms.Padding(2)
-        Me.ch8_HScrollBar.Maximum = 2500
+        Me.ch8_HScrollBar.Maximum = 2000
+        Me.ch8_HScrollBar.Minimum = 1000
         Me.ch8_HScrollBar.Name = "ch8_HScrollBar"
         Me.ch8_HScrollBar.Size = New System.Drawing.Size(228, 32)
         Me.ch8_HScrollBar.TabIndex = 36
-        Me.ch8_HScrollBar.Value = 1250
+        Me.ch8_HScrollBar.Value = 1500
         '
         'ch7_HScrollBar
         '
         Me.ch7_HScrollBar.LargeChange = 1
         Me.ch7_HScrollBar.Location = New System.Drawing.Point(95, 274)
         Me.ch7_HScrollBar.Margin = New System.Windows.Forms.Padding(2)
-        Me.ch7_HScrollBar.Maximum = 2500
+        Me.ch7_HScrollBar.Maximum = 2000
+        Me.ch7_HScrollBar.Minimum = 1000
         Me.ch7_HScrollBar.Name = "ch7_HScrollBar"
         Me.ch7_HScrollBar.Size = New System.Drawing.Size(228, 32)
         Me.ch7_HScrollBar.TabIndex = 35
-        Me.ch7_HScrollBar.Value = 1250
+        Me.ch7_HScrollBar.Value = 1500
         '
         'ch6_HScrollBar
         '
         Me.ch6_HScrollBar.LargeChange = 1
         Me.ch6_HScrollBar.Location = New System.Drawing.Point(95, 233)
         Me.ch6_HScrollBar.Margin = New System.Windows.Forms.Padding(2)
-        Me.ch6_HScrollBar.Maximum = 2500
+        Me.ch6_HScrollBar.Maximum = 2000
+        Me.ch6_HScrollBar.Minimum = 1000
         Me.ch6_HScrollBar.Name = "ch6_HScrollBar"
         Me.ch6_HScrollBar.Size = New System.Drawing.Size(228, 32)
         Me.ch6_HScrollBar.TabIndex = 34
-        Me.ch6_HScrollBar.Value = 1250
+        Me.ch6_HScrollBar.Value = 1500
         '
         'ch5_HScrollBar
         '
         Me.ch5_HScrollBar.LargeChange = 1
         Me.ch5_HScrollBar.Location = New System.Drawing.Point(95, 194)
         Me.ch5_HScrollBar.Margin = New System.Windows.Forms.Padding(2)
-        Me.ch5_HScrollBar.Maximum = 2500
+        Me.ch5_HScrollBar.Maximum = 2000
+        Me.ch5_HScrollBar.Minimum = 1000
         Me.ch5_HScrollBar.Name = "ch5_HScrollBar"
         Me.ch5_HScrollBar.Size = New System.Drawing.Size(228, 32)
         Me.ch5_HScrollBar.TabIndex = 33
-        Me.ch5_HScrollBar.Value = 1250
+        Me.ch5_HScrollBar.Value = 1500
         '
         'ch4_HScrollBar
         '
         Me.ch4_HScrollBar.LargeChange = 1
         Me.ch4_HScrollBar.Location = New System.Drawing.Point(95, 150)
         Me.ch4_HScrollBar.Margin = New System.Windows.Forms.Padding(2)
-        Me.ch4_HScrollBar.Maximum = 2500
+        Me.ch4_HScrollBar.Maximum = 2000
+        Me.ch4_HScrollBar.Minimum = 1000
         Me.ch4_HScrollBar.Name = "ch4_HScrollBar"
         Me.ch4_HScrollBar.Size = New System.Drawing.Size(228, 32)
         Me.ch4_HScrollBar.TabIndex = 32
-        Me.ch4_HScrollBar.Value = 1250
+        Me.ch4_HScrollBar.Value = 1500
         '
         'ch3_HScrollBar
         '
         Me.ch3_HScrollBar.LargeChange = 1
         Me.ch3_HScrollBar.Location = New System.Drawing.Point(95, 107)
         Me.ch3_HScrollBar.Margin = New System.Windows.Forms.Padding(2)
-        Me.ch3_HScrollBar.Maximum = 2500
+        Me.ch3_HScrollBar.Maximum = 2000
+        Me.ch3_HScrollBar.Minimum = 1000
         Me.ch3_HScrollBar.Name = "ch3_HScrollBar"
         Me.ch3_HScrollBar.Size = New System.Drawing.Size(228, 32)
         Me.ch3_HScrollBar.TabIndex = 31
-        Me.ch3_HScrollBar.Value = 1250
+        Me.ch3_HScrollBar.Value = 1500
         '
         'ch2_HScrollBar
         '
         Me.ch2_HScrollBar.LargeChange = 1
         Me.ch2_HScrollBar.Location = New System.Drawing.Point(95, 66)
         Me.ch2_HScrollBar.Margin = New System.Windows.Forms.Padding(2)
-        Me.ch2_HScrollBar.Maximum = 2500
+        Me.ch2_HScrollBar.Maximum = 2000
+        Me.ch2_HScrollBar.Minimum = 1000
         Me.ch2_HScrollBar.Name = "ch2_HScrollBar"
         Me.ch2_HScrollBar.Size = New System.Drawing.Size(228, 32)
         Me.ch2_HScrollBar.TabIndex = 30
-        Me.ch2_HScrollBar.Value = 1250
+        Me.ch2_HScrollBar.Value = 1500
         '
         'ch1_HScrollBar
         '
         Me.ch1_HScrollBar.LargeChange = 1
         Me.ch1_HScrollBar.Location = New System.Drawing.Point(95, 26)
         Me.ch1_HScrollBar.Margin = New System.Windows.Forms.Padding(2)
-        Me.ch1_HScrollBar.Maximum = 2500
+        Me.ch1_HScrollBar.Maximum = 2000
+        Me.ch1_HScrollBar.Minimum = 1000
         Me.ch1_HScrollBar.Name = "ch1_HScrollBar"
         Me.ch1_HScrollBar.Size = New System.Drawing.Size(228, 32)
         Me.ch1_HScrollBar.TabIndex = 29
-        Me.ch1_HScrollBar.Value = 1250
+        Me.ch1_HScrollBar.Value = 1500
         '
         'strCH_8_Current
         '
@@ -1437,6 +1457,19 @@ Partial Class PCC_PiKoder_Control_Center
         Me.ListBox1.Size = New System.Drawing.Size(43, 33)
         Me.ListBox1.TabIndex = 26
         '
+        'Led2
+        '
+        Me.Led2.BackColor = System.Drawing.SystemColors.ButtonFace
+        Me.Led2.Blink = False
+        Me.Led2.Color = LED.LEDColorSelection.LED_Red
+        Me.Led2.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Led2.Interval = CType(0, Short)
+        Me.Led2.Location = New System.Drawing.Point(370, 21)
+        Me.Led2.Name = "Led2"
+        Me.Led2.Size = New System.Drawing.Size(33, 35)
+        Me.Led2.State = False
+        Me.Led2.TabIndex = 23
+        '
         'PCC_PiKoder_Control_Center
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1451,11 +1484,11 @@ Partial Class PCC_PiKoder_Control_Center
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "PCC_PiKoder_Control_Center"
         Me.Text = "PCC_PiKoder_Control_Center"
-        Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
         Me.GroupBox3.ResumeLayout(False)
         Me.GroupBox3.PerformLayout()
+        Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox4.ResumeLayout(False)
         Me.GroupBox12.ResumeLayout(False)
         CType(Me.NumericUpDown1, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1514,8 +1547,6 @@ Partial Class PCC_PiKoder_Control_Center
         Me.PerformLayout()
 
     End Sub
-    Public WithEvents GroupBox1 As System.Windows.Forms.GroupBox
-    Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents AvailableCOMPorts As System.Windows.Forms.ListBox
     Public WithEvents GroupBox2 As System.Windows.Forms.GroupBox
     Friend WithEvents TextBox1 As System.Windows.Forms.TextBox
@@ -1609,4 +1640,8 @@ Partial Class PCC_PiKoder_Control_Center
     Friend WithEvents ListBox2 As System.Windows.Forms.ListBox
     Friend WithEvents ListBox1 As System.Windows.Forms.ListBox
     Protected WithEvents ListBox8 As System.Windows.Forms.ListBox
+    Friend WithEvents ConnectWLAN As System.Windows.Forms.CheckBox
+    Friend WithEvents ConnectCOM As System.Windows.Forms.CheckBox
+    Public WithEvents InfoSSID As System.Windows.Forms.TextBox
+    Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
 End Class
