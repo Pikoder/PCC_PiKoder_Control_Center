@@ -26,6 +26,7 @@ Partial Class PCC_PiKoder_Control_Center
         Me.AvailableCOMPorts = New System.Windows.Forms.ListBox()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.Led2 = New LED()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
@@ -119,7 +120,6 @@ Partial Class PCC_PiKoder_Control_Center
         Me.ListBox3 = New System.Windows.Forms.ListBox()
         Me.ListBox2 = New System.Windows.Forms.ListBox()
         Me.ListBox1 = New System.Windows.Forms.ListBox()
-        Me.Led2 = New LED()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
@@ -205,6 +205,19 @@ Partial Class PCC_PiKoder_Control_Center
         Me.GroupBox2.TabIndex = 22
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Status"
+        '
+        'Led2
+        '
+        Me.Led2.BackColor = System.Drawing.SystemColors.ButtonFace
+        Me.Led2.Blink = False
+        Me.Led2.Color = LED.LEDColorSelection.LED_Red
+        Me.Led2.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Led2.Interval = CType(0, Short)
+        Me.Led2.Location = New System.Drawing.Point(370, 21)
+        Me.Led2.Name = "Led2"
+        Me.Led2.Size = New System.Drawing.Size(33, 35)
+        Me.Led2.State = False
+        Me.Led2.TabIndex = 23
         '
         'Label5
         '
@@ -798,7 +811,7 @@ Partial Class PCC_PiKoder_Control_Center
         '
         Me.strCH_8_Neutral.ForeColor = System.Drawing.Color.White
         Me.strCH_8_Neutral.Location = New System.Drawing.Point(9, 317)
-        Me.strCH_8_Neutral.Maximum = New Decimal(New Integer() {254, 0, 0, 0})
+        Me.strCH_8_Neutral.Maximum = New Decimal(New Integer() {2250, 0, 0, 0})
         Me.strCH_8_Neutral.Name = "strCH_8_Neutral"
         Me.strCH_8_Neutral.Size = New System.Drawing.Size(64, 26)
         Me.strCH_8_Neutral.TabIndex = 25
@@ -808,7 +821,7 @@ Partial Class PCC_PiKoder_Control_Center
         '
         Me.strCH_7_Neutral.ForeColor = System.Drawing.Color.White
         Me.strCH_7_Neutral.Location = New System.Drawing.Point(9, 276)
-        Me.strCH_7_Neutral.Maximum = New Decimal(New Integer() {254, 0, 0, 0})
+        Me.strCH_7_Neutral.Maximum = New Decimal(New Integer() {2250, 0, 0, 0})
         Me.strCH_7_Neutral.Name = "strCH_7_Neutral"
         Me.strCH_7_Neutral.Size = New System.Drawing.Size(64, 26)
         Me.strCH_7_Neutral.TabIndex = 24
@@ -818,7 +831,7 @@ Partial Class PCC_PiKoder_Control_Center
         '
         Me.strCH_6_Neutral.ForeColor = System.Drawing.Color.White
         Me.strCH_6_Neutral.Location = New System.Drawing.Point(9, 238)
-        Me.strCH_6_Neutral.Maximum = New Decimal(New Integer() {254, 0, 0, 0})
+        Me.strCH_6_Neutral.Maximum = New Decimal(New Integer() {2250, 0, 0, 0})
         Me.strCH_6_Neutral.Name = "strCH_6_Neutral"
         Me.strCH_6_Neutral.Size = New System.Drawing.Size(64, 26)
         Me.strCH_6_Neutral.TabIndex = 23
@@ -828,7 +841,7 @@ Partial Class PCC_PiKoder_Control_Center
         '
         Me.strCH_5_Neutral.ForeColor = System.Drawing.Color.White
         Me.strCH_5_Neutral.Location = New System.Drawing.Point(9, 195)
-        Me.strCH_5_Neutral.Maximum = New Decimal(New Integer() {254, 0, 0, 0})
+        Me.strCH_5_Neutral.Maximum = New Decimal(New Integer() {2250, 0, 0, 0})
         Me.strCH_5_Neutral.Name = "strCH_5_Neutral"
         Me.strCH_5_Neutral.Size = New System.Drawing.Size(64, 26)
         Me.strCH_5_Neutral.TabIndex = 22
@@ -838,7 +851,7 @@ Partial Class PCC_PiKoder_Control_Center
         '
         Me.strCH_4_Neutral.ForeColor = System.Drawing.Color.White
         Me.strCH_4_Neutral.Location = New System.Drawing.Point(9, 155)
-        Me.strCH_4_Neutral.Maximum = New Decimal(New Integer() {254, 0, 0, 0})
+        Me.strCH_4_Neutral.Maximum = New Decimal(New Integer() {2250, 0, 0, 0})
         Me.strCH_4_Neutral.Name = "strCH_4_Neutral"
         Me.strCH_4_Neutral.Size = New System.Drawing.Size(64, 26)
         Me.strCH_4_Neutral.TabIndex = 21
@@ -848,7 +861,7 @@ Partial Class PCC_PiKoder_Control_Center
         '
         Me.strCH_3_Neutral.ForeColor = System.Drawing.Color.White
         Me.strCH_3_Neutral.Location = New System.Drawing.Point(9, 111)
-        Me.strCH_3_Neutral.Maximum = New Decimal(New Integer() {254, 0, 0, 0})
+        Me.strCH_3_Neutral.Maximum = New Decimal(New Integer() {2250, 0, 0, 0})
         Me.strCH_3_Neutral.Name = "strCH_3_Neutral"
         Me.strCH_3_Neutral.Size = New System.Drawing.Size(64, 26)
         Me.strCH_3_Neutral.TabIndex = 20
@@ -858,7 +871,7 @@ Partial Class PCC_PiKoder_Control_Center
         '
         Me.strCH_2_Neutral.ForeColor = System.Drawing.Color.White
         Me.strCH_2_Neutral.Location = New System.Drawing.Point(9, 70)
-        Me.strCH_2_Neutral.Maximum = New Decimal(New Integer() {254, 0, 0, 0})
+        Me.strCH_2_Neutral.Maximum = New Decimal(New Integer() {2250, 0, 0, 0})
         Me.strCH_2_Neutral.Name = "strCH_2_Neutral"
         Me.strCH_2_Neutral.Size = New System.Drawing.Size(64, 26)
         Me.strCH_2_Neutral.TabIndex = 19
@@ -868,7 +881,7 @@ Partial Class PCC_PiKoder_Control_Center
         '
         Me.strCH_1_Neutral.ForeColor = System.Drawing.Color.White
         Me.strCH_1_Neutral.Location = New System.Drawing.Point(9, 29)
-        Me.strCH_1_Neutral.Maximum = New Decimal(New Integer() {254, 0, 0, 0})
+        Me.strCH_1_Neutral.Maximum = New Decimal(New Integer() {2250, 0, 0, 0})
         Me.strCH_1_Neutral.Name = "strCH_1_Neutral"
         Me.strCH_1_Neutral.Size = New System.Drawing.Size(64, 26)
         Me.strCH_1_Neutral.TabIndex = 18
@@ -1456,19 +1469,6 @@ Partial Class PCC_PiKoder_Control_Center
         Me.ListBox1.Name = "ListBox1"
         Me.ListBox1.Size = New System.Drawing.Size(43, 33)
         Me.ListBox1.TabIndex = 26
-        '
-        'Led2
-        '
-        Me.Led2.BackColor = System.Drawing.SystemColors.ButtonFace
-        Me.Led2.Blink = False
-        Me.Led2.Color = LED.LEDColorSelection.LED_Red
-        Me.Led2.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Led2.Interval = CType(0, Short)
-        Me.Led2.Location = New System.Drawing.Point(370, 21)
-        Me.Led2.Name = "Led2"
-        Me.Led2.Size = New System.Drawing.Size(33, 35)
-        Me.Led2.State = False
-        Me.Led2.TabIndex = 23
         '
         'PCC_PiKoder_Control_Center
         '

@@ -128,21 +128,18 @@ Public Class PiKoderCommunicationAbstractionLayer
         End If
     End Sub
     Public Sub GetStatusRecord(ByRef SerialInputString As String)
-        If (iConnectedTo = iPhysicalLink.iSerialLink) Then
-            mySerialLink.SendDataToSerial("?")
-            If mySerialLink.SerialLinkConnected() Then  'Catch Error Message
+        Dim iTimeOut As Integer = 0
+        Do Until (InStr(SerialInputString, "T=") > 0) Or (iTimeOut = 10)
+            If (iConnectedTo = iPhysicalLink.iSerialLink) Then
+                mySerialLink.SendDataToSerial("?")
                 SerialInputString = mySerialLink.SerialReceiver()
-            Else
-                SerialInputString = "TimeOut"
-            End If
-        ElseIf (iConnectedTo = iPhysicalLink.iWLANlink) Then
-            myWLANLink.SendDataToWLAN("?")
-            If myWLANLink.WLANLinkConnected() Then  'Catch Error Message
+            ElseIf (iConnectedTo = iPhysicalLink.iWLANlink) Then
+                myWLANLink.SendDataToWLAN("?")
                 SerialInputString = myWLANLink.Receiver()
-            Else
-                SerialInputString = "TimeOut"
             End If
-        End If
+            iTimeOut = iTimeOut + 1
+        Loop
+        If (iTimeOut = 10) Then SerialInputString = "TimeOut"
     End Sub
     Public Sub GetTimeOut(ByRef SerialInputString As String)
         Dim iTimeOut As Integer = 0
@@ -254,7 +251,7 @@ Public Class PiKoderCommunicationAbstractionLayer
         If (iConnectedTo = iPhysicalLink.iSerialLink) Then
             Return InterpretReturnCode(mySerialLink.SendDataToSerialwithAck("T=" + myString + strTimeOut))
         ElseIf (iConnectedTo = iPhysicalLink.iWLANlink) Then
-            myWLANLink.SendDataToWLAN("T=")
+            myWLANLink.SendDataToWLAN("T=" + myString + strTimeOut)
             Return InterpretReturnCode(myWLANLink.Receiver())
         End If
     End Function
@@ -265,7 +262,7 @@ Public Class PiKoderCommunicationAbstractionLayer
         If (iConnectedTo = iPhysicalLink.iSerialLink) Then
             Return InterpretReturnCode(mySerialLink.SendDataToSerialwithAck("M=" + strSendString + strMiniSSCOffset))
         ElseIf (iConnectedTo = iPhysicalLink.iWLANlink) Then
-            myWLANLink.SendDataToWLAN("M=")
+            myWLANLink.SendDataToWLAN("M=" + strSendString + strMiniSSCOffset)
             Return InterpretReturnCode(myWLANLink.Receiver())
         End If
     End Function
