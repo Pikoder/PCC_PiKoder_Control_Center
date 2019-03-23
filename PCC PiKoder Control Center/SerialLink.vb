@@ -65,23 +65,25 @@ Public Class SerialLink
         Dim j As Integer = 0
 
         While (Receiving)                                                     'Setup an infinite loop
-            Try
-                If (Connected And (mySerialPort.BytesToRead > 0)) Then ' make sure to receive complete message
-                    myByte = mySerialPort.ReadByte
-                    If ((myByte <> &HD) And (myByte <> &HA)) Then
-                        myMessage = myMessage + Chr(myByte) 'Convert bytes back to string
-                        messageStarted = True
-                    ElseIf (messageStarted) Then
-                        eomDetect = eomDetect - 1
-                        If (Not eomDetect) Then
-                            Receiving = False
-                        End If
+            If (Connected And (mySerialPort.BytesToRead > 0)) Then ' make sure to receive complete message
+                myByte = mySerialPort.ReadByte
+                If ((myByte <> &HD) And (myByte <> &HA)) Then
+                    myMessage = myMessage + Chr(myByte) 'Convert bytes back to string
+                    messageStarted = True
+                ElseIf (messageStarted) Then
+                    eomDetect = eomDetect - 1
+                    If (Not eomDetect) Then
+                        Receiving = False
                     End If
                 End If
-
-            Catch ex As Exception
-                Return "TimeOut"
-            End Try
+            Else
+                j = j + 1
+                System.Threading.Thread.Sleep(10)
+                If j = 20 Then
+                    Receiving = False
+                    Return "TimeOut"
+                End If
+            End If
 
         End While
         Return myMessage

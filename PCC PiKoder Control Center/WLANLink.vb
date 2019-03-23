@@ -59,11 +59,11 @@ Public Class WLANLink
     End Sub
     Public Function Receiver() As String
         Dim iTimeOutCounter As Integer = 0
-        While Not MessageFullyReceived And iTimeOutCounter < 5
+        While Not MessageFullyReceived And iTimeOutCounter < 20
             Thread.Sleep(100)
             iTimeOutCounter = iTimeOutCounter + 1
         End While
-        If iTimeOutCounter = 5 Then
+        If iTimeOutCounter = 10 Then
             Try
                 receivingThread.Abort()
             Catch ex As Exception

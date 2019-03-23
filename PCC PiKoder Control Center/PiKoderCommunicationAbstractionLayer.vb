@@ -56,58 +56,49 @@ Public Class PiKoderCommunicationAbstractionLayer
         End If
         MyForm_Dispose()
     End Function
-    Public Sub GetHPPulseLength(ByRef SerialInputString As String, ByVal iChannelNo As Integer)
-        If (iConnectedTo = iPhysicalLink.iSerialLink) Then
-            mySerialLink.SendDataToSerial(iChannelNo.ToString() + "?")
-            SerialInputString = mySerialLink.SerialReceiver()
-        ElseIf (iConnectedTo = iPhysicalLink.iWLANlink) Then
-            myWLANLink.SendDataToWLAN(iChannelNo.ToString() + "?")
-            SerialInputString = myWLANLink.Receiver()
-        End If
-    End Sub
-    Public Sub GetPulseLength(ByRef SerialInputString As String, ByVal iChannelNo As Integer)
-        If (iConnectedTo = iPhysicalLink.iSerialLink) Then
-            mySerialLink.SendDataToSerial(iChannelNo.ToString() + "?")
-            SerialInputString = mySerialLink.SerialReceiver()
-        ElseIf (iConnectedTo = iPhysicalLink.iWLANlink) Then
-            Do
+    Public Sub GetPulseLength(ByRef SerialInputString As String, ByVal iChannelNo As Integer, ByVal HPMath As Boolean)
+        Do
+            If (iConnectedTo = iPhysicalLink.iSerialLink) Then
+                mySerialLink.SendDataToSerial(iChannelNo.ToString() + "?")
+                SerialInputString = mySerialLink.SerialReceiver()
+            ElseIf (iConnectedTo = iPhysicalLink.iWLANlink) Then
                 myWLANLink.SendDataToWLAN(iChannelNo.ToString() + "?")
                 SerialInputString = myWLANLink.Receiver()
-            Loop Until ValidatePulseValue(SerialInputString)
-        End If
+            End If
+        Loop Until ValidatePulseValue(SerialInputString, HPMath)
     End Sub
-    Public Sub GetNeutralPosition(ByRef SerialInputString As String, ByVal iChannelNo As Integer)
-        If (iConnectedTo = iPhysicalLink.iSerialLink) Then
-            mySerialLink.SendDataToSerial("N" + iChannelNo.ToString() + "?")
-            SerialInputString = mySerialLink.SerialReceiver()
-        ElseIf (iConnectedTo = iPhysicalLink.iWLANlink) Then
-            Do
+    Public Sub GetNeutralPosition(ByRef SerialInputString As String, ByVal iChannelNo As Integer, ByVal HPMath As Boolean)
+        Do
+            If (iConnectedTo = iPhysicalLink.iSerialLink) Then
+                mySerialLink.SendDataToSerial("N" + iChannelNo.ToString() + "?")
+                SerialInputString = mySerialLink.SerialReceiver()
+            ElseIf (iConnectedTo = iPhysicalLink.iWLANlink) Then
                 myWLANLink.SendDataToWLAN("N" + iChannelNo.ToString() + "?")
                 SerialInputString = myWLANLink.Receiver()
-            Loop Until ValidatePulseValue(SerialInputString)
-        End If
+            End If
+        Loop Until ValidatePulseValue(SerialInputString, HPMath)
     End Sub
-    Public Sub GetLowerLimit(ByRef SerialInputString As String, ByVal iChannelNo As Integer)
-        If (iConnectedTo = iPhysicalLink.iSerialLink) Then
-            mySerialLink.SendDataToSerial("L" + iChannelNo.ToString() + "?")
-            SerialInputString = mySerialLink.SerialReceiver()
-        ElseIf (iConnectedTo = iPhysicalLink.iWLANlink) Then
-            Do
+    Public Sub GetLowerLimit(ByRef SerialInputString As String, ByVal iChannelNo As Integer, ByVal HPMath As Boolean)
+        Do
+            If (iConnectedTo = iPhysicalLink.iSerialLink) Then
+                mySerialLink.SendDataToSerial("L" + iChannelNo.ToString() + "?")
+                SerialInputString = mySerialLink.SerialReceiver()
+            ElseIf (iConnectedTo = iPhysicalLink.iWLANlink) Then
                 myWLANLink.SendDataToWLAN("L" + iChannelNo.ToString() + "?")
                 SerialInputString = myWLANLink.Receiver()
-            Loop Until ValidatePulseValue(SerialInputString)
-        End If
+            End If
+        Loop Until ValidatePulseValue(SerialInputString, HPMath)
     End Sub
-    Public Sub GetUpperLimit(ByRef SerialInputString As String, ByVal iChannelNo As Integer)
-        If (iConnectedTo = iPhysicalLink.iSerialLink) Then
-            mySerialLink.SendDataToSerial("U" + iChannelNo.ToString() + "?")
-            SerialInputString = mySerialLink.SerialReceiver()
-        ElseIf (iConnectedTo = iPhysicalLink.iWLANlink) Then
-            Do
+    Public Sub GetUpperLimit(ByRef SerialInputString As String, ByVal iChannelNo As Integer, ByVal HPMath As Boolean)
+        Do
+            If (iConnectedTo = iPhysicalLink.iSerialLink) Then
+                mySerialLink.SendDataToSerial("U" + iChannelNo.ToString() + "?")
+                SerialInputString = mySerialLink.SerialReceiver()
+            ElseIf (iConnectedTo = iPhysicalLink.iWLANlink) Then
                 myWLANLink.SendDataToWLAN("U" + iChannelNo.ToString() + "?")
                 SerialInputString = myWLANLink.Receiver()
-            Loop Until ValidatePulseValue(SerialInputString)
-        End If
+            End If
+        Loop Until ValidatePulseValue(SerialInputString, HPMath)
     End Sub
     Public Sub GetIOType(ByRef SerialInputString As String, ByVal iChannelNo As Integer)
         If (iConnectedTo = iPhysicalLink.iSerialLink) Then
@@ -129,7 +120,7 @@ Public Class PiKoderCommunicationAbstractionLayer
     End Sub
     Public Sub GetStatusRecord(ByRef SerialInputString As String)
         Dim iTimeOut As Integer = 0
-        Do Until (InStr(SerialInputString, "T=") > 0) Or (iTimeOut = 10)
+        Do
             If (iConnectedTo = iPhysicalLink.iSerialLink) Then
                 mySerialLink.SendDataToSerial("?")
                 SerialInputString = mySerialLink.SerialReceiver()
@@ -138,7 +129,7 @@ Public Class PiKoderCommunicationAbstractionLayer
                 SerialInputString = myWLANLink.Receiver()
             End If
             iTimeOut = iTimeOut + 1
-        Loop
+        Loop Until (InStr(SerialInputString, "T=") > 0) Or (iTimeOut = 10)
         If (iTimeOut = 10) Then SerialInputString = "TimeOut"
     End Sub
     Public Sub GetTimeOut(ByRef SerialInputString As String)
@@ -303,25 +294,24 @@ Public Class PiKoderCommunicationAbstractionLayer
         Else
         End If
     End Function
-    Private Function ValidatePulseValue(ByRef strVal As String) As Boolean
+    Private Function ValidatePulseValue(ByRef strVal As String, ByVal HPMath As Boolean) As Boolean
         Dim intChannelPulseLength As Double
         intChannelPulseLength = Val(strVal) 'no check on chars this time
-        If (intChannelPulseLength < 750) Or (intChannelPulseLength > 2250) Then
-            Return False
+        If HPMath Then
+            If (intChannelPulseLength < 3750) Or (intChannelPulseLength > 11250) Then
+                Return False
+            End If
+            'format string
+            If (intChannelPulseLength < 10000) And (Len(strVal) = 5) Then strVal = Mid(strVal, 2, 4)
+            Return True
+        Else
+            If (intChannelPulseLength < 750) Or (intChannelPulseLength > 2250) Then
+                Return False
+            End If
+            'format string
+            If (intChannelPulseLength < 1000) And (Len(strVal) = 4) Then strVal = Mid(strVal, 2, 3)
+            Return True
         End If
-        'format string
-        If (intChannelPulseLength < 1000) And (Len(strVal) = 4) Then strVal = Mid(strVal, 2, 3)
-        Return True
-    End Function
-    Private Function ValidateHPPulseValue(ByRef strVal As String) As Boolean
-        Dim intChannelPulseLength As Double
-        intChannelPulseLength = Val(strVal) 'no check on chars this time
-        If (intChannelPulseLength < 3750) Or (intChannelPulseLength > 11250) Then
-            Return False
-        End If
-        'format string
-        If (intChannelPulseLength < 10000) And (Len(strVal) = 5) Then strVal = Mid(strVal, 2, 4)
-        Return True
     End Function
     Private Function ValidateZeroOffset(ByRef strVal As String) As Boolean
         Dim intZeroOffset As Integer

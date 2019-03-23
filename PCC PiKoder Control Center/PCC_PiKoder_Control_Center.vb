@@ -215,9 +215,8 @@ Public Class PCC_PiKoder_Control_Center
                     boolErrorFlag = True
                 ElseIf strChannelBuffer = "?" Then
                     boolErrorFlag = True
-                Else
-                    SerialInputString = strChannelBuffer
                 End If
+                SerialInputString = strChannelBuffer
             End If
         End If
     End Sub
@@ -352,33 +351,16 @@ Public Class PCC_PiKoder_Control_Center
 
         ' close port
         myPCAL.MyForm_Dispose()
+
+        ' reset error flag
+        boolErrorFlag = False
+
     End Sub
     Private Sub LostConnection()
         If ConnectCOM.Checked Then
             ConnectCOM.Checked = False 'this will take care of the CleanUp of the UI
             TextBox1.Text = "Lost connection to PiKoder."
         Else
-        End If
-    End Sub
-    Private Sub RetrieveUART2PPMParameters()
-        Dim strChannelBuffer As String = ""
-        IOSwitching = False
-        FastChannelRetrieve = False
-        If myPCAL.LinkConnected() Then
-            If Not boolErrorFlag Then
-                'request status information from SSC    
-                Call myPCAL.GetFirmwareVersion(strChannelBuffer)
-                If strChannelBuffer <> "TimeOut" Then
-                    strSSC_Firmware.Text = strChannelBuffer
-                    If Val(strChannelBuffer) > 2.06 Then
-                        MsgBox("The PiKoder firmware version found is not supported! Please goto www.pikoder.com and upgrade PCC Control Center to the latest version.", MsgBoxStyle.OkOnly, "Error Message")
-                        End
-                    End If
-                Else ' error message
-                    boolErrorFlag = True
-                End If
-            End If
-            RetrievePiKoderParameters()
         End If
     End Sub
     Private Sub RetrieveSSC_HPParameters()
@@ -412,621 +394,72 @@ Public Class PCC_PiKoder_Control_Center
 
         Dim strChannelBuffer As String = ""
 
-        bDataLoaded = False             'Avoid overridding of channel type due to re-reading data after value change
+        bDataLoaded = False             ' Avoid overridding of channel type due to re-reading data after value change
 
         GroupBox3.Invalidate()
         Me.Refresh()
 
-        'Make sure that - depending on PiKoder type - all required fields are initialized
-        If TypeId.Text = "SSC" Then
-            GroupBox8.Enabled = True
-            GroupBox8.Visible = True
-            GroupBox4.Enabled = True
-            GroupBox4.Visible = True
-            GroupBox7.Enabled = True    'Save Parameters
-            GroupBox7.Visible = True
+        GroupBox8.Enabled = True
+        GroupBox8.Visible = True
+        GroupBox4.Enabled = True
+        GroupBox4.Visible = True
+        GroupBox7.Enabled = True        ' Save Parameters
+        GroupBox7.Visible = True
+        GroupBox13.Enabled = False      ' # PPM Channels
+        GroupBox13.Visible = False
+        GroupBox17.Enabled = False      ' PPM mode
+        GroupBox17.Visible = False
 
-            GroupBox13.Enabled = False '# PPM Channels
-            GroupBox13.Visible = False
-            GroupBox17.Enabled = False 'PPM mode
-            GroupBox17.Visible = False
+        ' retrieve channel settings
+        Call RetrieveChannel1Information(HPMath)
+        frmOuter.Invalidate()
+        Me.Refresh()
 
-        ElseIf TypeId.Text = "UART2PPM" Then
-            GroupBox8.Enabled = True
-            GroupBox8.Visible = True
-            GroupBox4.Enabled = True
-            GroupBox4.Visible = True
-            GroupBox7.Enabled = True    'Save Parameters
-            GroupBox7.Visible = True
+        Call RetrieveChannel2Information(HPMath)
+        frmOuter.Invalidate()
+        Me.Refresh()
 
-            GroupBox13.Enabled = False
-            GroupBox13.Visible = False
-            GroupBox17.Enabled = False
-            GroupBox17.Visible = False
+        Call RetrieveChannel3Information(HPMath)
+        frmOuter.Invalidate()
+        Me.Refresh()
 
-        ElseIf TypeId.Text = "SSC-HP" Then
-            GroupBox8.Enabled = True
-            GroupBox8.Visible = True
-            GroupBox4.Enabled = True
-            GroupBox4.Visible = True
-            GroupBox7.Enabled = True 'Save Parameters
-            GroupBox7.Visible = True
+        Call RetrieveChannel4Information(HPMath)
+        frmOuter.Invalidate()
+        Me.Refresh()
 
-            GroupBox13.Enabled = False '# PPM Channels
-            GroupBox13.Visible = False
-            GroupBox17.Enabled = False 'PPM mode
-            GroupBox17.Visible = False
+        Call RetrieveChannel5Information(HPMath)
+        frmOuter.Invalidate()
+        Me.Refresh()
 
-        ElseIf TypeId.Text = "USB2PPM" Then
-            GroupBox13.Enabled = True
-            GroupBox13.Visible = True
-            GroupBox17.Enabled = True
-            GroupBox17.Visible = True
+        Call RetrieveChannel6Information(HPMath)
+        frmOuter.Invalidate()
+        Me.Refresh()
 
+        Call RetrieveChannel7Information(HPMath)
+        frmOuter.Invalidate()
+        Me.Refresh()
+
+        Call RetrieveChannel8Information(HPMath)
+        frmOuter.Invalidate()
+        Me.Refresh()
+
+        'retrieve TimeOut
+        If Not boolErrorFlag Then
+            Call myPCAL.GetTimeOut(strChannelBuffer)
+            If strChannelBuffer <> "TimeOut" Then
+                TimeOut.Value = Val(strChannelBuffer)
+                TimeOut.ForeColor = Color.Black
+            End If
         End If
 
-        If Not HPMath Then
-
-            'retrieve information for channel 1
-            Call RetrieveChannel1Information()
-
-            'retrieve information for channel 2
-            Call RetrieveChannel2Information()
-
-            'retrieve information for channel 3
-            Call RetrieveChannel3Information()
-
-            'retrieve information for channel 4
-            Call RetrieveChannel4Information()
-
-            'retrieve information for channel 5
-            Call RetrieveChannel5Information()
-
-            'retrieve information for channel 6
-            Call RetrieveChannel6Information()
-
-            'retrieve information for channel 7
-            Call RetrieveChannel7Information()
-
-            'retrieve information for channel 8
-            Call RetrieveChannel8Information()
-
-            If TypeId.Text <> "USB2PPM" Then
-                If Not boolErrorFlag Then
-                    Call myPCAL.GetNeutralPosition(strChannelBuffer, 1)
-                    If strChannelBuffer <> "TimeOut" Then
-                        strCH_1_Neutral.Value = Val(strChannelBuffer)
-                        strCH_1_Neutral.ForeColor = Color.Black
-                    End If
-                End If
-                If Not boolErrorFlag Then
-                    Call myPCAL.GetNeutralPosition(strChannelBuffer, 2)
-                    If strChannelBuffer <> "TimeOut" Then
-                        strCH_2_Neutral.Value = Val(strChannelBuffer)
-                        strCH_2_Neutral.ForeColor = Color.Black
-                    End If
-                End If
-                If Not boolErrorFlag Then
-                    Call myPCAL.GetNeutralPosition(strChannelBuffer, 3)
-                    If strChannelBuffer <> "TimeOut" Then
-                        strCH_3_Neutral.Value = Val(strChannelBuffer)
-                        strCH_3_Neutral.ForeColor = Color.Black
-                    End If
-                End If
-                If Not boolErrorFlag Then
-                    Call myPCAL.GetNeutralPosition(strChannelBuffer, 4)
-                    If strChannelBuffer <> "TimeOut" Then
-                        strCH_4_Neutral.Value = Val(strChannelBuffer)
-                        strCH_4_Neutral.ForeColor = Color.Black
-                    End If
-                End If
-                If Not boolErrorFlag Then
-                    Call myPCAL.GetNeutralPosition(strChannelBuffer, 5)
-                    If strChannelBuffer <> "TimeOut" Then
-                        strCH_5_Neutral.Value = Val(strChannelBuffer)
-                        strCH_5_Neutral.ForeColor = Color.Black
-                    End If
-                End If
-                If Not boolErrorFlag Then
-                    Call myPCAL.GetNeutralPosition(strChannelBuffer, 6)
-                    If strChannelBuffer <> "TimeOut" Then
-                        strCH_6_Neutral.Value = Val(strChannelBuffer)
-                        strCH_6_Neutral.ForeColor = Color.Black
-                    End If
-                End If
-                If Not boolErrorFlag Then
-                    Call myPCAL.GetNeutralPosition(strChannelBuffer, 7)
-                    If strChannelBuffer <> "TimeOut" Then
-                        strCH_7_Neutral.Value = Val(strChannelBuffer)
-                        strCH_7_Neutral.ForeColor = Color.Black
-                    End If
-                End If
-                If Not boolErrorFlag Then
-                    Call myPCAL.GetNeutralPosition(strChannelBuffer, 8)
-                    If strChannelBuffer <> "TimeOut" Then
-                        strCH_8_Neutral.Value = Val(strChannelBuffer)
-                        strCH_8_Neutral.ForeColor = Color.Black
-                    End If
-                End If
-                'retrieve min & max information for all channels
-                'channel 1
-                If Not boolErrorFlag Then
-                    Call myPCAL.GetLowerLimit(strChannelBuffer, 1)
-                    If strChannelBuffer <> "TimeOut" Then
-                        strCH_1_Min.Value = Val(strChannelBuffer)
-                        ch1_HScrollBar.Minimum = strCH_1_Min.Value
-                        strCH_1_Min.ForeColor = Color.Black
-                    End If
-                End If
-                If Not boolErrorFlag Then
-                    Call myPCAL.GetUpperLimit(strChannelBuffer, 1)
-                    If strChannelBuffer <> "TimeOut" Then
-                        strCH_1_Max.Value = Val(strChannelBuffer)
-                        ch1_HScrollBar.Maximum = strCH_1_Max.Value
-                        strCH_1_Max.ForeColor = Color.Black
-                    End If
-                End If
-
-                'channel 2
-                If Not boolErrorFlag Then
-                    Call myPCAL.GetLowerLimit(strChannelBuffer, 2)
-                    If strChannelBuffer <> "TimeOut" Then
-                        strCH_2_Min.Value = Val(strChannelBuffer)
-                        ch2_HScrollBar.Minimum = strCH_2_Min.Value
-                        strCH_2_Min.ForeColor = Color.Black
-                    End If
-                End If
-                If Not boolErrorFlag Then
-                    Call myPCAL.GetUpperLimit(strChannelBuffer, 2)
-                    If strChannelBuffer <> "TimeOut" Then
-                        strCH_2_Max.Value = Val(strChannelBuffer)
-                        ch2_HScrollBar.Maximum = strCH_2_Max.Value
-                        strCH_2_Max.ForeColor = Color.Black
-                    End If
-                End If
-
-                'channel 3
-                If Not boolErrorFlag Then
-                    Call myPCAL.GetLowerLimit(strChannelBuffer, 3)
-                    If strChannelBuffer <> "TimeOut" Then
-                        strCH_3_Min.Value = Val(strChannelBuffer)
-                        ch3_HScrollBar.Minimum = strCH_3_Min.Value
-                        strCH_3_Min.ForeColor = Color.Black
-                    End If
-                End If
-                If Not boolErrorFlag Then
-                    Call myPCAL.GetUpperLimit(strChannelBuffer, 3)
-                    If strChannelBuffer <> "TimeOut" Then
-                        strCH_3_Max.Value = Val(strChannelBuffer)
-                        ch3_HScrollBar.Maximum = strCH_3_Max.Value
-                        strCH_3_Max.ForeColor = Color.Black
-                    End If
-                End If
-
-                'channel 4
-                If Not boolErrorFlag Then
-                    Call myPCAL.GetLowerLimit(strChannelBuffer, 4)
-                    If strChannelBuffer <> "TimeOut" Then
-                        strCH_4_Min.Value = Val(strChannelBuffer)
-                        ch4_HScrollBar.Minimum = strCH_4_Min.Value
-                        strCH_4_Min.ForeColor = Color.Black
-                    End If
-                End If
-                If Not boolErrorFlag Then
-                    Call myPCAL.GetUpperLimit(strChannelBuffer, 4)
-                    If strChannelBuffer <> "TimeOut" Then
-                        strCH_4_Max.Value = Val(strChannelBuffer)
-                        ch4_HScrollBar.Maximum = strCH_4_Max.Value
-                        strCH_4_Max.ForeColor = Color.Black
-                    End If
-                End If
-
-                'channel 5
-                If Not boolErrorFlag Then
-                    Call myPCAL.GetLowerLimit(strChannelBuffer, 5)
-                    If strChannelBuffer <> "TimeOut" Then
-                        strCH_5_Min.Value = Val(strChannelBuffer)
-                        ch5_HScrollBar.Minimum = strCH_5_Min.Value
-                        strCH_5_Min.ForeColor = Color.Black
-                    End If
-                End If
-                If Not boolErrorFlag Then
-                    Call myPCAL.GetUpperLimit(strChannelBuffer, 5)
-                    If strChannelBuffer <> "TimeOut" Then
-                        strCH_5_Max.Value = Val(strChannelBuffer)
-                        ch5_HScrollBar.Maximum = strCH_5_Max.Value
-                        strCH_5_Max.ForeColor = Color.Black
-                    End If
-                End If
-
-                'channel 6
-                If Not boolErrorFlag Then
-                    Call myPCAL.GetLowerLimit(strChannelBuffer, 6)
-                    If strChannelBuffer <> "TimeOut" Then
-                        strCH_6_Min.Value = Val(strChannelBuffer)
-                        ch6_HScrollBar.Minimum = strCH_6_Min.Value
-                        strCH_6_Min.ForeColor = Color.Black
-                    End If
-                End If
-                If Not boolErrorFlag Then
-                    Call myPCAL.GetUpperLimit(strChannelBuffer, 6)
-                    If strChannelBuffer <> "TimeOut" Then
-                        strCH_6_Max.Value = Val(strChannelBuffer)
-                        ch6_HScrollBar.Maximum = strCH_6_Max.Value
-                        strCH_6_Max.ForeColor = Color.Black
-                    End If
-                End If
-
-                'channel 7
-                If Not boolErrorFlag Then
-                    Call myPCAL.GetLowerLimit(strChannelBuffer, 7)
-                    If strChannelBuffer <> "TimeOut" Then
-                        strCH_7_Min.Value = Val(strChannelBuffer)
-                        ch7_HScrollBar.Minimum = strCH_7_Min.Value
-                        strCH_7_Min.ForeColor = Color.Black
-                    End If
-                End If
-                If Not boolErrorFlag Then
-                    Call myPCAL.GetUpperLimit(strChannelBuffer, 7)
-                    If strChannelBuffer <> "TimeOut" Then
-                        strCH_7_Max.Value = Val(strChannelBuffer)
-                        ch7_HScrollBar.Maximum = strCH_7_Max.Value
-                        strCH_7_Max.ForeColor = Color.Black
-                    End If
-                End If
-
-                'channel 8
-                If Not boolErrorFlag Then
-                    Call myPCAL.GetLowerLimit(strChannelBuffer, 8)
-                    If strChannelBuffer <> "TimeOut" Then
-                        strCH_8_Min.Value = Val(strChannelBuffer)
-                        ch8_HScrollBar.Minimum = strCH_8_Min.Value
-                        strCH_8_Min.ForeColor = Color.Black
-                    End If
-                End If
-                If Not boolErrorFlag Then
-                    Call myPCAL.GetUpperLimit(strChannelBuffer, 8)
-                    If strChannelBuffer <> "TimeOut" Then
-                        strCH_8_Max.Value = Val(strChannelBuffer)
-                        ch8_HScrollBar.Maximum = strCH_8_Max.Value
-                        strCH_8_Max.ForeColor = Color.Black
-                    End If
-
-                End If
-            Else 'handle USB2PPM
-                'set min & max information for all channels
-                strCH_1_Min.Value = sDefaultMinValue
-                ch1_HScrollBar.Minimum = strCH_1_Min.Value
-                strCH_1_Min.ForeColor = Color.Black
-                strCH_1_Max.Value = sDefaultMaxValue
-                ch1_HScrollBar.Maximum = strCH_1_Max.Value
-                strCH_1_Max.ForeColor = Color.Black
-
-                strCH_2_Min.Value = sDefaultMinValue
-                ch2_HScrollBar.Minimum = strCH_2_Min.Value
-                strCH_2_Min.ForeColor = Color.Black
-                strCH_2_Max.Value = sDefaultMaxValue
-                ch2_HScrollBar.Maximum = strCH_2_Max.Value
-                strCH_2_Max.ForeColor = Color.Black
-
-                strCH_3_Min.Value = sDefaultMinValue
-                ch3_HScrollBar.Minimum = strCH_3_Min.Value
-                strCH_3_Min.ForeColor = Color.Black
-                strCH_3_Max.Value = sDefaultMaxValue
-                ch3_HScrollBar.Maximum = strCH_3_Max.Value
-                strCH_3_Max.ForeColor = Color.Black
-
-                strCH_4_Min.Value = sDefaultMinValue
-                ch4_HScrollBar.Minimum = strCH_4_Min.Value
-                strCH_4_Min.ForeColor = Color.Black
-                strCH_4_Max.Value = sDefaultMaxValue
-                ch4_HScrollBar.Maximum = strCH_4_Max.Value
-                strCH_4_Max.ForeColor = Color.Black
-
-                strCH_5_Min.Value = sDefaultMinValue
-                ch5_HScrollBar.Minimum = strCH_5_Min.Value
-                strCH_5_Min.ForeColor = Color.Black
-                strCH_5_Max.Value = sDefaultMaxValue
-                ch5_HScrollBar.Maximum = strCH_5_Max.Value
-                strCH_5_Max.ForeColor = Color.Black
-
-                strCH_6_Min.Value = sDefaultMinValue
-                ch6_HScrollBar.Minimum = strCH_6_Min.Value
-                strCH_6_Min.ForeColor = Color.Black
-                strCH_6_Max.Value = sDefaultMaxValue
-                ch6_HScrollBar.Maximum = strCH_6_Max.Value
-                strCH_6_Max.ForeColor = Color.Black
-
-                strCH_7_Min.Value = sDefaultMinValue
-                ch7_HScrollBar.Minimum = strCH_7_Min.Value
-                strCH_7_Min.ForeColor = Color.Black
-                strCH_7_Max.Value = sDefaultMaxValue
-                ch7_HScrollBar.Maximum = strCH_7_Max.Value
-                strCH_7_Max.ForeColor = Color.Black
-
-                strCH_8_Min.Value = sDefaultMinValue
-                ch8_HScrollBar.Minimum = strCH_8_Min.Value
-                strCH_8_Min.ForeColor = Color.Black
-                strCH_8_Max.Value = sDefaultMaxValue
-                ch8_HScrollBar.Maximum = strCH_8_Max.Value
-                strCH_8_Max.ForeColor = Color.Black
-
-                GroupBox11.Enabled = False 'neutral positions
-                GroupBox11.Visible = False
-                GroupBox8.Enabled = False 'miniSSC Offset
-                GroupBox8.Visible = False
-                GroupBox4.Enabled = False 'zero offset
-                GroupBox4.Visible = False
-                GroupBox7.Enabled = False 'Save Parameters
-                GroupBox7.Visible = False
-
-                PPM_Channels.Value = 8
-                PPM_Channels.ForeColor = Color.Black
-                PPM_Mode.Items.Add("positive")
-                PPM_Mode.Items.Add("negative (Futaba)")
-                PPM_Mode.ForeColor = Color.Black
+        'retrieve miniSSC offset
+        If Not boolErrorFlag Then
+            Call myPCAL.GetMiniSSCOffset(strChannelBuffer)
+            If strChannelBuffer <> "TimeOut" Then
+                miniSSCOffset.Value = Val(strChannelBuffer)
+                miniSSCOffset.ForeColor = Color.Black
             End If
-
-        Else ' HPMath processing
-            'retrieve min & max information for all channels and set params
-            'channel 1
-            If Not boolErrorFlag Then
-                Call myPCAL.GetLowerLimit(strChannelBuffer, 1)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_1_Min.Value = Val(strChannelBuffer) / 5
-                    ch1_HScrollBar.Minimum = strCH_1_Min.Value
-                    strCH_1_Min.ForeColor = Color.Black
-                End If
-            End If
-            If Not boolErrorFlag Then
-                Call myPCAL.GetUpperLimit(strChannelBuffer, 1)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_1_Max.Value = Val(strChannelBuffer) / 5
-                    ch1_HScrollBar.Maximum = strCH_1_Max.Value
-                    strCH_1_Max.ForeColor = Color.Black
-                End If
-            End If
-
-            'channel 2
-            If Not boolErrorFlag Then
-                Call myPCAL.GetLowerLimit(strChannelBuffer, 2)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_2_Min.Value = Val(strChannelBuffer) / 5
-                    ch2_HScrollBar.Minimum = strCH_2_Min.Value
-                    strCH_2_Min.ForeColor = Color.Black
-                End If
-            End If
-            If Not boolErrorFlag Then
-                Call myPCAL.GetUpperLimit(strChannelBuffer, 2)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_2_Max.Value = Val(strChannelBuffer) / 5
-                    ch2_HScrollBar.Maximum = strCH_2_Max.Value
-                    strCH_2_Max.ForeColor = Color.Black
-                End If
-            End If
-
-            'channel 3
-            If Not boolErrorFlag Then
-                Call myPCAL.GetLowerLimit(strChannelBuffer, 3)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_3_Min.Value = Val(strChannelBuffer) / 5
-                    ch3_HScrollBar.Minimum = strCH_3_Min.Value
-                    strCH_3_Min.ForeColor = Color.Black
-                End If
-            End If
-            If Not boolErrorFlag Then
-                Call myPCAL.GetUpperLimit(strChannelBuffer, 3)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_3_Max.Value = Val(strChannelBuffer) / 5
-                    ch3_HScrollBar.Maximum = strCH_3_Max.Value
-                    strCH_3_Max.ForeColor = Color.Black
-                End If
-            End If
-
-            'channel 4
-            If Not boolErrorFlag Then
-                Call myPCAL.GetLowerLimit(strChannelBuffer, 4)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_4_Min.Value = Val(strChannelBuffer) / 5
-                    ch4_HScrollBar.Minimum = strCH_4_Min.Value
-                    strCH_4_Min.ForeColor = Color.Black
-                End If
-            End If
-            If Not boolErrorFlag Then
-                Call myPCAL.GetUpperLimit(strChannelBuffer, 4)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_4_Max.Value = Val(strChannelBuffer) / 5
-                    ch4_HScrollBar.Maximum = strCH_4_Max.Value
-                    strCH_4_Max.ForeColor = Color.Black
-                End If
-            End If
-
-            'channel 5
-            If Not boolErrorFlag Then
-                Call myPCAL.GetLowerLimit(strChannelBuffer, 5)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_5_Min.Value = Val(strChannelBuffer) / 5
-                    ch5_HScrollBar.Minimum = strCH_5_Min.Value
-                    strCH_5_Min.ForeColor = Color.Black
-                End If
-            End If
-            If Not boolErrorFlag Then
-                Call myPCAL.GetUpperLimit(strChannelBuffer, 5)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_5_Max.Value = Val(strChannelBuffer) / 5
-                    ch5_HScrollBar.Maximum = strCH_5_Max.Value
-                    strCH_5_Max.ForeColor = Color.Black
-                End If
-            End If
-
-            'channel 6
-            If Not boolErrorFlag Then
-                Call myPCAL.GetLowerLimit(strChannelBuffer, 6)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_6_Min.Value = Val(strChannelBuffer) / 5
-                    ch6_HScrollBar.Minimum = strCH_6_Min.Value
-                    strCH_6_Min.ForeColor = Color.Black
-                End If
-            End If
-            If Not boolErrorFlag Then
-                Call myPCAL.GetUpperLimit(strChannelBuffer, 6)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_6_Max.Value = Val(strChannelBuffer) / 5
-                    ch6_HScrollBar.Maximum = strCH_6_Max.Value
-                    strCH_6_Max.ForeColor = Color.Black
-                End If
-            End If
-
-            'channel 7
-            If Not boolErrorFlag Then
-                Call myPCAL.GetLowerLimit(strChannelBuffer, 7)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_7_Min.Value = Val(strChannelBuffer) / 5
-                    ch7_HScrollBar.Minimum = strCH_7_Min.Value
-                    strCH_7_Min.ForeColor = Color.Black
-                End If
-            End If
-            If Not boolErrorFlag Then
-                Call myPCAL.GetUpperLimit(strChannelBuffer, 7)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_7_Max.Value = Val(strChannelBuffer) / 5
-                    ch7_HScrollBar.Maximum = strCH_7_Max.Value
-                    strCH_7_Max.ForeColor = Color.Black
-                End If
-            End If
-
-            'channel 8
-            If Not boolErrorFlag Then
-                Call myPCAL.GetLowerLimit(strChannelBuffer, 8)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_8_Min.Value = Val(strChannelBuffer) / 5
-                    ch8_HScrollBar.Minimum = strCH_8_Min.Value
-                    strCH_8_Min.ForeColor = Color.Black
-                End If
-            End If
-            If Not boolErrorFlag Then
-                Call myPCAL.GetUpperLimit(strChannelBuffer, 8)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_8_Max.Value = Val(strChannelBuffer) / 5
-                    ch8_HScrollBar.Maximum = strCH_8_Max.Value
-                    strCH_8_Max.ForeColor = Color.Black
-                End If
-
-            End If
-
-            If Not boolErrorFlag Then
-                Call myPCAL.GetNeutralPosition(strChannelBuffer, 1)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_1_Neutral.Maximum = strCH_1_Max.Value
-                    strCH_1_Neutral.Value = Val(strChannelBuffer) / 5
-                    strCH_1_Neutral.ForeColor = Color.Black
-                End If
-            End If
-
-            If Not boolErrorFlag Then
-                Call myPCAL.GetNeutralPosition(strChannelBuffer, 2)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_2_Neutral.Maximum = strCH_2_Max.Value
-                    strCH_2_Neutral.Value = Val(strChannelBuffer) / 5
-                    strCH_2_Neutral.ForeColor = Color.Black
-                End If
-            End If
-
-            If Not boolErrorFlag Then
-                Call myPCAL.GetNeutralPosition(strChannelBuffer, 3)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_3_Neutral.Maximum = strCH_3_Max.Value
-                    strCH_3_Neutral.Value = Val(strChannelBuffer) / 5
-                    strCH_3_Neutral.ForeColor = Color.Black
-                End If
-            End If
-            If Not boolErrorFlag Then
-                Call myPCAL.GetNeutralPosition(strChannelBuffer, 4)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_4_Neutral.Maximum = strCH_4_Max.Value
-                    strCH_4_Neutral.Value = Val(strChannelBuffer) / 5
-                    strCH_4_Neutral.ForeColor = Color.Black
-                End If
-            End If
-            If Not boolErrorFlag Then
-                Call myPCAL.GetNeutralPosition(strChannelBuffer, 5)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_5_Neutral.Maximum = strCH_5_Max.Value
-                    strCH_5_Neutral.Value = Val(strChannelBuffer) / 5
-                    strCH_5_Neutral.ForeColor = Color.Black
-                End If
-            End If
-            If Not boolErrorFlag Then
-                Call myPCAL.GetNeutralPosition(strChannelBuffer, 6)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_6_Neutral.Maximum = strCH_6_Max.Value
-                    strCH_6_Neutral.Value = Val(strChannelBuffer) / 5
-                    strCH_6_Neutral.ForeColor = Color.Black
-                End If
-            End If
-            If Not boolErrorFlag Then
-                Call myPCAL.GetNeutralPosition(strChannelBuffer, 7)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_7_Neutral.Maximum = strCH_7_Max.Value
-                    strCH_7_Neutral.Value = Val(strChannelBuffer) / 5
-                    strCH_7_Neutral.ForeColor = Color.Black
-                End If
-            End If
-            If Not boolErrorFlag Then
-                Call myPCAL.GetNeutralPosition(strChannelBuffer, 8)
-                If strChannelBuffer <> "TimeOut" Then
-                    strCH_8_Neutral.Maximum = strCH_8_Max.Value
-                    strCH_8_Neutral.Value = Val(strChannelBuffer) / 5
-                    strCH_8_Neutral.ForeColor = Color.Black
-                End If
-            End If
-
-            'retrieve information for channel 1
-            Call RetrieveChannel1HPInformation()
-
-            'retrieve information for channel 2
-            Call RetrieveChannel2HPInformation()
-
-            'retrieve information for channel 3
-            Call RetrieveChannel3HPInformation()
-
-            'retrieve information for channel 4
-            Call RetrieveChannel4HPInformation()
-
-            'retrieve information for channel 5
-            Call RetrieveChannel5HPInformation()
-
-            'retrieve information for channel 6
-            Call RetrieveChannel6HPInformation()
-
-            'retrieve information for channel 7
-            Call RetrieveChannel7HPInformation()
-
-            'retrieve information for channel 8
-            Call RetrieveChannel8HPInformation()
         End If
-
-            'retrieve TimeOut
-            If Not boolErrorFlag Then
-                Call myPCAL.GetTimeOut(strChannelBuffer)
-                If strChannelBuffer <> "TimeOut" Then
-                    TimeOut.Value = Val(strChannelBuffer)
-                    TimeOut.ForeColor = Color.Black
-                End If
-            End If
-
-            'retrieve miniSSC offset
-            If Not boolErrorFlag Then
-                Call myPCAL.GetMiniSSCOffset(strChannelBuffer)
-                If strChannelBuffer <> "TimeOut" Then
-                    miniSSCOffset.Value = Val(strChannelBuffer)
-                    miniSSCOffset.ForeColor = Color.Black
-                End If
-            End If
-
-            If IOSwitching Then
-                Call ReadIOSwitching()
-            End If
 
         IndicateConnectionOk()
         bDataLoaded = True
@@ -1063,19 +496,18 @@ Public Class PCC_PiKoder_Control_Center
             RetrievePiKoderParameters()
         End If
     End Sub
-    Private Sub RetrieveUSB2PPMParameters()
+    Private Sub RetrieveUART2PPMParameters()
         Dim strChannelBuffer As String = ""
+        IOSwitching = False
+        FastChannelRetrieve = False
         If myPCAL.LinkConnected() Then
             If Not boolErrorFlag Then
-                'request firm ware version from PiKoder    
+                'request status information from SSC    
                 Call myPCAL.GetFirmwareVersion(strChannelBuffer)
                 If strChannelBuffer <> "TimeOut" Then
                     strSSC_Firmware.Text = strChannelBuffer
-                    If Val(strChannelBuffer) > 2.0 Then
-                        MsgBox("The PiKoder firmware version found is not supported! Please goto www.pikoder.com and upgrade PCC PiKoder Control Center to the latest version.", MsgBoxStyle.OkOnly, "Error Message")
-                        End
-                    ElseIf Val(strChannelBuffer) < 1.02 Then
-                        MsgBox("The PiKoder firmware version found is not supported! Please goto www.pikoder.com and upgrade the PiKoder firmware to the latest version.", MsgBoxStyle.OkOnly, "Error Message")
+                    If Val(strChannelBuffer) > 2.06 Then
+                        MsgBox("The PiKoder firmware version found is not supported! Please goto www.pikoder.com and upgrade PCC Control Center to the latest version.", MsgBoxStyle.OkOnly, "Error Message")
                         End
                     End If
                 Else ' error message
@@ -1367,7 +799,6 @@ Public Class PCC_PiKoder_Control_Center
             Call myPCAL.SetChannelPulseLength(3, Convert.ToString(ch3_HScrollBar.Value))
         End If
     End Sub
-
     Private Sub ch4_HScrollBar_Scroll(ByVal sender As System.Object, ByVal e As System.Windows.Forms.ScrollEventArgs) Handles ch4_HScrollBar.Scroll
         strCH_4_Current.Text = Convert.ToString(ch4_HScrollBar.Value)
         If (HPMath) Then
@@ -1392,7 +823,6 @@ Public Class PCC_PiKoder_Control_Center
             Call myPCAL.SetChannelPulseLength(6, Convert.ToString(ch6_HScrollBar.Value))
         End If
     End Sub
-
     Private Sub ch7_HScrollBar_Scroll(ByVal sender As System.Object, ByVal e As System.Windows.Forms.ScrollEventArgs) Handles ch7_HScrollBar.Scroll
         strCH_7_Current.Text = Convert.ToString(ch7_HScrollBar.Value)
         If (HPMath) Then
@@ -1438,163 +868,450 @@ Public Class PCC_PiKoder_Control_Center
         End If
         PPM_Mode.ClearSelected()
     End Sub
-    Private Sub RetrieveChannel1HPInformation()
+    Private Function ScalePulseWidth(ByVal strChannelBuffer As String, ByVal HPMath As Boolean) As Integer
+        If HPMath Then
+            Return Val(strChannelBuffer) / 5
+        Else
+            Return Val(strChannelBuffer)
+        End If
+    End Function
+    Private Function EvaluateIOType(ByVal strChannelBuffer As String) As Integer
+        If (String.Compare(strChannelBuffer, "P") = 0) Then
+            Return 0
+        Else
+            Return 1
+        End If
+    End Function
+    Private Sub RetrieveChannel1Information(ByVal HPMath As Boolean)
         Dim strChannelBuffer As String = ""
-        If Not boolErrorFlag Then
-            Call myPCAL.GetHPPulseLength(strChannelBuffer, 1)
+        If Not boolErrorFlag Then   ' retrieve channel value
+            Call myPCAL.GetPulseLength(strChannelBuffer, 1, HPMath)
             If strChannelBuffer <> "TimeOut" Then
-                ch1_HScrollBar.Value = Val(strChannelBuffer) / 5
+                ch1_HScrollBar.Value = ScalePulseWidth(strChannelBuffer, HPMath)
                 strCH_1_Current.Text = Convert.ToString(ch1_HScrollBar.Value)
+            Else
+                boolErrorFlag = True
+            End If
+        End If
+        If Not boolErrorFlag Then   ' retrieve neutral value
+            Call myPCAL.GetNeutralPosition(strChannelBuffer, 1, HPMath)
+            If strChannelBuffer <> "TimeOut" Then
+                strCH_1_Neutral.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                strCH_1_Neutral.ForeColor = Color.Black
+            Else
+                boolErrorFlag = True
+            End If
+        End If
+        If Not boolErrorFlag Then
+            Call myPCAL.GetLowerLimit(strChannelBuffer, 1, HPMath)
+            If strChannelBuffer <> "TimeOut" Then
+                strCH_1_Min.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                ch1_HScrollBar.Minimum = strCH_1_Min.Value
+                strCH_1_Min.ForeColor = Color.Black
+            Else
+                boolErrorFlag = True
+            End If
+        End If
+        If Not boolErrorFlag Then
+            Call myPCAL.GetUpperLimit(strChannelBuffer, 1, HPMath)
+            If strChannelBuffer <> "TimeOut" Then
+                strCH_1_Max.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                ch1_HScrollBar.Maximum = strCH_1_Max.Value
+                strCH_1_Max.ForeColor = Color.Black
+            Else
+                boolErrorFlag = True
+            End If
+        End If
+        If IOSwitching Then
+            If Not boolErrorFlag Then
+                Call myPCAL.GetIOType(strChannelBuffer, 1)
+                If strChannelBuffer = "TimeOut" Then
+                    boolErrorFlag = True
+                Else
+                    ListBox1.Enabled = True
+                    ListBox1.SelectedIndex = EvaluateIOType(strChannelBuffer)
+                    ListBox1.ClearSelected()
+                    ListBox1.ForeColor = Color.Black
+                End If
             End If
         End If
     End Sub
-    Private Sub RetrieveChannel2HPInformation()
+    Private Sub RetrieveChannel2Information(ByVal HPMath As Boolean)
         Dim strChannelBuffer As String = ""
         If Not boolErrorFlag Then
-            Call myPCAL.GetHPPulseLength(strChannelBuffer, 2)
+            Call myPCAL.GetPulseLength(strChannelBuffer, 2, HPMath)
             If strChannelBuffer <> "TimeOut" Then
-                ch2_HScrollBar.Value = Val(strChannelBuffer) / 5
+                ch2_HScrollBar.Value = ScalePulseWidth(strChannelBuffer, HPMath)
                 strCH_2_Current.Text = Convert.ToString(ch2_HScrollBar.Value)
+            Else
+                boolErrorFlag = True
+            End If
+        End If
+        If Not boolErrorFlag Then
+            Call myPCAL.GetNeutralPosition(strChannelBuffer, 2, HPMath)
+            If strChannelBuffer <> "TimeOut" Then
+                strCH_2_Neutral.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                strCH_2_Neutral.ForeColor = Color.Black
+            Else
+                boolErrorFlag = True
+            End If
+        End If
+        If Not boolErrorFlag Then
+            Call myPCAL.GetLowerLimit(strChannelBuffer, 2, HPMath)
+            If strChannelBuffer <> "TimeOut" Then
+                strCH_2_Min.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                ch2_HScrollBar.Minimum = strCH_2_Min.Value
+                strCH_2_Min.ForeColor = Color.Black
+            Else
+                boolErrorFlag = True
+            End If
+        End If
+        If Not boolErrorFlag Then
+            Call myPCAL.GetUpperLimit(strChannelBuffer, 2, HPMath)
+            If strChannelBuffer <> "TimeOut" Then
+                strCH_2_Max.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                ch2_HScrollBar.Maximum = strCH_2_Max.Value
+                strCH_2_Max.ForeColor = Color.Black
+            Else
+                boolErrorFlag = True
+            End If
+        End If
+        If IOSwitching Then
+            If Not boolErrorFlag Then
+                Call myPCAL.GetIOType(strChannelBuffer, 2)
+                If strChannelBuffer = "TimeOut" Then
+                    boolErrorFlag = True
+                Else
+                    ListBox2.Enabled = True
+                    ListBox2.SelectedIndex = EvaluateIOType(strChannelBuffer)
+                    ListBox2.ClearSelected()
+                    ListBox2.ForeColor = Color.Black
+                End If
             End If
         End If
     End Sub
-    Private Sub RetrieveChannel3HPInformation()
+    Private Sub RetrieveChannel3Information(ByVal HPMath As Boolean)
         Dim strChannelBuffer As String = ""
         If Not boolErrorFlag Then
-            Call myPCAL.GetHPPulseLength(strChannelBuffer, 3)
+            Call myPCAL.GetPulseLength(strChannelBuffer, 3, HPMath)
             If strChannelBuffer <> "TimeOut" Then
-                ch3_HScrollBar.Value = Val(strChannelBuffer) / 5
+                ch3_HScrollBar.Value = ScalePulseWidth(strChannelBuffer, HPMath)
                 strCH_3_Current.Text = Convert.ToString(ch3_HScrollBar.Value)
+            Else
+                boolErrorFlag = True
+            End If
+        End If
+        If Not boolErrorFlag Then
+            Call myPCAL.GetNeutralPosition(strChannelBuffer, 3, HPMath)
+            If strChannelBuffer <> "TimeOut" Then
+                strCH_3_Neutral.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                strCH_3_Neutral.ForeColor = Color.Black
+            Else
+                boolErrorFlag = True
+            End If
+        End If
+        If Not boolErrorFlag Then
+            Call myPCAL.GetLowerLimit(strChannelBuffer, 3, HPMath)
+            If strChannelBuffer <> "TimeOut" Then
+                strCH_3_Min.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                ch3_HScrollBar.Minimum = strCH_3_Min.Value
+                strCH_3_Min.ForeColor = Color.Black
+            Else
+                boolErrorFlag = True
+            End If
+        End If
+        If Not boolErrorFlag Then
+            Call myPCAL.GetUpperLimit(strChannelBuffer, 3, HPMath)
+            If strChannelBuffer <> "TimeOut" Then
+                strCH_3_Max.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                ch3_HScrollBar.Maximum = strCH_3_Max.Value
+                strCH_3_Max.ForeColor = Color.Black
+            Else
+                boolErrorFlag = True
+            End If
+        End If
+        If IOSwitching Then
+            If Not boolErrorFlag Then
+                Call myPCAL.GetIOType(strChannelBuffer, 3)
+                If strChannelBuffer = "TimeOut" Then
+                    boolErrorFlag = True
+                Else
+                    ListBox3.Enabled = True
+                    ListBox3.SelectedIndex = EvaluateIOType(strChannelBuffer)
+                    ListBox3.ClearSelected()
+                    ListBox3.ForeColor = Color.Black
+                End If
             End If
         End If
     End Sub
-    Private Sub RetrieveChannel4HPInformation()
+    Private Sub RetrieveChannel4Information(ByVal HPMath As Boolean)
         Dim strChannelBuffer As String = ""
         If Not boolErrorFlag Then
-            Call myPCAL.GetHPPulseLength(strChannelBuffer, 4)
+            Call myPCAL.GetPulseLength(strChannelBuffer, 4, HPMath)
             If strChannelBuffer <> "TimeOut" Then
-                ch4_HScrollBar.Value = Val(strChannelBuffer) / 5
+                ch4_HScrollBar.Value = ScalePulseWidth(strChannelBuffer, HPMath)
                 strCH_4_Current.Text = Convert.ToString(ch4_HScrollBar.Value)
+            Else
+                boolErrorFlag = True
             End If
         End If
+        If Not boolErrorFlag Then
+            Call myPCAL.GetNeutralPosition(strChannelBuffer, 4, HPMath)
+            If strChannelBuffer <> "TimeOut" Then
+                strCH_4_Neutral.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                strCH_4_Neutral.ForeColor = Color.Black
+            Else
+                boolErrorFlag = True
+            End If
+        End If
+        If Not boolErrorFlag Then
+            Call myPCAL.GetLowerLimit(strChannelBuffer, 4, HPMath)
+            If strChannelBuffer <> "TimeOut" Then
+                strCH_4_Min.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                ch4_HScrollBar.Minimum = strCH_4_Min.Value
+                strCH_4_Min.ForeColor = Color.Black
+            Else
+                boolErrorFlag = True
+            End If
+        End If
+        If Not boolErrorFlag Then
+            Call myPCAL.GetUpperLimit(strChannelBuffer, 4, HPMath)
+            If strChannelBuffer <> "TimeOut" Then
+                strCH_4_Max.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                ch4_HScrollBar.Maximum = strCH_4_Max.Value
+                strCH_4_Max.ForeColor = Color.Black
+            Else
+                boolErrorFlag = True
+            End If
+        End If
+        If IOSwitching Then
+            If Not boolErrorFlag Then
+                Call myPCAL.GetIOType(strChannelBuffer, 4)
+                If strChannelBuffer = "TimeOut" Then
+                    boolErrorFlag = True
+                Else
+                    ListBox4.Enabled = True
+                    ListBox4.SelectedIndex = EvaluateIOType(strChannelBuffer)
+                    ListBox4.ClearSelected()
+                    ListBox4.ForeColor = Color.Black
+                End If
+            End If
+        End If
+
     End Sub
-    Private Sub RetrieveChannel5HPInformation()
+    Private Sub RetrieveChannel5Information(ByVal HPMath As Boolean)
         Dim strChannelBuffer As String = ""
         If Not boolErrorFlag Then
-            Call myPCAL.GetHPPulseLength(strChannelBuffer, 5)
+            Call myPCAL.GetPulseLength(strChannelBuffer, 5, HPMath)
             If strChannelBuffer <> "TimeOut" Then
-                ch5_HScrollBar.Value = Val(strChannelBuffer) / 5
+                ch5_HScrollBar.Value = ScalePulseWidth(strChannelBuffer, HPMath)
                 strCH_5_Current.Text = Convert.ToString(ch5_HScrollBar.Value)
+            Else
+                boolErrorFlag = True
+            End If
+        End If
+        If Not boolErrorFlag Then
+            Call myPCAL.GetNeutralPosition(strChannelBuffer, 5, HPMath)
+            If strChannelBuffer <> "TimeOut" Then
+                strCH_5_Neutral.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                strCH_5_Neutral.ForeColor = Color.Black
+            Else
+                boolErrorFlag = True
+            End If
+        End If
+        If Not boolErrorFlag Then
+            Call myPCAL.GetLowerLimit(strChannelBuffer, 5, HPMath)
+            If strChannelBuffer <> "TimeOut" Then
+                strCH_5_Min.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                ch5_HScrollBar.Minimum = strCH_5_Min.Value
+                strCH_5_Min.ForeColor = Color.Black
+            Else
+                boolErrorFlag = True
+            End If
+        End If
+        If Not boolErrorFlag Then
+            Call myPCAL.GetUpperLimit(strChannelBuffer, 5, HPMath)
+            If strChannelBuffer <> "TimeOut" Then
+                strCH_5_Max.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                ch5_HScrollBar.Maximum = strCH_5_Max.Value
+                strCH_5_Max.ForeColor = Color.Black
+            Else
+                boolErrorFlag = True
+            End If
+        End If
+        If IOSwitching Then
+            If Not boolErrorFlag Then
+                Call myPCAL.GetIOType(strChannelBuffer, 5)
+                If strChannelBuffer = "TimeOut" Then
+                    boolErrorFlag = True
+                Else
+                    ListBox5.Enabled = True
+                    ListBox5.SelectedIndex = EvaluateIOType(strChannelBuffer)
+                    ListBox5.ClearSelected()
+                    ListBox5.ForeColor = Color.Black
+                End If
             End If
         End If
     End Sub
-    Private Sub RetrieveChannel6HPInformation()
+    Private Sub RetrieveChannel6Information(ByVal HPMath As Boolean)
         Dim strChannelBuffer As String = ""
         If Not boolErrorFlag Then
-            Call myPCAL.GetHPPulseLength(strChannelBuffer, 6)
+            Call myPCAL.GetPulseLength(strChannelBuffer, 6, HPMath)
             If strChannelBuffer <> "TimeOut" Then
-                ch6_HScrollBar.Value = Val(strChannelBuffer) / 5
+                ch6_HScrollBar.Value = ScalePulseWidth(strChannelBuffer, HPMath)
                 strCH_6_Current.Text = Convert.ToString(ch6_HScrollBar.Value)
+            Else
+                boolErrorFlag = True
+            End If
+        End If
+        If Not boolErrorFlag Then
+            Call myPCAL.GetNeutralPosition(strChannelBuffer, 6, HPMath)
+            If strChannelBuffer <> "TimeOut" Then
+                strCH_6_Neutral.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                strCH_6_Neutral.ForeColor = Color.Black
+            Else
+                boolErrorFlag = True
+            End If
+        End If
+        If Not boolErrorFlag Then
+            Call myPCAL.GetLowerLimit(strChannelBuffer, 6, HPMath)
+            If strChannelBuffer <> "TimeOut" Then
+                strCH_6_Min.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                ch6_HScrollBar.Minimum = strCH_6_Min.Value
+                strCH_6_Min.ForeColor = Color.Black
+            Else
+                boolErrorFlag = True
+            End If
+        End If
+        If Not boolErrorFlag Then
+            Call myPCAL.GetUpperLimit(strChannelBuffer, 6, HPMath)
+            If strChannelBuffer <> "TimeOut" Then
+                strCH_6_Max.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                ch6_HScrollBar.Maximum = strCH_6_Max.Value
+                strCH_6_Max.ForeColor = Color.Black
+            Else
+                boolErrorFlag = True
+            End If
+        End If
+        If IOSwitching Then
+            If Not boolErrorFlag Then
+                Call myPCAL.GetIOType(strChannelBuffer, 6)
+                If strChannelBuffer = "TimeOut" Then
+                    boolErrorFlag = True
+                Else
+                    ListBox6.Enabled = True
+                    ListBox6.SelectedIndex = EvaluateIOType(strChannelBuffer)
+                    ListBox6.ClearSelected()
+                    ListBox6.ForeColor = Color.Black
+                End If
             End If
         End If
     End Sub
-    Private Sub RetrieveChannel7HPInformation()
+    Private Sub RetrieveChannel7Information(ByVal HPMath As Boolean)
         Dim strChannelBuffer As String = ""
         If Not boolErrorFlag Then
-            Call myPCAL.GetHPPulseLength(strChannelBuffer, 7)
+            Call myPCAL.GetPulseLength(strChannelBuffer, 7, HPMath)
             If strChannelBuffer <> "TimeOut" Then
-                ch7_HScrollBar.Value = Val(strChannelBuffer) / 5
+                ch7_HScrollBar.Value = ScalePulseWidth(strChannelBuffer, HPMath)
                 strCH_7_Current.Text = Convert.ToString(ch7_HScrollBar.Value)
+            Else
+                boolErrorFlag = True
+            End If
+        End If
+        If Not boolErrorFlag Then
+            Call myPCAL.GetNeutralPosition(strChannelBuffer, 7, HPMath)
+            If strChannelBuffer <> "TimeOut" Then
+                strCH_7_Neutral.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                strCH_7_Neutral.ForeColor = Color.Black
+            Else
+                boolErrorFlag = True
+            End If
+        End If
+        If Not boolErrorFlag Then
+            Call myPCAL.GetLowerLimit(strChannelBuffer, 7, HPMath)
+            If strChannelBuffer <> "TimeOut" Then
+                strCH_7_Min.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                ch7_HScrollBar.Minimum = strCH_7_Min.Value
+                strCH_7_Min.ForeColor = Color.Black
+            Else
+                boolErrorFlag = True
+            End If
+        End If
+        If Not boolErrorFlag Then
+            Call myPCAL.GetUpperLimit(strChannelBuffer, 7, HPMath)
+            If strChannelBuffer <> "TimeOut" Then
+                strCH_7_Max.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                ch7_HScrollBar.Maximum = strCH_7_Max.Value
+                strCH_7_Max.ForeColor = Color.Black
+            Else
+                boolErrorFlag = True
+            End If
+        End If
+        If IOSwitching Then
+            If Not boolErrorFlag Then
+                Call myPCAL.GetIOType(strChannelBuffer, 7)
+                If strChannelBuffer = "TimeOut" Then
+                    boolErrorFlag = True
+                Else
+                    ListBox7.Enabled = True
+                    ListBox7.SelectedIndex = EvaluateIOType(strChannelBuffer)
+                    ListBox7.ClearSelected()
+                    ListBox7.ForeColor = Color.Black
+                End If
             End If
         End If
     End Sub
-    Private Sub RetrieveChannel8HPInformation()
+    Private Sub RetrieveChannel8Information(ByVal HPMath As Boolean)
         Dim strChannelBuffer As String = ""
         If Not boolErrorFlag Then
-            Call myPCAL.GetHPPulseLength(strChannelBuffer, 8)
+            Call myPCAL.GetPulseLength(strChannelBuffer, 8, HPMath)
             If strChannelBuffer <> "TimeOut" Then
-                ch8_HScrollBar.Value = Val(strChannelBuffer) / 5
+                ch8_HScrollBar.Value = ScalePulseWidth(strChannelBuffer, HPMath)
                 strCH_8_Current.Text = Convert.ToString(ch8_HScrollBar.Value)
+            Else
+                boolErrorFlag = True
             End If
         End If
-    End Sub
-    Private Sub RetrieveChannel1Information()
-        Dim strChannelBuffer As String = ""
         If Not boolErrorFlag Then
-            Call myPCAL.GetPulseLength(strChannelBuffer, 1)
+            Call myPCAL.GetNeutralPosition(strChannelBuffer, 8, HPMath)
             If strChannelBuffer <> "TimeOut" Then
-                strCH_1_Current.Text = strChannelBuffer
-                ch1_HScrollBar.Value = Val(strChannelBuffer)
+                strCH_8_Neutral.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                strCH_8_Neutral.ForeColor = Color.Black
+            Else
+                boolErrorFlag = True
             End If
         End If
-    End Sub
-    Private Sub RetrieveChannel2Information()
-        Dim strChannelBuffer As String = ""
         If Not boolErrorFlag Then
-            Call myPCAL.GetPulseLength(strChannelBuffer, 2)
+            Call myPCAL.GetLowerLimit(strChannelBuffer, 8, HPMath)
             If strChannelBuffer <> "TimeOut" Then
-                strCH_2_Current.Text = strChannelBuffer
-                ch2_HScrollBar.Value = Val(strChannelBuffer)
+                strCH_8_Min.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                ch8_HScrollBar.Minimum = strCH_8_Min.Value
+                strCH_8_Min.ForeColor = Color.Black
+            Else
+                boolErrorFlag = True
             End If
         End If
-    End Sub
-    Private Sub RetrieveChannel3Information()
-        Dim strChannelBuffer As String = ""
         If Not boolErrorFlag Then
-            Call myPCAL.GetPulseLength(strChannelBuffer, 3)
+            Call myPCAL.GetUpperLimit(strChannelBuffer, 8, HPMath)
             If strChannelBuffer <> "TimeOut" Then
-                strCH_3_Current.Text = strChannelBuffer
-                ch3_HScrollBar.Value = Val(strChannelBuffer)
+                strCH_8_Max.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                ch8_HScrollBar.Maximum = strCH_8_Max.Value
+                strCH_8_Max.ForeColor = Color.Black
+            Else
+                boolErrorFlag = True
             End If
         End If
-    End Sub
-    Private Sub RetrieveChannel4Information()
-        Dim strChannelBuffer As String = ""
-        If Not boolErrorFlag Then
-            Call myPCAL.GetPulseLength(strChannelBuffer, 4)
-            If strChannelBuffer <> "TimeOut" Then
-                strCH_4_Current.Text = strChannelBuffer
-                ch4_HScrollBar.Value = Val(strChannelBuffer)
-            End If
-        End If
-    End Sub
-    Private Sub RetrieveChannel5Information()
-        Dim strChannelBuffer As String = ""
-        If Not boolErrorFlag Then
-            Call myPCAL.GetPulseLength(strChannelBuffer, 5)
-            If strChannelBuffer <> "TimeOut" Then
-                strCH_5_Current.Text = strChannelBuffer
-                ch5_HScrollBar.Value = Val(strChannelBuffer)
-            End If
-        End If
-    End Sub
-    Private Sub RetrieveChannel6Information()
-        Dim strChannelBuffer As String = ""
-        If Not boolErrorFlag Then
-            Call myPCAL.GetPulseLength(strChannelBuffer, 6)
-            If strChannelBuffer <> "TimeOut" Then
-                strCH_6_Current.Text = strChannelBuffer
-                ch6_HScrollBar.Value = Val(strChannelBuffer)
-            End If
-        End If
-    End Sub
-    Private Sub RetrieveChannel7Information()
-        Dim strChannelBuffer As String = ""
-        If Not boolErrorFlag Then
-            Call myPCAL.GetPulseLength(strChannelBuffer, 7)
-            If strChannelBuffer <> "TimeOut" Then
-                strCH_7_Current.Text = strChannelBuffer
-                ch7_HScrollBar.Value = Val(strChannelBuffer)
-            End If
-        End If
-    End Sub
-    Private Sub RetrieveChannel8Information()
-        Dim strChannelBuffer As String = ""
-        If Not boolErrorFlag Then
-            Call myPCAL.GetPulseLength(strChannelBuffer, 8)
-            If strChannelBuffer <> "TimeOut" Then
-                strCH_8_Current.Text = strChannelBuffer
-                ch8_HScrollBar.Value = Val(strChannelBuffer)
+        If IOSwitching Then
+            If Not boolErrorFlag Then
+                Call myPCAL.GetIOType(strChannelBuffer, 8)
+                If strChannelBuffer = "TimeOut" Then
+                    boolErrorFlag = True
+                Else
+                    ListBox8.Enabled = True
+                    ListBox8.SelectedIndex = EvaluateIOType(strChannelBuffer)
+                    ListBox8.ClearSelected()
+                    ListBox8.ForeColor = Color.Black
+                End If
             End If
         End If
     End Sub
@@ -1737,146 +1454,6 @@ Public Class PCC_PiKoder_Control_Center
         End If
         TextBox1.Text = myMessage
     End Sub
-    Private Sub ReadIOSwitching()
-        Dim strChannelBuffer As String = ""
-        If Not boolErrorFlag Then
-            Call myPCAL.GetIOType(strChannelBuffer, 1)
-            If strChannelBuffer = "TimeOut" Then
-                boolErrorFlag = True
-            Else
-                If (String.Compare(strChannelBuffer, "P") = 0) Then
-                    iChannelSetting(1) = 0
-                Else
-                    iChannelSetting(1) = 1
-                End If
-                ListBox1.Enabled = True
-                ListBox1.SelectedIndex = iChannelSetting(1)
-                ListBox1.ClearSelected()
-                ListBox1.ForeColor = Color.Black
-            End If
-        End If
-
-        If Not boolErrorFlag Then
-            Call myPCAL.GetIOType(strChannelBuffer, 2)
-            If strChannelBuffer = "TimeOut" Then
-                boolErrorFlag = True
-            Else
-                If (String.Compare(strChannelBuffer, "P") = 0) Then
-                    iChannelSetting(2) = 0
-                Else
-                    iChannelSetting(2) = 1
-                End If
-                ListBox2.Enabled = True
-                ListBox2.SelectedIndex = iChannelSetting(2)
-                ListBox2.ClearSelected()
-                ListBox2.ForeColor = Color.Black
-            End If
-        End If
-
-        If Not boolErrorFlag Then
-            Call myPCAL.GetIOType(strChannelBuffer, 3)
-            If strChannelBuffer = "TimeOut" Then
-                boolErrorFlag = True
-            Else
-                If (String.Compare(strChannelBuffer, "P") = 0) Then
-                    iChannelSetting(3) = 0
-                Else
-                    iChannelSetting(3) = 1
-                End If
-                ListBox3.Enabled = True
-                ListBox3.SelectedIndex = iChannelSetting(3)
-                ListBox3.ClearSelected()
-                ListBox3.ForeColor = Color.Black
-            End If
-        End If
-
-        If Not boolErrorFlag Then
-            Call myPCAL.GetIOType(strChannelBuffer, 4)
-            If strChannelBuffer = "TimeOut" Then
-                boolErrorFlag = True
-            Else
-                If (String.Compare(strChannelBuffer, "P") = 0) Then
-                    iChannelSetting(4) = 0
-                Else
-                    iChannelSetting(4) = 1
-                End If
-                ListBox4.Enabled = True
-                ListBox4.SelectedIndex = iChannelSetting(4)
-                ListBox4.ClearSelected()
-                ListBox4.ForeColor = Color.Black
-            End If
-        End If
-
-
-        If Not boolErrorFlag Then
-            Call myPCAL.GetIOType(strChannelBuffer, 5)
-            If strChannelBuffer = "TimeOut" Then
-                boolErrorFlag = True
-            Else
-                If (String.Compare(strChannelBuffer, "P") = 0) Then
-                    iChannelSetting(5) = 0
-                Else
-                    iChannelSetting(5) = 1
-                End If
-                ListBox5.Enabled = True
-                ListBox5.SelectedIndex = iChannelSetting(5)
-                ListBox5.ClearSelected()
-                ListBox5.ForeColor = Color.Black
-            End If
-        End If
-
-        If Not boolErrorFlag Then
-            Call myPCAL.GetIOType(strChannelBuffer, 6)
-            If strChannelBuffer = "TimeOut" Then
-                boolErrorFlag = True
-            Else
-                If (String.Compare(strChannelBuffer, "P") = 0) Then
-                    iChannelSetting(6) = 0
-                Else
-                    iChannelSetting(6) = 1
-                End If
-                ListBox6.Enabled = True
-                ListBox6.SelectedIndex = iChannelSetting(6)
-                ListBox6.ClearSelected()
-                ListBox6.ForeColor = Color.Black
-            End If
-        End If
-
-        If Not boolErrorFlag Then
-            Call myPCAL.GetIOType(strChannelBuffer, 7)
-            If strChannelBuffer = "TimeOut" Then
-                boolErrorFlag = True
-            Else
-                If (String.Compare(strChannelBuffer, "P") = 0) Then
-                    iChannelSetting(7) = 0
-                Else
-                    iChannelSetting(7) = 1
-                End If
-                ListBox7.Enabled = True
-                ListBox7.SelectedIndex = iChannelSetting(7)
-                ListBox7.ClearSelected()
-                ListBox7.ForeColor = Color.Black
-            End If
-        End If
-
-        If Not boolErrorFlag Then
-            Call myPCAL.GetIOType(strChannelBuffer, 8)
-            If strChannelBuffer = "TimeOut" Then
-                boolErrorFlag = True
-            Else
-                If (String.Compare(strChannelBuffer, "P") = 0) Then
-                    iChannelSetting(8) = 0
-                Else
-                    iChannelSetting(8) = 1
-                End If
-                ListBox8.Enabled = True
-                ListBox8.SelectedIndex = iChannelSetting(8)
-                ListBox8.ClearSelected()
-                ListBox8.ForeColor = Color.Black
-            End If
-        End If
-
-    End Sub
     Private Sub ConnectCOM_CheckedChanged(sender As Object, e As EventArgs) Handles ConnectCOM.CheckedChanged
         If ConnectCOM.Checked Then
             If ConnectWLAN.Checked Then
@@ -1924,6 +1501,115 @@ Public Class PCC_PiKoder_Control_Center
     End Sub
     Private Sub AvailableCOMPorts_SelectedIndexChanged(sender As Object, e As EventArgs) Handles AvailableCOMPorts.SelectedIndexChanged
         AvailableCOMPorts.ClearSelected()
+    End Sub
+    Private Sub RetrieveUSB2PPMParameters()
+        Dim strChannelBuffer As String = ""
+        If myPCAL.LinkConnected() Then
+            If Not boolErrorFlag Then
+                'request firm ware version from PiKoder    
+                Call myPCAL.GetFirmwareVersion(strChannelBuffer)
+                If strChannelBuffer <> "TimeOut" Then
+                    strSSC_Firmware.Text = strChannelBuffer
+                    If Val(strChannelBuffer) > 2.0 Then
+                        MsgBox("The PiKoder firmware version found is not supported! Please goto www.pikoder.com and upgrade PCC PiKoder Control Center to the latest version.", MsgBoxStyle.OkOnly, "Error Message")
+                        End
+                    ElseIf Val(strChannelBuffer) < 1.02 Then
+                        MsgBox("The PiKoder firmware version found is not supported! Please goto www.pikoder.com and upgrade the PiKoder firmware to the latest version.", MsgBoxStyle.OkOnly, "Error Message")
+                        End
+                    End If
+                Else ' error message
+                    boolErrorFlag = True
+                End If
+            End If
+            ' RetrievePiKoderParameters()   ' left the retrieve part here locally because USB2PPM is not supported anymore
+
+            GroupBox13.Enabled = True               ' setup form
+            GroupBox13.Visible = True
+            GroupBox17.Enabled = True
+            GroupBox17.Visible = True
+
+            Call RetrieveChannel1Information(HPMath)      ' retrieve information for channels
+            Call RetrieveChannel2Information(HPMath)
+            Call RetrieveChannel2Information(HPMath)
+            Call RetrieveChannel3Information(HPMath)
+            Call RetrieveChannel4Information(HPMath)
+            Call RetrieveChannel5Information(HPMath)
+            Call RetrieveChannel6Information(HPMath)
+            Call RetrieveChannel7Information(HPMath)
+            Call RetrieveChannel8Information(HPMath)
+
+            'set min & max information for all channels
+            strCH_1_Min.Value = sDefaultMinValue
+            ch1_HScrollBar.Minimum = strCH_1_Min.Value
+            strCH_1_Min.ForeColor = Color.Black
+            strCH_1_Max.Value = sDefaultMaxValue
+            ch1_HScrollBar.Maximum = strCH_1_Max.Value
+            strCH_1_Max.ForeColor = Color.Black
+
+            strCH_2_Min.Value = sDefaultMinValue
+            ch2_HScrollBar.Minimum = strCH_2_Min.Value
+            strCH_2_Min.ForeColor = Color.Black
+            strCH_2_Max.Value = sDefaultMaxValue
+            ch2_HScrollBar.Maximum = strCH_2_Max.Value
+            strCH_2_Max.ForeColor = Color.Black
+
+            strCH_3_Min.Value = sDefaultMinValue
+            ch3_HScrollBar.Minimum = strCH_3_Min.Value
+            strCH_3_Min.ForeColor = Color.Black
+            strCH_3_Max.Value = sDefaultMaxValue
+            ch3_HScrollBar.Maximum = strCH_3_Max.Value
+            strCH_3_Max.ForeColor = Color.Black
+
+            strCH_4_Min.Value = sDefaultMinValue
+            ch4_HScrollBar.Minimum = strCH_4_Min.Value
+            strCH_4_Min.ForeColor = Color.Black
+            strCH_4_Max.Value = sDefaultMaxValue
+            ch4_HScrollBar.Maximum = strCH_4_Max.Value
+            strCH_4_Max.ForeColor = Color.Black
+
+            strCH_5_Min.Value = sDefaultMinValue
+            ch5_HScrollBar.Minimum = strCH_5_Min.Value
+            strCH_5_Min.ForeColor = Color.Black
+            strCH_5_Max.Value = sDefaultMaxValue
+            ch5_HScrollBar.Maximum = strCH_5_Max.Value
+            strCH_5_Max.ForeColor = Color.Black
+
+            strCH_6_Min.Value = sDefaultMinValue
+            ch6_HScrollBar.Minimum = strCH_6_Min.Value
+            strCH_6_Min.ForeColor = Color.Black
+            strCH_6_Max.Value = sDefaultMaxValue
+            ch6_HScrollBar.Maximum = strCH_6_Max.Value
+            strCH_6_Max.ForeColor = Color.Black
+
+            strCH_7_Min.Value = sDefaultMinValue
+            ch7_HScrollBar.Minimum = strCH_7_Min.Value
+            strCH_7_Min.ForeColor = Color.Black
+            strCH_7_Max.Value = sDefaultMaxValue
+            ch7_HScrollBar.Maximum = strCH_7_Max.Value
+            strCH_7_Max.ForeColor = Color.Black
+
+            strCH_8_Min.Value = sDefaultMinValue
+            ch8_HScrollBar.Minimum = strCH_8_Min.Value
+            strCH_8_Min.ForeColor = Color.Black
+            strCH_8_Max.Value = sDefaultMaxValue
+            ch8_HScrollBar.Maximum = strCH_8_Max.Value
+            strCH_8_Max.ForeColor = Color.Black
+
+            GroupBox11.Enabled = False 'neutral positions
+            GroupBox11.Visible = False
+            GroupBox8.Enabled = False 'miniSSC Offset
+            GroupBox8.Visible = False
+            GroupBox4.Enabled = False 'zero offset
+            GroupBox4.Visible = False
+            GroupBox7.Enabled = False 'Save Parameters
+            GroupBox7.Visible = False
+
+            PPM_Channels.Value = 8
+            PPM_Channels.ForeColor = Color.Black
+            PPM_Mode.Items.Add("positive")
+            PPM_Mode.Items.Add("negative (Futaba)")
+            PPM_Mode.ForeColor = Color.Black
+        End If
     End Sub
 End Class
 
