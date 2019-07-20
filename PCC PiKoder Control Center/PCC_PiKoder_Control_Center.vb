@@ -30,6 +30,7 @@ Public Class PCC_PiKoder_Control_Center
     Dim boolErrorFlag As Boolean                    ' global flag for errors in communication
     Dim IOSwitching As Boolean = False              ' SSC feature switch (implemented w/ release 2.7)
     Dim FastChannelRetrieve As Boolean = False      ' SSC feature switch (implemented w/ release 2.8)
+    Dim ProtectedSaveMode As Boolean = False        ' SSC feature switch (implemented w/ release 2.9)
     Dim HPMath As Boolean = False                   ' SSC HP feature switch to high precision computing
     Dim bDataLoaded As Boolean = False              ' flag to avoid data updates while uploading data from Pikoder 
     Dim bConnectCom As Boolean = False              ' flag status of connection
@@ -38,7 +39,7 @@ Public Class PCC_PiKoder_Control_Center
     Dim sDefaultMaxValue As String = "2250"
     Dim strPiKoderType As String = ""               ' PiKoder type we are currently connected to
     Dim iChannelSetting(8) As Integer               ' contains the current output type (would be 1 for P(WM) and 2 for S(witch)
-
+    Dim wlan = New WlanClient()
 
     ' declaration of subroutines
     ''' <summary>
@@ -241,7 +242,7 @@ Public Class PCC_PiKoder_Control_Center
     ''' 
     Private Sub saveButton_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles saveButton.Click
         Dim iRetCode As Integer
-        iRetCode = myPCAL.SetPiKoderPreferences()
+        iRetCode = myPCAL.SetPiKoderPreferences(ProtectedSaveMode)
     End Sub
     ''' <summary>
     ''' Subroutine for starting heartbeat timer
@@ -477,9 +478,13 @@ Public Class PCC_PiKoder_Control_Center
                 Call myPCAL.GetFirmwareVersion(strChannelBuffer)
                 If strChannelBuffer <> "TimeOut" Then
                     strSSC_Firmware.Text = strChannelBuffer
-                    If Val(strChannelBuffer) > 2.08 Then
+                    If Val(strChannelBuffer) > 2.09 Then
                         MsgBox("The PiKoder firmware version found is not supported! Please goto www.pikoder.com and upgrade PCC Control Center to the latest version.", MsgBoxStyle.OkOnly, "Error Message")
                         End
+                    ElseIf Val(strChannelBuffer) >= 2.09 Then
+                        ProtectedSaveMode = True
+                        FastChannelRetrieve = True
+                        IOSwitching = True
                     ElseIf Val(strChannelBuffer) >= 2.08 Then
                         FastChannelRetrieve = True
                         IOSwitching = True
@@ -1384,7 +1389,6 @@ Public Class PCC_PiKoder_Control_Center
         End If
     End Sub
     Private Sub ObtainCurrentSSID()
-        Dim wlan = New WlanClient()
         Dim connectedSsids As Collection(Of [String]) = New Collection(Of String)()
 
         If (wlan.Interfaces(0).InterfaceState = NativeWifi.Wlan.WlanInterfaceState.Disconnected) Then

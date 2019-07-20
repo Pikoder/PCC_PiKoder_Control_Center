@@ -122,6 +122,8 @@ Public Class PiKoderCommunicationAbstractionLayer
         Dim iTimeOut As Integer = 0
         Do
             If (iConnectedTo = iPhysicalLink.iSerialLink) Then
+                While (mySerialLink.SerialReceiver() <> "TimeOut")
+                End While
                 mySerialLink.SendDataToSerial("?")
                 SerialInputString = mySerialLink.SerialReceiver()
             ElseIf (iConnectedTo = iPhysicalLink.iWLANlink) Then
@@ -257,13 +259,15 @@ Public Class PiKoderCommunicationAbstractionLayer
             Return InterpretReturnCode(myWLANLink.Receiver())
         End If
     End Function
-    Public Function SetPiKoderPreferences() As Boolean
+    Public Function SetPiKoderPreferences(ByVal ProtectedSaveMode As Boolean) As Boolean
         Dim ReturnCode As String = ""
+        Dim CommandStr As String = "S"
+        If ProtectedSaveMode Then CommandStr = +"U]U]"
         If (iConnectedTo = iPhysicalLink.iSerialLink) Then
-            mySerialLink.SendDataToSerial("S")
+            mySerialLink.SendDataToSerial(CommandStr)
             Return InterpretReturnCode(mySerialLink.SerialReceiver())
         ElseIf (iConnectedTo = iPhysicalLink.iWLANlink) Then
-            myWLANLink.SendDataToWLAN("S")
+            myWLANLink.SendDataToWLAN(CommandStr)
             Return InterpretReturnCode(myWLANLink.Receiver())
         End If
     End Function
