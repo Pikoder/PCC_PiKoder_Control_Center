@@ -1526,21 +1526,90 @@ Public Class PCC_PiKoder_Control_Center
                 End If
             End If
             ' RetrievePiKoderParameters()   ' left the retrieve part here locally because USB2PPM is not supported anymore
-
+                                            
             GroupBox13.Enabled = True               ' setup form
             GroupBox13.Visible = True
             GroupBox17.Enabled = True
             GroupBox17.Visible = True
 
-            Call RetrieveChannel1Information(HPMath)      ' retrieve information for channels
-            Call RetrieveChannel2Information(HPMath)
-            Call RetrieveChannel2Information(HPMath)
-            Call RetrieveChannel3Information(HPMath)
-            Call RetrieveChannel4Information(HPMath)
-            Call RetrieveChannel5Information(HPMath)
-            Call RetrieveChannel6Information(HPMath)
-            Call RetrieveChannel7Information(HPMath)
-            Call RetrieveChannel8Information(HPMath)
+            If Not boolErrorFlag Then   ' retrieve channel value
+                Call myPCAL.GetPulseLength(strChannelBuffer, 1, HPMath)
+                If strChannelBuffer <> "TimeOut" Then
+                    ch1_HScrollBar.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                    strCH_1_Current.Text = Convert.ToString(ch1_HScrollBar.Value)
+                Else
+                    boolErrorFlag = True
+                End If
+            End If
+           If Not boolErrorFlag Then
+                Call myPCAL.GetPulseLength(strChannelBuffer, 2, HPMath)
+                If strChannelBuffer <> "TimeOut" Then
+                    ch2_HScrollBar.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                    strCH_2_Current.Text = Convert.ToString(ch2_HScrollBar.Value)
+                Else
+                    boolErrorFlag = True
+                End If
+            End If
+
+            If Not boolErrorFlag Then
+                Call myPCAL.GetPulseLength(strChannelBuffer, 3, HPMath)
+                If strChannelBuffer <> "TimeOut" Then
+                    ch3_HScrollBar.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                    strCH_3_Current.Text = Convert.ToString(ch3_HScrollBar.Value)
+                Else
+                   boolErrorFlag = True
+                End If
+            End If
+        
+            If Not boolErrorFlag Then
+                Call myPCAL.GetPulseLength(strChannelBuffer, 4, HPMath)
+                If strChannelBuffer <> "TimeOut" Then
+                    ch4_HScrollBar.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                    strCH_4_Current.Text = Convert.ToString(ch4_HScrollBar.Value)
+                Else
+                    boolErrorFlag = True
+                End If
+            End If
+
+            If Not boolErrorFlag Then
+                Call myPCAL.GetPulseLength(strChannelBuffer, 5, HPMath)
+                If strChannelBuffer <> "TimeOut" Then
+                    ch5_HScrollBar.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                    strCH_5_Current.Text = Convert.ToString(ch5_HScrollBar.Value)
+                Else
+                    boolErrorFlag = True
+                End If
+            End If
+
+            If Not boolErrorFlag Then
+                Call myPCAL.GetPulseLength(strChannelBuffer, 6, HPMath)
+                If strChannelBuffer <> "TimeOut" Then
+                    ch6_HScrollBar.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                    strCH_6_Current.Text = Convert.ToString(ch6_HScrollBar.Value)
+                Else
+                    boolErrorFlag = True
+                End If
+            End If
+ 
+            If Not boolErrorFlag Then
+                Call myPCAL.GetPulseLength(strChannelBuffer, 7, HPMath)
+                If strChannelBuffer <> "TimeOut" Then
+                    ch7_HScrollBar.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                    strCH_7_Current.Text = Convert.ToString(ch7_HScrollBar.Value)
+                Else
+                    boolErrorFlag = True
+                End If
+            End If
+
+            If Not boolErrorFlag Then
+                Call myPCAL.GetPulseLength(strChannelBuffer, 8, HPMath)
+                If strChannelBuffer <> "TimeOut" Then
+                    ch8_HScrollBar.Value = ScalePulseWidth(strChannelBuffer, HPMath)
+                    strCH_8_Current.Text = Convert.ToString(ch8_HScrollBar.Value)
+                Else
+                    boolErrorFlag = True
+                End If
+            End If
 
             'set min & max information for all channels
             strCH_1_Min.Value = sDefaultMinValue
@@ -1613,6 +1682,9 @@ Public Class PCC_PiKoder_Control_Center
             PPM_Mode.Items.Add("positive")
             PPM_Mode.Items.Add("negative (Futaba)")
             PPM_Mode.ForeColor = Color.Black
+
+            IndicateConnectionOk()
+
         End If
     End Sub
 End Class
