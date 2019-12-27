@@ -1,11 +1,8 @@
-﻿Option Strict Off
-Option Explicit On
-Imports System
+﻿Imports System.Collections.ObjectModel
 Imports System.IO.Ports
 Imports System.Collections.ObjectModel
 Imports System.Text
 Imports NativeWifi
-
 Public Class PCC_PiKoder_Control_Center
 
     ' This is a program for evaluating the PiKoder platform - please refer to http://pikoder.com for more details.
@@ -25,6 +22,10 @@ Public Class PCC_PiKoder_Control_Center
     ' limitations under the License.
 
     Inherits System.Windows.Forms.Form
+
+    Private Const LogFileName As String = "\PPC_LogFile.log"
+    Private Const LogOutput As Boolean = False
+
     Private myPCAL As New PiKoderCommunicationAbstractionLayer
 
     Dim boolErrorFlag As Boolean                    ' global flag for errors in communication
@@ -39,7 +40,7 @@ Public Class PCC_PiKoder_Control_Center
     Dim sDefaultMaxValue As String = "2250"
     Dim strPiKoderType As String = ""               ' PiKoder type we are currently connected to
     Dim iChannelSetting(8) As Integer               ' contains the current output type (would be 1 for P(WM) and 2 for S(witch)
-    Dim wlan = New WlanClient()
+    Dim wlan As WlanClient
 
     ' declaration of subroutines
     ''' <summary>
@@ -50,10 +51,15 @@ Public Class PCC_PiKoder_Control_Center
     ''' <remarks></remarks>
 
     Public Sub New()
-
         InitializeComponent()
-        ObtainCurrentSSID()
         boolErrorFlag = False
+        If LogOutput Then WriteLog("Initialized Component ok.")
+
+        wlan = New WlanClient()
+        ObtainCurrentSSID()
+        If (LogOutput And (InfoSSID.Text <> "")) Then
+            WriteLog("Found SSID: " & InfoSSID.Text)
+        End If
 
         ' Set active control 
         Me.ActiveControl = Me.AvailableCOMPorts
@@ -62,8 +68,39 @@ Public Class PCC_PiKoder_Control_Center
         Led2.Color = LED.LEDColorSelection.LED_Red
         Led2.Interval = 500
         Led2.State = True
+        If LogOutput Then WriteLog("Created form ok.")
 
     End Sub
+    '****************************************************************************
+    '   Function:
+    '       public sub WriteLog(ByVal TimeDate As Date, ByVal Message As String)
+    '
+    '   Summary:
+    '       This function appends message to standard logfile.
+    '
+    '   Description:
+    '
+    '   Precondition:
+    '       None
+    '
+    '   Parameters:
+    '       None
+    '
+    '   Return Values
+    '       None
+    '
+    '   Remarks:
+    '       None
+    '***************************************************************************
+    Public Sub WriteLog(ByVal Message As String)
+        Dim myStreamWriter As IO.StreamWriter
+
+        myStreamWriter = IO.File.AppendText(Application.StartupPath & LogFileName)
+        myStreamWriter.Write($"[{DateTime.Now.ToLongTimeString()} {DateTime.Now.ToLongDateString()}")
+        myStreamWriter.WriteLine("] :" & Message)
+        myStreamWriter.Close()
+    End Sub
+
     '****************************************************************************
     '   Function:
     '       private void UpdateCOMPortList()
@@ -124,7 +161,7 @@ Public Class PCC_PiKoder_Control_Center
                 foundDifference = foundDifference Or foundDifferenceHere
             Next s
         Else
-                foundDifference = True
+            foundDifference = True
         End If
 
         'If nothing has changed, exit the function.
@@ -522,12 +559,12 @@ Public Class PCC_PiKoder_Control_Center
             RetrievePiKoderParameters()
         End If
     End Sub
-    Private Function FormatChannelValue(ByVal iChannelInput) As String
+    Private Function FormatChannelValue(ByVal iChannelInput As Decimal) As String
         Dim strChannelBuffer = ""
         Dim iChannelValue = iChannelInput
         If (HPMath) Then
-            iChannelValue = iChannelValue * 5
-            If (iChannelValue < 10000) Then strChannelBuffer = strChannelBuffer + "0"
+            iChannelValue *= 5
+            If iChannelValue < 10000 Then strChannelBuffer = strChannelBuffer + "0"
         End If
         If (iChannelValue < 1000) Then strChannelBuffer = strChannelBuffer + "0"
         Return strChannelBuffer + Convert.ToString(iChannelValue)
@@ -1391,10 +1428,15 @@ Public Class PCC_PiKoder_Control_Center
     Private Sub ObtainCurrentSSID()
         Dim connectedSsids As Collection(Of [String]) = New Collection(Of String)()
 
-        If (wlan.Interfaces(0).InterfaceState = NativeWifi.Wlan.WlanInterfaceState.Disconnected) Then
-            InfoSSID.Text = ""
-            Exit Sub
+        If My.Computer.Network.IsAvailable Then
+            If wlan.Interfaces(0).InterfaceState = NativeWifi.Wlan.WlanInterfaceState.Disconnected Then
+                InfoSSID.Text = ""
+                If LogOutput Then WriteLog("Network availbale but no Wlan found.")
+                Exit Sub
+            End If
         End If
+
+
 
         Try
             For Each wlanInterface As WlanClient.WlanInterface In wlan.Interfaces
@@ -1406,6 +1448,7 @@ Public Class PCC_PiKoder_Control_Center
                 Next
             Next
         Catch ex As Exception
+            If LogOutput Then WriteLog("Hit exception while obtaining SSID")
         End Try
     End Sub
     Private Sub Connect2PiKoder(iLinkType As Integer)
@@ -1526,7 +1569,7 @@ Public Class PCC_PiKoder_Control_Center
                 End If
             End If
             ' RetrievePiKoderParameters()   ' left the retrieve part here locally because USB2PPM is not supported anymore
-                                            
+
             GroupBox13.Enabled = True               ' setup form
             GroupBox13.Visible = True
             GroupBox17.Enabled = True
@@ -1541,7 +1584,7 @@ Public Class PCC_PiKoder_Control_Center
                     boolErrorFlag = True
                 End If
             End If
-           If Not boolErrorFlag Then
+            If Not boolErrorFlag Then
                 Call myPCAL.GetPulseLength(strChannelBuffer, 2, HPMath)
                 If strChannelBuffer <> "TimeOut" Then
                     ch2_HScrollBar.Value = ScalePulseWidth(strChannelBuffer, HPMath)
@@ -1557,10 +1600,10 @@ Public Class PCC_PiKoder_Control_Center
                     ch3_HScrollBar.Value = ScalePulseWidth(strChannelBuffer, HPMath)
                     strCH_3_Current.Text = Convert.ToString(ch3_HScrollBar.Value)
                 Else
-                   boolErrorFlag = True
+                    boolErrorFlag = True
                 End If
             End If
-        
+
             If Not boolErrorFlag Then
                 Call myPCAL.GetPulseLength(strChannelBuffer, 4, HPMath)
                 If strChannelBuffer <> "TimeOut" Then
@@ -1590,7 +1633,7 @@ Public Class PCC_PiKoder_Control_Center
                     boolErrorFlag = True
                 End If
             End If
- 
+
             If Not boolErrorFlag Then
                 Call myPCAL.GetPulseLength(strChannelBuffer, 7, HPMath)
                 If strChannelBuffer <> "TimeOut" Then
